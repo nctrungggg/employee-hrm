@@ -1,0 +1,156 @@
+/* mui*/
+.css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
+  padding: 20px 16px 4px 24px !important;
+}
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+  max-width: 444px !important;
+}
+.css-hlj6pa-MuiDialogActions-root {
+  padding: 24px !important;
+  justify-content: flex-start !important;
+}
+.css-9y1egq-MuiButtonBase-root-MuiButton-root,
+.css-jh47zj-MuiButtonBase-root-MuiButton-root {
+  border-radius: 6px !important;
+  height: 48px !important;
+  font-size: 16px !important;
+  min-width: 148px !important;
+  text-transform: unset !important;
+}
+.css-16ac5r2-MuiButtonBase-root-MuiListItemButton-root:hover {
+  background-color: initial !important;
+}
+
+/* table */
+.css-dwuj3p-MuiTableCell-root {
+  line-height: 1.5rem !important;
+  font-size: 1.3rem !important;
+  font-family: "SVN-Sofia Pro Regular", "Public Sans", sans-serif !important;
+  font-weight: 600 !important;
+  display: table-cell !important;
+  vertical-align: inherit !important;
+  color: rgb(17, 24, 28) !important;
+  position: sticky !important;
+  top: 0px !important;
+  z-index: 2 !important;
+  border-top-left-radius: 8px !important;
+  border: 1px solid white !important;
+  width: 36px !important;
+
+  text-align: center !important;
+  background-color: rgb(236, 238, 240) !important;
+  padding: 6px !important;
+}
+
+.css-i02g0k-MuiTableCell-root {
+  line-height: 1.5rem !important;
+  font-size: 1.3rem !important;
+  font-family: "SVN-Sofia Pro Regular", "Public Sans", sans-serif !important;
+  font-weight: 600 !important;
+  display: table-cell !important;
+  vertical-align: inherit !important;
+  text-align: left !important;
+  color: rgb(17, 24, 28) !important;
+  position: sticky !important;
+  top: 0px !important;
+  z-index: 2 !important;
+  border: 1px solid white !important;
+  border-top-left-radius: 0px !important;
+  border-top-right-radius: 0px !important;
+  padding: 6px 10px !important;
+  background-color: rgb(236, 238, 240) !important;
+}
+
+tr {
+  background-color: rgb(248, 249, 250) !important;
+}
+
+th {
+  line-height: 1.5rem !important;
+  font-size: 1.3rem !important;
+  font-family: "SVN-Sofia Pro Regular", "Public Sans", sans-serif !important;
+  font-weight: 600 !important;
+  display: table-cell !important;
+  vertical-align: inherit !important;
+  text-align: left !important;
+  color: rgb(17, 24, 28) !important;
+  position: sticky !important;
+  top: 0px !important;
+  z-index: 2 !important;
+  border: 1px solid white !important;
+  border-top-left-radius: 0px !important;
+  border-top-right-radius: 0px !important;
+  padding: 6px 10px !important;
+  background-color: rgb(236, 238, 240) !important;
+}
+
+.css-1yhpg23-MuiTableCell-root {
+  border: 1px solid white !important;
+  padding: 0px !important;
+  cursor: pointer !important;
+}
+
+.css-1ex1afd-MuiTableCell-root {
+  border: 1px solid white !important;
+}
+
+.css-y8ay40-MuiTableCell-root {
+  line-height: 1.5rem !important;
+  font-size: 14px !important;
+  font-family: "SVN-Sofia Pro Regular", "Public Sans", sans-serif !important;
+  font-weight: 600 !important;
+  display: table-cell !important;
+  vertical-align: inherit !important;
+  text-align: left !important;
+  color: rgb(17, 24, 28) !important;
+  position: sticky !important;
+  top: 0px !important;
+  z-index: 2 !important;
+  border: 1px solid white !important;
+  border-top-left-radius: 0px !important;
+  border-top-right-radius: 0px !important;
+  padding: 6px 10px !important;
+  background-color: rgb(236, 238, 240) !important;
+}
+
+.css-1ex1afd-MuiTableCell-root {
+  font-family: "Open Sans", sans-serif !important;
+  font-weight: 400;
+  font-size: 12px !important;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  display: table-cell;
+  vertical-align: inherit;
+  border-bottom: 1px solid rgba(224, 224, 224, 1);
+  text-align: left;
+  font-weight: 500 !important;
+  padding: 0 10px !important;
+  color: rgb(104, 112, 118) !important;
+}
+.css-177gid-MuiTableCell-root {
+  font-family: "Open Sans", sans-serif !important;
+  font-size: 1.3rem !important;
+}
+
+/* Table Panigation */
+
+.css-16c50h-MuiInputBase-root-MuiTablePagination-select {
+  font-family: "Open Sans", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.css-pdct74-MuiTablePagination-selectLabel {
+  font-family: "Open Sans", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root.Mui-checked,
+.css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root.MuiCheckbox-indeterminate   {
+  color: #30a46c !important;
+}
+
+.css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root {
+  padding: 0 !important;
+}
