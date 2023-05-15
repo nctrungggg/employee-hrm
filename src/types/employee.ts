@@ -1,4 +1,4 @@
-export interface Employee {
+export interface IEmployeeParams {
   id: number;
   old_staff_id: number | null;
   staff_id: string;
@@ -48,12 +48,12 @@ export interface Employee {
   grade_prefix: string;
   grade_name: string;
   manager_name: string | null;
-  contracts: Contract[];
+  contracts: IContractParams[];
 }
 
-export interface DataEmployee {
+export interface IDataEmployeeParams {
   current_page: number;
-  data: Employee[];
+  data: IEmployeeParams[];
   first_page_url: string;
   from: number;
   last_page: number;
@@ -71,7 +71,7 @@ export interface DataEmployee {
   total: number;
 }
 
-export interface Contract {
+export interface IContractParams {
   id: number;
   employee_id: number;
   contract_date: string;

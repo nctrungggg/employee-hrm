@@ -24,7 +24,7 @@ const Sidebar = () => {
                 isActive ? "active-link" : "normal-link"
               }
             >
-              <ListItemButton className="text- gap-[10px] !py-2 !px-[10px] !rounded-lg">
+              <ListItemButton className="gap-[10px] !py-2 !px-[10px] !rounded-lg">
                 <div
                   className={`rounded-full bg-bgrGray w-9 h-9 p-2
                   `}
@@ -35,7 +35,7 @@ const Sidebar = () => {
                     alt="navbar-icon"
                   />
                 </div>
-                <p className=" text-16 font-normal text-textPrimary tracking-wide ">
+                <p className=" text-16 font-normal text-textPrimary">
                   {link.name}
                 </p>
               </ListItemButton>

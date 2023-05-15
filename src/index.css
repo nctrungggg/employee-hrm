@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 @import url("https://fonts.googleapis.com/css2?family=Public+Sans:wght@100;200;300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 /* reset css */
 /* http://meyerweb.com/eric/tools/css/reset/
@@ -466,7 +467,7 @@ body {
   font-weight: 400;
   overflow-x: hidden;
   background: #f8f9fa;
-  font-family: "SVN-Sofia Pro Regular", "Public Sans", sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .container {

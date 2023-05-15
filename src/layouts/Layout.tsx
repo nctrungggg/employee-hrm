@@ -1,19 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReactNode } from "react";
-import { Header } from "./header/Header";
-import { Footer } from "./footer/Footer";
+import { useSelector } from "react-redux";
 import Sidebar from "../components/sidebar/Sidebar";
-import Cookies from "js-cookie";
-import { ACCESS_TOKEN_KEY } from "../constants/constants";
+import { Footer } from "./footer/Footer";
+import { Header } from "./header/Header";
 
-interface Props {
+interface ILayoutProps {
   children: ReactNode;
 }
 
-const Layout = ({ children }: Props) => {
-  const authToken = Cookies.get(ACCESS_TOKEN_KEY);
+const Layout = ({ children }: ILayoutProps) => {
+  const authToken = useSelector((state: any) => state.auth.authToken);
 
   if (!authToken) return <>{children}</>;
-
   return (
     <>
       <Header />

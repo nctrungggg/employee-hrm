@@ -1,13 +1,11 @@
-import Cookies from "js-cookie";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import authApi from "../../../api/authApi";
-import { ACCESS_TOKEN_KEY, STORAGE_KEY } from "../../../constants/constants";
+import { ACCESS_TOKEN_KEY } from "../../../constants/constants";
 import { ILoginParams } from "../../../types/auth";
-import { ICompanyParams } from "../../../types/company";
 interface initialState {
-  // currentUser: null;
-  companyList: ICompanyParams[];
+  authToken: string;
 }
 
 export const signIn = createAsyncThunk(
@@ -17,12 +15,13 @@ export const signIn = createAsyncThunk(
       const { data } = await authApi.signIn(payload);
 
       Cookies.set(ACCESS_TOKEN_KEY, data.data.token);
+
+      return data.data.token;
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.response.data.message);
     }
-
-    // save data to local storage
   }
 );
 
@@ -31,12 +30,6 @@ export const forgotPassword = createAsyncThunk(
   async (payload: string) => {
     try {
       const data = await authApi.fortgotPassword(payload);
-      console.log(data);
-
-      // toast.success(data.message, {
-      //   autoClose: 2000,
-      // });
-
       Cookies.set(ACCESS_TOKEN_KEY, data.data.token);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -45,16 +38,8 @@ export const forgotPassword = createAsyncThunk(
   }
 );
 
-export const getCompany = createAsyncThunk("auth/company", async () => {
-  const {
-    data: { data: company },
-  } = await authApi.getCompany();
-
-  return company;
-});
-
 const initialState: initialState = {
-  companyList: [],
+  authToken: Cookies.get(ACCESS_TOKEN_KEY) || "",
 };
 
 const authSlice = createSlice({
@@ -62,14 +47,15 @@ const authSlice = createSlice({
   initialState,
 
   reducers: {
-    logout: () => {
+    logout: (state) => {
+      state.authToken = "";
       Cookies.remove(ACCESS_TOKEN_KEY);
     },
   },
 
   extraReducers: {
-    [getCompany.fulfilled.toString()]: (state, action) => {
-      state.companyList = action.payload;
+    [signIn.fulfilled.toString()]: (state, action) => {
+      state.authToken = action.payload;
     },
   },
 });

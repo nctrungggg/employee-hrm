@@ -5,5 +5,11 @@
 
 9/5
 
-- Logout
-- Làm UI phần eployee
+- Logout : done
+- Làm UI phần eployee : done
+
+// đang bug phần loyout: done
+
+14/5:
+
+- delete field: xoá được bên fe, be chưa xoá dược

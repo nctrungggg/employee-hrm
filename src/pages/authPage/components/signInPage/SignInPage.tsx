@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "../../../../app/store";
-import { SignInForm } from "../../../../modules/auth/components/signInForm/SignInForm";
-import { getCompany, signIn } from "../../../../modules/auth/redux/authSlice";
-import { ILoginParams } from "../../../../types/auth";
-import { ROUTES } from "../../../../configs/routes";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import authApi from "../../../../api/authApi";
+import { AppDispatch } from "../../../../app/store";
+import { ROUTES } from "../../../../configs/routes";
+import { SignInForm } from "../../../../modules/auth/components/signInForm/SignInForm";
+import { signIn } from "../../../../modules/auth/redux/authSlice";
+import { ILoginParams } from "../../../../types/auth";
 
 // export interface ISignInPageProps {}
 
@@ -16,7 +17,7 @@ export function SignInPage() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const companyList = useSelector((state: any) => state.auth.companyList);
+  const [companyList, setCompanyList] = useState([]);
 
   const handleSubmitForm = async (values: ILoginParams) => {
     try {
@@ -33,6 +34,7 @@ export function SignInPage() {
       setLoading(false);
 
       navigate(ROUTES.employee);
+      // location.href = "/employee";
     } catch (error) {
       console.log(error);
     }
@@ -40,8 +42,11 @@ export function SignInPage() {
 
   useEffect(() => {
     (async () => {
-      const resultAction = await dispatch(getCompany());
-      unwrapResult(resultAction);
+      const {
+        data: { data: company },
+      } = await authApi.getCompany();
+      setCompanyList(company);
+      console.log(company);
     })();
   }, [dispatch]);
 

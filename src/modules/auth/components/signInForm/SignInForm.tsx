@@ -46,8 +46,8 @@ export function SignInForm({
     formState: { isValid, errors },
   } = useForm({
     defaultValues: {
-      username: "",
-      password: "",
+      username: "trungnguyenchi",
+      password: "nctrung0410",
       factory: null,
     },
 

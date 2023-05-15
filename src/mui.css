@@ -86,7 +86,7 @@ th {
 
 .css-1yhpg23-MuiTableCell-root {
   border: 1px solid white !important;
-  padding: 0px !important;
+  padding: 6px !important;
   cursor: pointer !important;
 }
 
@@ -147,10 +147,22 @@ th {
 }
 
 .css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root.Mui-checked,
-.css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root.MuiCheckbox-indeterminate   {
+.css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root.MuiCheckbox-indeterminate {
   color: #30a46c !important;
 }
 
 .css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root {
   padding: 0 !important;
+}
+.css-1ps6pg7-MuiPaper-root {
+  background-color: unset !important;
+  box-shadow: none !important;
+}
+
+.css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
+  font-size: 24px !important;
+  font-weight: 500 !important;
+}
+.css-ypiqx9-MuiDialogContent-root {
+  padding: 0 24px !important;
 }

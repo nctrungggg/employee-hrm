@@ -1,5 +1,11 @@
 import {
+  Button,
   Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Paper,
   Table,
   TableBody,
@@ -10,10 +16,15 @@ import {
   TableRow,
 } from "@mui/material";
 import { useState } from "react";
-import { DataEmployee } from "../../../../types/employee";
+import { Link } from "react-router-dom";
+import { IDataEmployeeParams } from "../../../../types/employee";
+import addIcon from "../../../../assets/add.svg";
+import trashDisableIcon from "../../../../assets/trashDisable.svg";
+import trashIcon from "../../../../assets/trash.svg";
 
 interface IEmployeeListProps {
-  dataEmployee: DataEmployee;
+  dataEmployee: IDataEmployeeParams;
+  onDeleteFieldTable: (listId: number[]) => void;
 }
 
 interface Column {
@@ -75,12 +86,14 @@ const columns: readonly Column[] = [
   { id: "Grading", label: "Grading", minWidth: 100 },
 ];
 
-export function EmployeeList({ dataEmployee }: IEmployeeListProps) {
+export function EmployeeList({
+  dataEmployee,
+  onDeleteFieldTable,
+}: IEmployeeListProps) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-
-  console.log(dataEmployee);
+  const [open, setOpen] = useState(false);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -111,9 +124,59 @@ export function EmployeeList({ dataEmployee }: IEmployeeListProps) {
 
   const isRowSelected = (id: number) => selectedRows.includes(id);
 
+  const handleDeleteSelected = () => {
+    onDeleteFieldTable(selectedRows);
+    setOpen(false);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  console.log(selectedRows);
+
   return (
     <div>
-      <div className="max-w-[1000px] overflow-auto mt-3">
+      <div className="flex justify-end border-gray-200 pb-3">
+        <div className="flex items-center  gap-1 rounded-md">
+          <div className="w-[90px] h-[35px] bg-bgrBlue2 rounded-md flex items-center justify-center gap-[6px] cursor-pointer hover:bg-[#0091ff14]">
+            <img src={addIcon} alt="add-icon" />
+            <Link
+              className="text-bgrBlue text-14 font-normal"
+              to="/employee/create-or-update"
+            >
+              Add
+            </Link>
+          </div>
+          <button
+            disabled={selectedRows.length > 0 ? false : true}
+            className={`w-[90px]  h-[35px] flex items-center justify-center gap-[6px] rounded-md ${
+              selectedRows.length > 0
+                ? " bg-red2 cursor-pointer hover:bg-[#e5484d14]"
+                : " bg-bgrGray cursor-default"
+            }`}
+            onClick={handleClickOpen}
+          >
+            {selectedRows.length > 0 ? (
+              <img src={trashIcon} alt="trash-icon" />
+            ) : (
+              <img src={trashDisableIcon} alt="trash-disable-icon" />
+            )}
+            <div
+              className={`${
+                selectedRows.length > 0 ? "text-red3" : "text-[#c1c8cd]"
+              } text-14 font-normal`}
+            >
+              Delete
+            </div>
+          </button>
+        </div>
+      </div>
+      <div className="w-full h-[1px] bg-[#DFE3E6] mb-[10px]"></div>
+      <div className="max-w-[1000px] h-[470px] overflow-auto mt-3">
         <Paper>
           <TableContainer className=" max-h-[500px]">
             <Table stickyHeader aria-label="sticky table">
@@ -121,13 +184,13 @@ export function EmployeeList({ dataEmployee }: IEmployeeListProps) {
                 <TableRow>
                   <TableCell align="center">
                     {/* <input
-                      type="checkbox"
-                      onChange={handleHeaderSelect}
-                      checked={
-                        selectedRows.length === dataEmployee.data.length &&
-                        dataEmployee.data.length > 0
-                      }
-                    /> */}
+                        type="checkbox"
+                        onChange={handleHeaderSelect}
+                        checked={
+                          selectedRows.length === dataEmployee.data.length &&
+                          dataEmployee.data.length > 0
+                        }
+                      /> */}
                     <div
                       onClick={handleHeaderSelect}
                       className="relative flex items-center justify-center"
@@ -146,7 +209,6 @@ export function EmployeeList({ dataEmployee }: IEmployeeListProps) {
                         inputProps={{
                           "aria-label": "select all desserts",
                         }}
-                       
                       />
                     </div>
                   </TableCell>
@@ -240,6 +302,46 @@ export function EmployeeList({ dataEmployee }: IEmployeeListProps) {
           />
         </Paper>
       </div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button size="large" variant="outlined" onClick={handleClose}>
+            No
+          </Button>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={handleDeleteSelected}
+          >
+            Yes
+          </Button>
+        </DialogActions>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          className="w-6 h-6 absolute top-6 right-6 cursor-pointer"
+          onClick={handleClose}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </Dialog>
     </div>
   );
 }

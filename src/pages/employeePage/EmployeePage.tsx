@@ -1,23 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { unwrapResult } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
 import { AppDispatch } from "../../app/store";
-import addIcon from "../../assets/add.svg";
 import searchIcon from "../../assets/search.svg";
-import trashIcon from "../../assets/trash.svg";
 import { ROUTES } from "../../configs/routes";
 import { ACCESS_TOKEN_KEY } from "../../constants/constants";
 import { EmployeeList } from "../../modules/employee/components/employeeList/EmployeeList";
-import { getEmployList } from "../../modules/employee/redux/employeeSlice";
+import {
+  deleteFieldTableEmployee,
+  getEmployList,
+} from "../../modules/employee/redux/employeeSlice";
 
 export function EmployeePage() {
   const dispatch = useDispatch<AppDispatch>();
   const authToken = Cookies.get(ACCESS_TOKEN_KEY);
 
   const dataEmployee = useSelector((state: any) => state.employee.dataEmployee);
+  const [dataTables, setDataTables] = useState(dataEmployee);
+
+  useEffect(() => {
+    setDataTables(dataEmployee);
+  }, [dataEmployee]);
 
   useEffect(() => {
     (async () => {
@@ -30,7 +36,15 @@ export function EmployeePage() {
     return <Navigate to={`${ROUTES.auth}/${ROUTES.signIn}`} />;
   }
 
-  if (!dataEmployee) return;
+  const handleDeleteFieldTable = (selectedTables: number[]) => {
+    console.log(selectedTables);
+    dispatch(deleteFieldTableEmployee(selectedTables));
+
+    setDataTables((prevData: { data: any[] }) => ({
+      ...prevData,
+      data: prevData.data.filter((row) => !selectedTables.includes(row.id)),
+    }));
+  };
 
   return (
     <div className="pt-[92px] pl-[376px]">
@@ -49,26 +63,11 @@ export function EmployeePage() {
           />
         </div>
       </div>
-      <div className="pt-[10px] px-[10px]  bg-bgrGray2">
-        <div className="flex justify-end border-gray-200 pb-3">
-          <div className="flex items-center  gap-1 rounded-md">
-            <div className="w-[90px] h-[35px] bg-bgrBlue2 rounded-md flex items-center justify-center gap-[6px] cursor-pointer hover:bg-[#0091ff14]">
-              <img src={addIcon} alt="add-icon" />
-              <Link
-                className="text-bgrBlue text-14 font-normal"
-                to="/employee/create-or-update"
-              >
-                Add
-              </Link>
-            </div>
-            <div className="w-[90px] h-[35px] flex items-center justify-center gap-[6px] rounded-md bg-red2 cursor-pointer hover:bg-[#e5484d14]">
-              <img src={trashIcon} alt="trash-icon" />
-              <button className="text-red3 text-14 font-normal">Delete</button>
-            </div>
-          </div>
-        </div>
-        <div className="w-full h-[1px] bg-[#DFE3E6] mb-[10px]"></div>
-        <EmployeeList dataEmployee={dataEmployee} />
+      <div className="pt-[10px] px-[10px] rounded-xl shadow-md bg-bgrGray2">
+        <EmployeeList
+          onDeleteFieldTable={handleDeleteFieldTable}
+          dataEmployee={dataTables}
+        />
       </div>
     </div>
   );

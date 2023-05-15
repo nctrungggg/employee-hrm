@@ -2,14 +2,21 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { ACCESS_TOKEN_KEY, API_HOST } from "../constants/constants";
 
-const authToken = Cookies.get(ACCESS_TOKEN_KEY);
-
 const axiosClient = axios.create({
   baseURL: API_HOST,
   headers: {
-    // "Content-Type": "application/json",
-    Authorization: `Bearer ${"800|uqEIx0ZaUbZoCRgzB72wxJgOzHVWJSiiZ9kvHImO"}`,
+    "Content-Type": "application/json",
   },
 });
+axiosClient.interceptors.request.use(
+  function (config) {
+    config.headers.Authorization = `Bearer ${Cookies.get(ACCESS_TOKEN_KEY)}`;
+    return config;
+  },
+  function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  }
+);
 
 export default axiosClient;

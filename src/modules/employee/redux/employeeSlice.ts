@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import employeeApi from "../../../api/employeeApi";
-import { DataEmployee } from "../../../types/employee";
+import { IDataEmployeeParams } from "../../../types/employee";
 
 interface initialState {
-  dataEmployee: DataEmployee;
+  dataEmployee: IDataEmployeeParams;
   loadingEmployee: boolean;
 }
 
@@ -14,6 +14,14 @@ export const getEmployList = createAsyncThunk("employee", async () => {
 
   return data;
 });
+
+export const deleteFieldTableEmployee = createAsyncThunk(
+  "product/deleteProduct",
+  async (record_ids: number[]) => {
+    await employeeApi.deleteEmployee(record_ids);
+    return;
+  }
+);
 
 const initialState: initialState = {
   dataEmployee: {
