@@ -1,24 +1,37 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import employeeApi from "../../../api/employeeApi";
 import { IDataEmployeeParams } from "../../../types/employee";
+import { toast } from "react-toastify";
 
 interface initialState {
   dataEmployee: IDataEmployeeParams;
   loadingEmployee: boolean;
 }
 
-export const getEmployList = createAsyncThunk("employee", async () => {
-  const {
-    data: { data },
-  } = await employeeApi.getEmployList();
+interface EmployeeListParams {
+  keywordSearch?:  string | null;
+  currentPage?:  string | null;
+}
 
-  return data;
-});
+export const getEmployeeList = createAsyncThunk(
+  "employee",
+  async ({ keywordSearch = "", currentPage = "1" }: EmployeeListParams) => {
+    const {
+      data: { data },
+    } = await employeeApi.getEmployList({ keywordSearch, currentPage });
+
+    return data;
+  }
+);
 
 export const deleteFieldTableEmployee = createAsyncThunk(
   "product/deleteProduct",
   async (record_ids: number[]) => {
-    await employeeApi.deleteEmployee(record_ids);
+    const {
+      data: { message },
+    } = await employeeApi.deleteEmployee(record_ids);
+
+    toast.success(message);
     return;
   }
 );
@@ -54,7 +67,7 @@ const authSlice = createSlice({
   reducers: {},
 
   extraReducers: {
-    [getEmployList.fulfilled.toString()]: (state, action) => {
+    [getEmployeeList.fulfilled.toString()]: (state, action) => {
       state.dataEmployee = action.payload;
     },
   },

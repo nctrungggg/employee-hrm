@@ -1,18 +1,26 @@
 import axiosClient from "./axiosClient";
-
+interface EmployeeListParams {
+  keywordSearch: string | null;
+  currentPage: string | null;
+}
 const employeeApi = {
-  getEmployList() {
-    const url = "employee";
-    return axiosClient.get(url);
+  getEmployList({ keywordSearch = "", currentPage = "" }: EmployeeListParams) {
+    const url = `employee`;
+    return axiosClient.get(url, {
+      params: {
+        search: keywordSearch,
+        page: currentPage,
+      },
+    });
   },
 
   deleteEmployee(record_ids: number[]) {
-    const encodedRecordIds = record_ids.map(
-      (id) => `record_ids%5B%5D=${encodeURIComponent(id)}`
-    );
-    const param = encodedRecordIds.join("&");
-    const url = `employee/multiple-delete?${param}`;
-    return axiosClient.delete(url);
+    const url = `employee/multiple-delete`;
+    return axiosClient.delete(url, {
+      data: {
+        record_ids: record_ids,
+      },
+    });
   },
 };
 

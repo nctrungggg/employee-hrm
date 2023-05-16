@@ -30,9 +30,12 @@ export const forgotPassword = createAsyncThunk(
   async (payload: string) => {
     try {
       const data = await authApi.fortgotPassword(payload);
-      Cookies.set(ACCESS_TOKEN_KEY, data.data.token);
+      toast.success(data.data.message);
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
+      console.log(error);
+
       toast.error(error.response.data.message);
     }
   }
