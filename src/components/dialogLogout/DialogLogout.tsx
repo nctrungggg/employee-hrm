@@ -8,12 +8,13 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../modules/auth/redux/authSlice";
 import { ROUTES } from "../../configs/routes";
+import authApi from "../../api/authApi";
 
 export interface IDialogLogoutProps {
   title: string;
 }
 
-export default function DialogLogout({ title }: IDialogLogoutProps) {
+export default function DialogLogout() {
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -26,7 +27,8 @@ export default function DialogLogout({ title }: IDialogLogoutProps) {
     setOpen(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await authApi.logout();
     dispatch(logout());
 
     navigate(`${ROUTES.auth}/${ROUTES.signIn}`);
@@ -36,9 +38,13 @@ export default function DialogLogout({ title }: IDialogLogoutProps) {
 
   return (
     <div className="relative">
-      <div onClick={handleClickOpen} className="cursor-pointer">
-        <Avatar sx={{ width: 30, height: 30, fontSize: 14 }}> {title}</Avatar>
-      </div>
+      <Button
+        className="w-full !bg-bgrBlue !capitalize !h-12 !font-normal !rounded-md"
+        variant="contained"
+        onClick={handleClickOpen}
+      >
+        Sign Out
+      </Button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -53,7 +59,12 @@ export default function DialogLogout({ title }: IDialogLogoutProps) {
           <Button size="large" variant="outlined" onClick={handleClose}>
             No
           </Button>
-          <Button variant="contained" size="large" onClick={handleLogout}>
+          <Button
+            variant="contained"
+            size="large"
+            className="!bg-bgrBlue"
+            onClick={handleLogout}
+          >
             Yes
           </Button>
         </DialogActions>

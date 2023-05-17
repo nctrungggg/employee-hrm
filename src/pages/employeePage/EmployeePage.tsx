@@ -25,6 +25,7 @@ export function EmployeePage() {
   const searchParams = new URLSearchParams(location.search);
   const search = searchParams.get("search");
   const page = searchParams.get("page");
+  console.log(page);
 
   const dataEmployee = useSelector(
     (state: RootState) => state.employee.dataEmployee
@@ -52,21 +53,28 @@ export function EmployeePage() {
     (async () => {
       getDataEmployeeList(search, page);
     })();
-  }, [search, page]);
+  }, [search, page, getDataEmployeeList]);
 
-  const handleSearchEmployee = debounce((keyword: string) => {
-    const queryParams: { search: string; page: string } = {
-      search: keyword,
-      page: String(dataTables.current_page),
-    };
+  const handleSearchEmployee = debounce(
+    (keyword: string | "", page?: number) => {
+      const queryParams: { search?: string; page: string } = keyword
+        ? {
+            search: keyword,
+            page: "1",
+          }
+        : {
+            page: String(page ? page : dataEmployee.current_page),
+          };
 
-    const searchParams = new URLSearchParams(queryParams);
+      const searchParams = new URLSearchParams(queryParams);
 
-    navigate({
-      pathname: "/employee",
-      search: `${searchParams}`,
-    });
-  }, 250);
+      navigate({
+        pathname: "/employee",
+        search: `${searchParams}`,
+      });
+    },
+    250
+  );
 
   const handleDeleteFieldTable = async (selectedTables: number[]) => {
     await dispatch(deleteFieldTableEmployee(selectedTables));
@@ -85,13 +93,16 @@ export function EmployeePage() {
         </h1>
         <SearchEmployee
           search={search}
+          // currentPage={page}
           onSearchEmployee={handleSearchEmployee}
         />
       </div>
       <div className="pt-[10px] px-[10px] rounded-xl shadow-md bg-bgrGray2">
         <EmployeeList
           onDeleteFieldTable={handleDeleteFieldTable}
+          onChangePage={handleSearchEmployee}
           dataEmployee={dataTables}
+          currentPage={Number(page)}
         />
       </div>
     </div>

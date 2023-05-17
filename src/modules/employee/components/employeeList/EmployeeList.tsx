@@ -6,14 +6,15 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Pagination,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -25,6 +26,8 @@ import { IDataEmployeeParams } from "../../../../types/employee";
 interface IEmployeeListProps {
   dataEmployee: IDataEmployeeParams;
   onDeleteFieldTable: (listId: number[]) => void;
+  onChangePage: (keyword: string | "", page: number) => void;
+  currentPage: number;
 }
 
 interface Column {
@@ -89,21 +92,14 @@ const columns: readonly Column[] = [
 export function EmployeeList({
   dataEmployee,
   onDeleteFieldTable,
+  onChangePage,
+  currentPage,
 }: IEmployeeListProps) {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [open, setOpen] = useState(false);
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+    onChangePage("", newPage);
   };
 
   const handleRowSelect = (id: number) => {
@@ -126,8 +122,8 @@ export function EmployeeList({
 
   const handleDeleteSelected = () => {
     onDeleteFieldTable(selectedRows);
-    setOpen(false);
 
+    setOpen(false);
     setTimeout(() => {
       setSelectedRows([]);
     }, 500);
@@ -140,8 +136,6 @@ export function EmployeeList({
   const handleClose = () => {
     setOpen(false);
   };
-
-  console.log(selectedRows);
 
   return (
     <div>
@@ -221,70 +215,68 @@ export function EmployeeList({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {dataEmployee?.data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.id}
-                        selected={isRowSelected(row.id)}
-                        onClick={() => handleRowSelect(row.id)}
-                        className={`row-start-select  ${
-                          isRowSelected(row.id) ? "row-selected" : ""
-                        } `}
-                        // onDoubleClick={() => {
-                        //   console.log(row.id);
-                        //   navigate(`/employee/create-or-update/${row.id}`);
-                        // }}
-                      >
-                        <TableCell align="center">
-                          <Checkbox
-                            color="primary"
-                            onChange={() => handleRowSelect(row.id)}
-                            checked={selectedRows.includes(row.id)}
-                            inputProps={{
-                              "aria-label": "select all desserts",
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell>{row.staff_id}</TableCell>
-                        <TableCell>{row.name}</TableCell>
-                        <TableCell>
-                          {row.gender === 1 ? "Female" : "Male"}
-                        </TableCell>
-                        <TableCell>{row.card_number}</TableCell>
-                        <TableCell>{row.bank_account_no}</TableCell>
-                        <TableCell>{row.family_card_number}</TableCell>
-                        <TableCell>{row.marriage_code}</TableCell>
-                        <TableCell>{row.mother_name}</TableCell>
-                        <TableCell>{row.pob}</TableCell>
-                        <TableCell>{row.dob}</TableCell>
-                        <TableCell>{row.home_address_1}</TableCell>
-                        <TableCell>{row.nc_id}</TableCell>
-                        <TableCell>{row.contract_start_date}</TableCell>
-                        <TableCell>{row.contract_start_date}</TableCell>
-                        <TableCell>{row.card_number}</TableCell>
-                        <TableCell>{row.card_number}</TableCell>
-                        <TableCell>{row.department_name}</TableCell>
-                        <TableCell>
-                          {row.department_id === 1 ? "Permanent" : ""}
-                        </TableCell>
-                        <TableCell>{row.audit_salary}</TableCell>
-                        <TableCell>{row.position_name}</TableCell>
-                        <TableCell>
-                          {row.attendance_allowance_paid === 1 ? "Yes" : "No"}
-                        </TableCell>
-                        <TableCell>
-                          {row.attendance_allowance_paid === 1 ? "Yes" : "No"}
-                        </TableCell>
-                        <TableCell>{row.health_insurance}</TableCell>
-                        <TableCell>{row.grade_name}</TableCell>
-                      </TableRow>
-                    );
-                  })}
+                {dataEmployee?.data.map((row) => {
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isRowSelected(row.id)}
+                      onClick={() => handleRowSelect(row.id)}
+                      className={`row-start-select  ${
+                        isRowSelected(row.id) ? "row-selected" : ""
+                      } `}
+                      // onDoubleClick={() => {
+                      //   console.log(row.id);
+                      //   navigate(`/employee/create-or-update/${row.id}`);
+                      // }}
+                    >
+                      <TableCell align="center">
+                        <Checkbox
+                          color="primary"
+                          onChange={() => handleRowSelect(row.id)}
+                          checked={selectedRows.includes(row.id)}
+                          inputProps={{
+                            "aria-label": "select all desserts",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>{row.staff_id}</TableCell>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>
+                        {row.gender === 1 ? "Female" : "Male"}
+                      </TableCell>
+                      <TableCell>{row.card_number}</TableCell>
+                      <TableCell>{row.bank_account_no}</TableCell>
+                      <TableCell>{row.family_card_number}</TableCell>
+                      <TableCell>{row.marriage_code}</TableCell>
+                      <TableCell>{row.mother_name}</TableCell>
+                      <TableCell>{row.pob}</TableCell>
+                      <TableCell>{row.dob}</TableCell>
+                      <TableCell>{row.home_address_1}</TableCell>
+                      <TableCell>{row.nc_id}</TableCell>
+                      <TableCell>{row.contract_start_date}</TableCell>
+                      <TableCell>{row.contract_start_date}</TableCell>
+                      <TableCell>{row.card_number}</TableCell>
+                      <TableCell>{row.card_number}</TableCell>
+                      <TableCell>{row.department_name}</TableCell>
+                      <TableCell>
+                        {row.department_id === 1 ? "Permanent" : ""}
+                      </TableCell>
+                      <TableCell>{row.audit_salary}</TableCell>
+                      <TableCell>{row.position_name}</TableCell>
+                      <TableCell>
+                        {row.attendance_allowance_paid === 1 ? "Yes" : "No"}
+                      </TableCell>
+                      <TableCell>
+                        {row.attendance_allowance_paid === 1 ? "Yes" : "No"}
+                      </TableCell>
+                      <TableCell>{row.health_insurance}</TableCell>
+                      <TableCell>{row.grade_name}</TableCell>
+                    </TableRow>
+                  );
+                })}
 
                 {dataEmployee?.data.length === 0 && (
                   <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] ">
@@ -451,15 +443,22 @@ export function EmployeeList({
             </Table>
           </TableContainer>
         </div>
-        <TablePagination
-          rowsPerPageOptions={[10, 20, 100]}
-          component="div"
-          count={dataEmployee.data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <div className="flex items-center gap-5 py-4">
+          <Pagination
+            page={currentPage}
+            count={dataEmployee.last_page}
+            onChange={handleChangePage}
+            showFirstButton
+            showLastButton
+            shape="rounded"
+          />
+
+          {dataEmployee && (
+            <Typography>
+              {dataEmployee.from} - {dataEmployee.to} of {dataEmployee.total}
+            </Typography>
+          )}
+        </div>
       </Paper>
       <Dialog
         open={open}

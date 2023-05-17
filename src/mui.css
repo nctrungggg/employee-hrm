@@ -166,3 +166,21 @@ th {
 .css-ypiqx9-MuiDialogContent-root {
   padding: 0 24px !important;
 }
+
+.css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop {
+  background-color: unset !important;
+}
+
+/* pagination employee */
+.css-10w330c-MuiButtonBase-root-MuiPaginationItem-root {
+  font-family: inherit !important;
+  height: 35px !important;
+  min-width: 48px !important;
+  background: rgb(241, 243, 245) !important;
+  color: rgb(104, 112, 118) !important;
+}
+.css-10w330c-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
+  background: rgb(230, 232, 235) !important;
+  color: rgb(17, 24, 28) !important;
+  font-weight: 600 !important`;
+}

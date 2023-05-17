@@ -14,6 +14,11 @@ const authApi = {
     }
   },
 
+  logout() {
+    const url = "/logout";
+    return axiosClient.post(url);
+  },
+
   getCompany() {
     const url = "/company";
     return axiosClient.get(url);

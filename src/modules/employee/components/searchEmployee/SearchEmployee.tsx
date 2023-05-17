@@ -2,8 +2,9 @@ import { useState } from "react";
 import searchIcon from "../../../../assets/search.svg";
 
 export interface ISearchEmployeeProps {
-  onSearchEmployee: (value: string) => void;
+  onSearchEmployee: (keyword: string) => void;
   search: string | null;
+  // currentPage:
 }
 
 export function SearchEmployee({
