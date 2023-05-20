@@ -165,7 +165,7 @@ export function SignInForm({
           <button
             disabled={loading}
             type="submit"
-            className="cursor-pointer mt-[26px]  px-6 py-3 bg-bgrBlue rounded-md w-full h-12 block m-auto text-textGray"
+            className="cursor-pointer mt-[26px] px-6 py-3 bg-bgrBlue rounded-md w-full h-12 block m-auto text-textGray"
           >
             {loading ? (
               <div>

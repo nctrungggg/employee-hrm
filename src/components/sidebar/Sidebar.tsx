@@ -31,12 +31,12 @@ const Sidebar = () => {
                 >
                   <img
                     src={link.icon}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover "
                     alt="navbar-icon"
                   />
                 </div>
                 <p className=" text-16 font-normal text-textPrimary">
-                  {link.name}
+                  {link.name} 
                 </p>
               </ListItemButton>
             </NavLink>

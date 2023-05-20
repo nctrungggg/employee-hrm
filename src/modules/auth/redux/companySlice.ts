@@ -10,7 +10,6 @@ export const getCompany = createAsyncThunk("auth/company", async () => {
   const {
     data: { data: company },
   } = await companyApi.getCompany();
-  console.log(company);
 
   return company;
 });

@@ -480,6 +480,10 @@ body {
 .active-link {
   @apply flex items-center gap-[10px] rounded-lg mb-[10px] bg-bgrGray hover:bg-bgrHoverActive transition-all;
 }
+.active-link > div > div {
+  background-color: #fff;
+}
+
 .normal-link {
   @apply flex items-center gap-[10px] rounded-lg transition-all hover:bg-bgrHover mb-2;
 }
@@ -512,3 +516,7 @@ input[type="checkbox"]:checked {
 .icon-checked {
   color: white;
 } */
+
+.relative {
+  position: relative;
+}

@@ -4,6 +4,7 @@ import { AuthPage } from "../pages/authPage/AuthPage";
 import { ForgotPasswordPage } from "../pages/authPage/components/forgotPasswordPage/ForgotPasswordPage";
 import { SignInPage } from "../pages/authPage/components/signInPage/SignInPage";
 import { EmployeePage } from "../pages/employeePage/EmployeePage";
+import { PrivateRoutes } from "../utils/PrivateRoutes";
 
 export const Router = () => {
   return (
@@ -15,7 +16,10 @@ export const Router = () => {
           element={<ForgotPasswordPage />}
         ></Route>
       </Route>
-      <Route path={ROUTES.employee} element={<EmployeePage />}></Route>
+
+      <Route element={<PrivateRoutes />}>
+        <Route path={ROUTES.employee} element={<EmployeePage />}></Route>
+      </Route>
     </Routes>
   );
 };

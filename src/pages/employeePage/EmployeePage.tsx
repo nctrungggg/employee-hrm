@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { unwrapResult } from "@reduxjs/toolkit";
-import Cookies from "js-cookie";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
-import { ROUTES } from "../../configs/routes";
-import { ACCESS_TOKEN_KEY } from "../../constants/constants";
 import { EmployeeList } from "../../modules/employee/components/employeeList/EmployeeList";
 import { SearchEmployee } from "../../modules/employee/components/searchEmployee/SearchEmployee";
 import {
@@ -18,14 +15,13 @@ import { IDataEmployeeParams } from "../../types/employee";
 
 export function EmployeePage() {
   const dispatch = useDispatch<AppDispatch>();
-  const authToken = Cookies.get(ACCESS_TOKEN_KEY);
   const navigate = useNavigate();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const search = searchParams.get("search");
   const page = searchParams.get("page");
-  console.log(page);
+  const [loading, setLoading] = useState(false);
 
   const dataEmployee = useSelector(
     (state: RootState) => state.employee.dataEmployee
@@ -51,39 +47,68 @@ export function EmployeePage() {
 
   useEffect(() => {
     (async () => {
-      getDataEmployeeList(search, page);
+      setLoading(true);
+
+      await getDataEmployeeList(search, page);
+      setLoading(false);
     })();
   }, [search, page, getDataEmployeeList]);
 
+  const searchParamsString = (queryParams: {
+    search?: string;
+    page: string;
+  }) => {
+    const searchParams = new URLSearchParams(queryParams);
+    navigate({
+      pathname: "/employee",
+      search: `${searchParams}`,
+    });
+  };
+
   const handleSearchEmployee = debounce(
-    (keyword: string | "", page?: number) => {
+    (keyword: string | null, page?: number) => {
       const queryParams: { search?: string; page: string } = keyword
         ? {
             search: keyword,
-            page: "1",
+            page: page ? String(page) : "1",
           }
         : {
             page: String(page ? page : dataEmployee.current_page),
           };
 
-      const searchParams = new URLSearchParams(queryParams);
-
-      navigate({
-        pathname: "/employee",
-        search: `${searchParams}`,
-      });
+      searchParamsString(queryParams);
     },
     250
   );
 
   const handleDeleteFieldTable = async (selectedTables: number[]) => {
-    await dispatch(deleteFieldTableEmployee(selectedTables));
-    getDataEmployeeList(search, page);
-  };
+    console.log(selectedTables);
 
-  if (!authToken) {
-    return <Navigate to={`${ROUTES.auth}/${ROUTES.signIn}`} />;
-  }
+    setLoading(true);
+
+    const updatedPage =
+      Number(page) === dataTables.last_page &&
+      selectedTables.length >= dataTables.data.length
+        ? Number(page) -
+            Math.floor(selectedTables.length / dataEmployee.per_page) || 1
+        : page;
+
+    await dispatch(deleteFieldTableEmployee(selectedTables));
+    await getDataEmployeeList(search, String(updatedPage));
+
+    const queryParams = search
+      ? {
+          search: search,
+          page: String(updatedPage),
+        }
+      : {
+          page: String(updatedPage),
+        };
+
+    searchParamsString(queryParams);
+
+    setLoading(false);
+  };
 
   return (
     <div className="pt-[92px] pl-[376px]">
@@ -93,7 +118,6 @@ export function EmployeePage() {
         </h1>
         <SearchEmployee
           search={search}
-          // currentPage={page}
           onSearchEmployee={handleSearchEmployee}
         />
       </div>
@@ -103,6 +127,8 @@ export function EmployeePage() {
           onChangePage={handleSearchEmployee}
           dataEmployee={dataTables}
           currentPage={Number(page)}
+          loading={loading}
+          search={search}
         />
       </div>
     </div>

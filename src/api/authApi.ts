@@ -19,10 +19,10 @@ const authApi = {
     return axiosClient.post(url);
   },
 
-  getCompany() {
-    const url = "/company";
+  getInfoUser() {
+    const url = "/user/detail";
     return axiosClient.get(url);
-  },
+  }
 };
 
 export default authApi;

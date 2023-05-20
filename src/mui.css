@@ -182,5 +182,20 @@ th {
 .css-10w330c-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
   background: rgb(230, 232, 235) !important;
   color: rgb(17, 24, 28) !important;
-  font-weight: 600 !important`;
+  font-weight: 600 !important;
 }
+
+.css-10w330c-MuiButtonBase-root-MuiPaginationItem-root :nth-child(1),
+.ss-10w330c-MuiButtonBase-root-MuiPaginationItem-root :nth-child(2) {
+  background: unset !important;
+}
+.css-ahj2mt-MuiTypography-root {
+  color: #687076 !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+}
+/* 
+.custom-last-button > ul > li:nth-last-child(1) button,
+.custom-last-button > ul > li:nth-last-child(2) button {
+  background-color: #fff !important;
+} */

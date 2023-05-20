@@ -13,6 +13,6 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <Provider store={store}>
       <App />
     </Provider>
-    <ToastContainer></ToastContainer>
+    <ToastContainer hideProgressBar autoClose={1000}></ToastContainer>
   </BrowserRouter>
 );

@@ -4,8 +4,10 @@ import { toast } from "react-toastify";
 import authApi from "../../../api/authApi";
 import { ACCESS_TOKEN_KEY } from "../../../constants/constants";
 import { ILoginParams } from "../../../types/auth";
+import { IUserInfoParams } from "../../../types/userInfo";
 interface initialState {
   authToken: string;
+  userInFo: IUserInfoParams;
 }
 
 export const signIn = createAsyncThunk(
@@ -41,8 +43,44 @@ export const forgotPassword = createAsyncThunk(
   }
 );
 
+export const getUserInfo = createAsyncThunk("auth/user-info", async () => {
+  const {
+    data: { data },
+  } = await authApi.getInfoUser();
+
+  return data;
+});
+
 const initialState: initialState = {
   authToken: Cookies.get(ACCESS_TOKEN_KEY) || "",
+  userInFo: {
+    company: {
+      address: "",
+      created_at: "",
+      full_name: "",
+      id: 0,
+      name: "",
+      prefix: "",
+      tel_no: "",
+      updated_at: null,
+    },
+    id: 0,
+    username: "",
+    email: "",
+    role_id: 0,
+    employee_id: null,
+    department_id: null,
+    company_id: 0,
+    register_token: "",
+    email_verified_at: null,
+    is_active: "",
+    created_at: "",
+    updated_at: "",
+    deleted_at: "",
+    department_name: "",
+    position_name: "",
+    permissions: [],
+  },
 };
 
 const authSlice = createSlice({
@@ -59,6 +97,10 @@ const authSlice = createSlice({
   extraReducers: {
     [signIn.fulfilled.toString()]: (state, action) => {
       state.authToken = action.payload;
+    },
+
+    [getUserInfo.fulfilled.toString()]: (state, action) => {
+      state.userInFo = action.payload;
     },
   },
 });
