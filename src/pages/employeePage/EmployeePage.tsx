@@ -3,7 +3,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import { EmployeeList } from "../../modules/employee/components/employeeList/EmployeeList";
 import { SearchEmployee } from "../../modules/employee/components/searchEmployee/SearchEmployee";

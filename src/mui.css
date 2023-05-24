@@ -199,3 +199,6 @@ th {
 .custom-last-button > ul > li:nth-last-child(2) button {
   background-color: #fff !important;
 } */
+.MuiBox-root .css-19kzrtu {
+  padding: 0 !important;
+}

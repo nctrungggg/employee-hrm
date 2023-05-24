@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 
 import { ListItemButton } from "@mui/material";
-import { navBarLinks } from "../../contexts/navBarLink";
+import { navBarLinks } from "../../contexts/dataLink";
 
 const Sidebar = () => {
   return (

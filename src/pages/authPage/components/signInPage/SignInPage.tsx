@@ -39,7 +39,7 @@ export function SignInPage() {
   };
 
   useEffect(() => {
-    if (companyList.length) return;
+    // if (companyList.length) return;
 
     (async () => {
       const resultAction = await dispatch(getCompany());

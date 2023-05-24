@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
@@ -20,7 +21,6 @@ export const signIn = createAsyncThunk(
 
       return data.data.token;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.response.data.message);
     }
@@ -34,7 +34,6 @@ export const forgotPassword = createAsyncThunk(
       const data = await authApi.fortgotPassword(payload);
       toast.success(data.data.message);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);
 

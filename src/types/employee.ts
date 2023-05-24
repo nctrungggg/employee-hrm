@@ -81,3 +81,34 @@ export interface IContractParams {
   updated_at: string;
   deleted_at: string | null;
 }
+
+// form employee Information
+export interface IFormEmployeeInformationParams {
+  nik: string;
+  name: string;
+  gender: string | number;
+  mother_name: string;
+  dob: string;
+  pob: string;
+  ktp_no: string;
+  nc_id: string;
+  home_address_1: string;
+  home_address_2: string;
+  mobile_no: string;
+  tel_no: string;
+  marriage_id: string;
+  card_number: string;
+  bank_account_no: string;
+  bank_name: string;
+  family_card_number: string;
+  safety_insurance_no: string;
+  health_insurance_no: string;
+}
+export interface IMarriageStatusParams {
+  id: number;
+  name: string;
+  code: string;
+  company_id: number;
+  created_at: string;
+  updated_at: string | null;
+}

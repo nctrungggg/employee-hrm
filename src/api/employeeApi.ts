@@ -1,10 +1,14 @@
+import { IEmployeeParams } from "../types/employee";
 import axiosClient from "./axiosClient";
 interface EmployeeListParams {
   keywordSearch: string | null;
   currentPage: string | null;
 }
 const employeeApi = {
-  getEmployList({ keywordSearch = "", currentPage = "" }: EmployeeListParams) {
+  getEmployListApi({
+    keywordSearch = "",
+    currentPage = "",
+  }: EmployeeListParams) {
     const url = `employee`;
     return axiosClient.get(url, {
       params: {
@@ -14,13 +18,23 @@ const employeeApi = {
     });
   },
 
-  deleteEmployee(record_ids: number[]) {
+  addEmployeeApi(formData: IEmployeeParams) {
+    const url = `employee`;
+    return axiosClient.post(url, formData);
+  },
+
+  deleteEmployeeApi(record_ids: number[]) {
     const url = `employee/multiple-delete`;
     return axiosClient.delete(url, {
       data: {
         record_ids: record_ids,
       },
     });
+  },
+
+  getMarriageStatusApi() {
+    const url = "/marriage";
+    return axiosClient.get(url);
   },
 };
 

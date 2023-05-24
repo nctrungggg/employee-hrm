@@ -5,6 +5,7 @@ import { ForgotPasswordPage } from "../pages/authPage/components/forgotPasswordP
 import { SignInPage } from "../pages/authPage/components/signInPage/SignInPage";
 import { EmployeePage } from "../pages/employeePage/EmployeePage";
 import { PrivateRoutes } from "../utils/PrivateRoutes";
+import { CreateEmployeePage } from "../pages/employeePage/createEmployeePage/CreateEmployeePage";
 
 export const Router = () => {
   return (
@@ -19,6 +20,10 @@ export const Router = () => {
 
       <Route element={<PrivateRoutes />}>
         <Route path={ROUTES.employee} element={<EmployeePage />}></Route>
+        <Route
+          path={`${ROUTES.employee}/${ROUTES.createOrUpdate}`}
+          element={<CreateEmployeePage />}
+        ></Route>
       </Route>
     </Routes>
   );

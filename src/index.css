@@ -520,3 +520,263 @@ input[type="checkbox"]:checked {
 .relative {
   position: relative;
 }
+
+/* css input create employee */
+.input-type {
+  height: 46px;
+  width: 290px;
+  padding: 8px 12px;
+  font-size: 16px;
+  font-weight: 400;
+  color: rgb(17, 24, 28);
+  box-sizing: border-box;
+  cursor: text;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  position: relative;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  border-radius: 6px;
+  background-color: rgb(241, 243, 245);
+  overflow: hidden;
+  border: 1px solid #f1f3f5;
+}
+
+.input-danger {
+  background-color: #ffefef !important;
+  border: 1px solid rgb(243, 174, 175);
+}
+
+.date-container {
+  width: 260px;
+  background-color: rgb(241, 243, 245);
+}
+
+.input-type-date {
+  padding: 8px 50px;
+  width: 290px;
+  height: 46px;
+  font-size: 16px;
+  line-height: 1.4375em;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+  color: rgb(17, 24, 28);
+  box-sizing: border-box;
+  cursor: text;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  position: relative;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  border-radius: 6px;
+  background-color: rgb(241, 243, 245);
+  overflow: hidden;
+}
+
+.select-type {
+  width: 290px;
+  height: 46px;
+  font-size: 16px;
+  margin-top: 6px;
+  padding: 2px 0px;
+  line-height: 1.4375em;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+  color: rgb(105, 105, 105);
+  box-sizing: border-box;
+  cursor: text;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  position: relative;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  border-radius: 6px;
+  background-color: rgb(241, 243, 245);
+  overflow: hidden;
+}
+
+.select-type-2 {
+  width: 260px;
+}
+
+.css-idofj3-MuiInputBase-root {
+  font-size: 1.4rem !important;
+  font-family: "SVN-Sofia Pro Regular", "Public Sans", sans-serif !important;
+}
+
+/* css configuration datePicker */
+.custom-datepicker {
+  --datepicker-bg: #fff;
+  --datepicker-color: #333;
+}
+
+.react-datepicker__header {
+  text-align: center !important;
+  background-color: transparent !important;
+  border-bottom: 1px solid transparent !important;
+  border-top-left-radius: 0.3rem !important;
+  padding: 16px 0 !important;
+  position: relative !important;
+}
+
+.react-datepicker__navigation {
+  margin-top: 16px !important;
+}
+
+.react-datepicker {
+  background-color: #fff !important;
+  border: 1px solid #aeaeae !important;
+  border-radius: 0.3rem !important;
+  color: #000 !important;
+  display: inline-block !important;
+  font-family: "SVN-Sofia Pro Regular", "Public Sans", sans-serif;
+  font-size: 8px !important;
+  position: relative !important;
+}
+
+.react-datepicker__triangle {
+  display: none !important;
+}
+
+.react-datepicker__navigation {
+  height: 26px !important;
+  width: 26px !important;
+}
+
+.react-datepicker__month {
+  margin: 0.25rem !important;
+  text-align: center !important;
+  width: 308px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: space-between !important;
+}
+
+.react-datepicker__week {
+  width: 100% !important;
+}
+
+.react-datepicker__day-names {
+  margin-top: 4px !important;
+  margin-bottom: -10px !important;
+}
+
+.react-datepicker__day-names .react-datepicker__day-name {
+  color: rgb(48, 164, 108) !important;
+  background-color: rgb(233, 249, 238) !important ;
+  border-radius: 6px !important;
+}
+
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  color: #000 !important;
+  display: inline-block !important;
+  text-align: center !important;
+  margin: 0.25rem !important;
+  font-size: 12px !important;
+  border-radius: 50% !important;
+  width: 35px !important;
+  line-height: 35px !important;
+  font-family: "SVN-Sofia Pro Regular", "Public Sans", sans-serif;
+}
+
+.react-datepicker__day:hover,
+.react-datepicker__month-text:hover,
+.react-datepicker__quarter-text:hover,
+.react-datepicker__year-text:hover {
+  border-radius: 50% !important;
+  background-color: #f0f0f0 !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  margin-top: 0 !important;
+  color: #000 !important;
+  font-weight: 500 !important;
+  font-size: 16px !important;
+  font-family: "SVN-Sofia Pro Regular", "Public Sans", sans-serif;
+}
+
+.react-datepicker__day--selected {
+  background-color: #0091ff !important;
+  color: white !important;
+}
+
+/* close Icon */
+.react-datepicker__close-icon {
+  margin-right: 30px !important;
+}
+
+.react-datepicker__close-icon::after {
+  cursor: pointer !important;
+  background-color: transparent !important;
+  color: #a0a0a0 !important;
+  border-radius: 50% !important;
+  height: 24px !important;
+  width: 24px !important;
+  padding: 2px !important;
+  font-size: 19px !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  display: table-cell !important;
+  vertical-align: middle !important;
+  content: "×" !important;
+}
+
+.isRequired {
+  color: #e5484d;
+  font-size: 1.5rem;
+}
+
+/* tab button create employee */
+.tab-button {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  text-transform: capitalize !important;
+  font-family: "SVN-Sofia Pro Regular", "Public Sans", sans-serif !important;
+  padding: 3px 8px !important;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: rgb(0, 145, 255) !important;
+  box-shadow: none !important;
+  border-radius: 6px !important;
+  background-color: rgb(237, 246, 255) !important;
+  min-width: 180px !important;
+  min-height: 43px !important ;
+  margin-right: 4px !important;
+}
+
+.tab-button:hover {
+  background-color: rgba(0, 145, 255, 0.08) !important;
+}
+.tab-button.Mui-selected {
+  color: white !important;
+  background-color: rgb(0, 145, 255) !important;
+}
+
+.tab-button-error.Mui-selected {
+  color: white !important;
+  background-color: rgb(229, 72, 77) !important;
+}
+
+.tab-button-error:hover {
+  background-color: rgb(220, 61, 67) !important;
+}
+
+.MuiTabs-indicator .css-1aquho2-MuiTabs-indicator {
+  display: none !important;
+}
+
+.css-1aquho2-MuiTabs-indicator {
+  display: none !important;
+}
+
+.MuiBox-root .css-1gsv261 {
+  border-bottom: 1px solid !important;
+  border-color: transparent !important;
+}

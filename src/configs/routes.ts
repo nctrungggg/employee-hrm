@@ -4,5 +4,6 @@ export const ROUTES = {
   fortgotPassword: "forgot-password",
   pageNotFound: "*",
   auth: "/auth",
-  employee: "/employee"
+  employee: "/employee",
+  createOrUpdate: "create-or-update",
 };

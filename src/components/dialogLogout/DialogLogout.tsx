@@ -1,4 +1,3 @@
-import { Avatar } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -6,9 +5,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../modules/auth/redux/authSlice";
-import { ROUTES } from "../../configs/routes";
 import authApi from "../../api/authApi";
+import { ROUTES } from "../../configs/routes";
+import { logout } from "../../modules/auth/redux/authSlice";
 
 export interface IDialogLogoutProps {
   title: string;

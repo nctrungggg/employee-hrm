@@ -17,12 +17,13 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import addIcon from "../../../../assets/add.svg";
 import noData from "../../../../assets/noData.svg";
 import trashIcon from "../../../../assets/trash.svg";
 import trashDisableIcon from "../../../../assets/trashDisable.svg";
 import { IDataEmployeeParams } from "../../../../types/employee";
+import { ROUTES } from "../../../../configs/routes";
 interface IEmployeeListProps {
   dataEmployee: IDataEmployeeParams;
   onDeleteFieldTable: (listId: number[]) => void;
@@ -101,6 +102,7 @@ export function EmployeeList({
 }: IEmployeeListProps) {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleChangePage = (event: unknown, newPage: number) => {
     onChangePage(search, newPage);
@@ -184,15 +186,15 @@ export function EmployeeList({
     <div>
       <div className="flex justify-end border-gray-200 pb-3">
         <div className="flex items-center  gap-1 rounded-md">
-          <div className="w-[90px] h-[35px] bg-bgrBlue2 rounded-md flex items-center justify-center gap-[6px] cursor-pointer hover:bg-[#0091ff14]">
-            <img src={addIcon} alt="add-icon" />
-            <Link
-              className="text-bgrBlue text-14 font-normal"
-              to="/employee/create-or-update"
-            >
+          <Link
+            className="text-bgrBlue text-14 font-normal"
+            to={`${ROUTES.employee}/${ROUTES.createOrUpdate}`}
+          >
+            <div className="w-[90px] h-[35px] bg-bgrBlue2 rounded-md flex items-center justify-center gap-[6px] cursor-pointer hover:bg-[#0091ff14]">
+              <img src={addIcon} alt="add-icon" />
               Add
-            </Link>
-          </div>
+            </div>
+          </Link>
           <button
             disabled={selectedRows.length > 0 ? false : true}
             className={`w-[90px]  h-[35px] flex items-center justify-center gap-[6px] rounded-md ${
@@ -268,7 +270,6 @@ export function EmployeeList({
                             "aria-label": "select all desserts",
                           }}
                         />
-                        
                       </div>
                     </TableCell>
                     {columns.map((column) => (
@@ -295,10 +296,12 @@ export function EmployeeList({
                         className={`row-start-select  ${
                           isRowSelected(row.id) ? "row-selected" : ""
                         } `}
-                        // onDoubleClick={() => {
-                        //   console.log(row.id);
-                        //   navigate(`/employee/create-or-update/${row.id}`);
-                        // }}
+                        onDoubleClick={() => {
+                          console.log(row.id);
+                          navigate(
+                            `${ROUTES.employee}/${ROUTES.createOrUpdate}/${row.id}`
+                          );
+                        }}
                       >
                         <TableCell align="center">
                           <Checkbox

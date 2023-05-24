@@ -1,16 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import employeeApi from "../../../api/employeeApi";
-import { IDataEmployeeParams } from "../../../types/employee";
 import { toast } from "react-toastify";
+import employeeApi from "../../../api/employeeApi";
+import {
+  IDataEmployeeParams,
+  IMarriageStatusParams,
+} from "../../../types/employee";
 
 interface initialState {
   dataEmployee: IDataEmployeeParams;
   loadingEmployee: boolean;
+  marriageStatus: IMarriageStatusParams[];
 }
 
 interface EmployeeListParams {
-  keywordSearch?:  string | null;
-  currentPage?:  string | null;
+  keywordSearch?: string | null;
+  currentPage?: string | null;
 }
 
 export const getEmployeeList = createAsyncThunk(
@@ -18,7 +23,7 @@ export const getEmployeeList = createAsyncThunk(
   async ({ keywordSearch = "", currentPage = "1" }: EmployeeListParams) => {
     const {
       data: { data },
-    } = await employeeApi.getEmployList({ keywordSearch, currentPage });
+    } = await employeeApi.getEmployListApi({ keywordSearch, currentPage });
 
     return data;
   }
@@ -29,12 +34,20 @@ export const deleteFieldTableEmployee = createAsyncThunk(
   async (record_ids: number[]) => {
     const {
       data: { message },
-    } = await employeeApi.deleteEmployee(record_ids);
+    } = await employeeApi.deleteEmployeeApi(record_ids);
 
     toast.success(message);
     return;
   }
 );
+
+export const getMarriageStatus = createAsyncThunk("auth/company", async () => {
+  const {
+    data: { data: company },
+  } = await employeeApi.getMarriageStatusApi();
+
+  return company;
+});
 
 const initialState: initialState = {
   dataEmployee: {
@@ -58,6 +71,7 @@ const initialState: initialState = {
   },
 
   loadingEmployee: false,
+  marriageStatus: [],
 };
 
 const authSlice = createSlice({
@@ -69,6 +83,10 @@ const authSlice = createSlice({
   extraReducers: {
     [getEmployeeList.fulfilled.toString()]: (state, action) => {
       state.dataEmployee = action.payload;
+    },
+
+    [getMarriageStatus.fulfilled.toString()]: (state, action) => {
+      state.marriageStatus = action.payload;
     },
   },
 });
