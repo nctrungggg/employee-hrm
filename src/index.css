@@ -554,7 +554,7 @@ input[type="checkbox"]:checked {
 
 .input-type-date {
   padding: 8px 50px;
-  width: 290px;
+  /* width: 290px; */
   height: 46px;
   font-size: 16px;
   line-height: 1.4375em;
@@ -594,10 +594,6 @@ input[type="checkbox"]:checked {
   border-radius: 6px;
   background-color: rgb(241, 243, 245);
   overflow: hidden;
-}
-
-.select-type-2 {
-  width: 260px;
 }
 
 .css-idofj3-MuiInputBase-root {
@@ -754,9 +750,18 @@ input[type="checkbox"]:checked {
 .tab-button:hover {
   background-color: rgba(0, 145, 255, 0.08) !important;
 }
+.tab-button.tab-button-error:hover {
+  background-color: rgba(229, 72, 77, 0.08) !important;
+}
+
 .tab-button.Mui-selected {
   color: white !important;
   background-color: rgb(0, 145, 255) !important;
+}
+
+.tab-button-error {
+  color: rgb(229, 72, 77) !important;
+  background-color: rgba(229, 72, 77, 0.08) !important;
 }
 
 .tab-button-error.Mui-selected {
@@ -764,7 +769,7 @@ input[type="checkbox"]:checked {
   background-color: rgb(229, 72, 77) !important;
 }
 
-.tab-button-error:hover {
+.tab-button-error.Mui-selected:hover {
   background-color: rgb(220, 61, 67) !important;
 }
 

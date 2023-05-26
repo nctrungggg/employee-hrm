@@ -9,17 +9,23 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import employeeApi from "../../../api/employeeApi";
-import { AppDispatch } from "../../../app/store";
-import { ContactInfomation } from "../../../modules/employee/components/createEmployee/contactInfomation/ContactInfomation";
+import { AppDispatch, RootState } from "../../../app/store";
+import { ROUTES } from "../../../configs/routes";
+import { ContractInfomation } from "../../../modules/employee/components/createEmployee/contractInfomation/ContractInfomation";
 import { EmployeeDetails } from "../../../modules/employee/components/createEmployee/employeeDetails/EmployeeDetails";
 import { EmployeeInfomation } from "../../../modules/employee/components/createEmployee/employeeInfomation/EmployeeInfomation";
 import { EmployeeOthers } from "../../../modules/employee/components/createEmployee/employeeOthers/EmployeeOthers";
 import { EmployeeSalary } from "../../../modules/employee/components/createEmployee/employeeSalary/EmployeeSalary";
 import {
-  IEmployeeParams,
+  changeValueEmployee,
+  resetValueEmployee,
+} from "../../../modules/employee/redux/employeeSlice";
+import {
+  IFormContractEmployeeParams,
   IFormEmployeeInformationParams,
 } from "../../../types/employee";
 
@@ -57,37 +63,50 @@ function a11yProps(index: number) {
 }
 
 export function CreateEmployeePage() {
+  const navigate = useNavigate();
+  const employee = useSelector((state: RootState) => state.employee.employee);
+  const { id } = useParams();
+
   const [valueTab, setValueTab] = useState(0);
-  const [date, setDate] = useState<string | null>("");
+  const [dob, setDob] = useState<string | null>(employee?.dob || "");
+  const [contractDate, setContractDate] = useState<string | null>(
+    employee.contract_start_date || ""
+  );
   const [isActiveAdd, setIsActiveAdd] = useState<boolean>(false);
-  const [isActiveAddContract, setIsActiveAddContract] =
-    useState<boolean>(false);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   // state employee Information form
   const [formEmployeeInfomation, setFormEmployeeInfomation] =
     useState<IFormEmployeeInformationParams>({
-      nik: "",
-      name: "",
-      gender: "",
-      mother_name: "",
-      dob: "",
-      pob: "",
-      ktp_no: "",
-      nc_id: "",
-      home_address_1: "",
-      home_address_2: "",
-      mobile_no: "",
-      tel_no: "",
-      marriage_id: "",
-      card_number: "",
-      bank_account_no: "",
-      bank_name: "",
-      family_card_number: "",
-      safety_insurance_no: "",
-      health_insurance_no: "",
+      nik: employee.staff_id,
+      name: employee.name,
+      gender: employee.gender,
+      mother_name: employee.mother_name,
+      dob: employee.dob,
+      pob: String(employee.pob),
+      ktp_no: employee.ktp_no,
+      nc_id: employee.nc_id,
+      home_address_1: employee.home_address_1,
+      home_address_2: String(employee.home_address_2),
+      mobile_no: String(employee.mobile_no),
+      tel_no: employee.tel_no,
+      marriage_id: String(employee.marriage_id),
+      card_number: String(employee.card_number),
+      bank_account_no: employee.bank_account_no,
+      bank_name: employee.bank_name,
+      family_card_number: employee.family_card_number,
+      safety_insurance_no: employee.safety_insurance_no,
+      health_insurance_no: employee.health_insurance_no,
     });
 
-  const { name, ktp_no, nc_id, gender } = formEmployeeInfomation;
+  // state contract information form
+  const [formContractEmployee, setFormContractEmployee] =
+    useState<IFormContractEmployeeParams>({
+      contract_start_date: employee.contract_start_date,
+      type: String(employee.type),
+      contract: [],
+    });
 
   const handleChangeTabs = (event: React.SyntheticEvent, newValue: number) => {
     setValueTab(newValue);
@@ -97,19 +116,74 @@ export function CreateEmployeePage() {
   const handleChangeFormEmployee = (
     e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
   ) => {
-    console.log(formEmployeeInfomation);
+    console.log(e);
 
     const value = e.target.value;
     setFormEmployeeInfomation((prevValues) => ({
       ...prevValues,
       [e.target.name]: value,
-      dob: date || "",
     }));
   };
 
+  const handleDateChangeDob = (dateString: string | null) => {
+    setFormEmployeeInfomation((prevValues) => ({
+      ...prevValues,
+      dob: dateString || "",
+    }));
+
+    setDob(dateString);
+  };
+
+  const handleDateChangeContracDate = (dateString: string | null) => {
+    setFormContractEmployee((prevValues) => ({
+      ...prevValues,
+      contract_start_date: dateString || "",
+    }));
+
+    setContractDate(dateString);
+  };
+
+  useEffect(() => {
+    const newData = Object.assign(
+      {},
+      formEmployeeInfomation,
+      formContractEmployee
+    );
+
+    dispatch(changeValueEmployee(newData));
+  }, [dispatch, formContractEmployee, formEmployeeInfomation]);
+
+  // handle Add contract information Submitted
+  const handleChangeFormContract = (
+    e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
+  ) => {
+    const value = e.target.value;
+    console.log(e.target);
+
+    setFormContractEmployee((prevValues) => ({
+      ...prevValues,
+      [e.target.name]: value,
+      contract_start_date: contractDate || "",
+    }));
+  };
+
+  const { name, ktp_no, nc_id, gender } = formEmployeeInfomation;
+
+  const { contract_start_date, type } = formContractEmployee;
+
+  console.log(name, ktp_no, nc_id, gender, contract_start_date, type);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkInvalidValueForm = () => {
-    if (name && ktp_no && nc_id && date && (gender === 0 || gender === 1)) {
+    if (
+      name &&
+      ktp_no &&
+      nc_id &&
+      dob &&
+      contract_start_date &&
+      type &&
+      (gender === 0 || gender === 1)
+    ) {
       setIsActiveAdd(true);
     } else {
       setIsActiveAdd(false);
@@ -118,64 +192,25 @@ export function CreateEmployeePage() {
 
   useEffect(() => {
     checkInvalidValueForm();
-  }, [name, ktp_no, nc_id, gender, date, checkInvalidValueForm]);
+  }, [
+    name,
+    ktp_no,
+    nc_id,
+    gender,
+    dob,
+    contract_start_date,
+    type,
+    checkInvalidValueForm,
+  ]);
 
   // handle add employee
   const handleAddEmployee = async () => {
-    const employeeData: IEmployeeParams = {
-      attendance_allowance_paid: 1,
-      audit_salary: 0,
-      bank_account_no: "",
-      bank_name: "",
-      basic_salary: 0,
-      card_number: "",
-      company_id: 1,
-      contract_start_date: "2023-05-01",
-      contracts: [],
-      created_at: "",
-      deleted_at: "",
-      department_id: 1,
-      department_name: "",
-      dob: "",
-      entitle_ot: 1,
-      family_card_number: "",
-      gender: 1,
-      grade_id: 1,
-      grade_name: "",
-      grade_prefix: "",
-      health_insurance: 0,
-      health_insurance_no: "",
-      home_address_1: "",
-      home_address_2: "",
-      id: 0,
-      ktp_no: "sadasd",
-      manager_id: 1,
-      manager_name: "",
-      marriage_code: "",
-      marriage_id: 1,
-      meal_allowance: 0,
-      meal_allowance_paid: 1,
-      minimum_salary_used: "",
-      mobile_no: "",
-      mother_name: "",
-      name: "sadsadsad",
-      nc_id: "ádasdas",
-      old_staff_id: 0,
-      operational_allowance_paid: 1,
-      pob: "",
-      position_id: 1,
-      position_name: "",
-      remark: "",
-      safety_insurance: 0,
-      safety_insurance_no: "",
-      shift: "",
-      staff_id: "",
-      tel_no: "",
-      type: "0",
-      updated_at: "",
-    };
-
-    const newData = Object.assign({}, employeeData, formEmployeeInfomation);
+    const newData = Object.assign(
+      {},
+      employee,
+      formEmployeeInfomation,
+      formContractEmployee
+    );
 
     try {
       const {
@@ -183,6 +218,13 @@ export function CreateEmployeePage() {
       } = await employeeApi.addEmployeeApi(newData);
 
       toast.success(message);
+
+      setTimeout(() => {
+        navigate(ROUTES.employee);
+      }, 250);
+
+      // reset data về rỗng
+      dispatch(resetValueEmployee());
     } catch (error: any) {
       toast.error(error.response.data.message);
     }
@@ -194,17 +236,25 @@ export function CreateEmployeePage() {
         <h1 className="text-36 font-medium text-textPrimary mb-10">
           Employee Management
         </h1>
-
-        <Button
-          disabled={isActiveAdd ? false : true}
-          className={` !capitalize !py-2 !px-6 !h-12 !font-normal !rounded-md ${
-            isActiveAdd && "!bg-bgrBlue"
-          }`}
-          variant="contained"
-          onClick={handleAddEmployee}
-        >
-          Add
-        </Button>
+        {id ? (
+          <Button
+            type="submit"
+            className="h-[48px] w-[140px] !capitalize !rounded-md !bg-bgrBlue !text-white"
+          >
+            Save Change
+          </Button>
+        ) : (
+          <Button
+            disabled={isActiveAdd ? false : true}
+            className={` !capitalize !py-2 !px-6 !h-12 !font-normal !rounded-md ${
+              isActiveAdd && "!bg-bgrBlue"
+            }`}
+            variant="contained"
+            onClick={handleAddEmployee}
+          >
+            Add
+          </Button>
+        )}
       </div>
 
       <Box sx={{ width: "100%" }}>
@@ -231,7 +281,15 @@ export function CreateEmployeePage() {
               {...a11yProps(0)}
             />
             <Tab
-              className="tab-button"
+              icon={
+                !isActiveAdd ? (
+                  <ErrorOutlineRoundedIcon style={{ fontSize: 22 }} />
+                ) : (
+                  ""
+                )
+              }
+              iconPosition={"end"}
+              className={`tab-button ${!isActiveAdd && "tab-button-error"}`}
               component="button"
               label="Contract Information"
               {...a11yProps(1)}
@@ -270,13 +328,15 @@ export function CreateEmployeePage() {
               <EmployeeInfomation
                 FormEmployeeInformation={formEmployeeInfomation}
                 handleChangeFormEmployee={handleChangeFormEmployee}
-                handleDateChange={setDate}
+                // handleDateChange={setDob} =
+                handleDateChangeDob={handleDateChangeDob}
               />
             </TabPanel>
             <TabPanel value={valueTab} index={1}>
-              <ContactInfomation
-              // formContractEmployee={formContractEmployee}
-              // handleFormContractChange={handleFormContractChange}
+              <ContractInfomation
+                formContractEmployee={formContractEmployee}
+                handleChangeFormContract={handleChangeFormContract}
+                handleDateChangeContractDate={handleDateChangeContracDate}
               />
             </TabPanel>
             <TabPanel value={valueTab} index={2}>

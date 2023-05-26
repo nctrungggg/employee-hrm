@@ -17,13 +17,13 @@ export interface IEmployeeInfomationProps {
   handleChangeFormEmployee?: (
     event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent
   ) => void;
-  handleDateChange: (date: string | null) => void;
+  handleDateChangeDob: (date: string | null) => void;
 }
 
 export function EmployeeInfomation({
   FormEmployeeInformation,
   handleChangeFormEmployee,
-  handleDateChange,
+  handleDateChangeDob,
 }: IEmployeeInfomationProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { idEmployee } = useParams();
@@ -38,6 +38,8 @@ export function EmployeeInfomation({
       unwrapResult(resultAction);
     })();
   }, [dispatch]);
+
+  console.log("FormEmployeeInformation", FormEmployeeInformation);
 
   return (
     <div className="flex pb-3 gap-[50px] px-5">
@@ -79,8 +81,7 @@ export function EmployeeInfomation({
           type="date"
           value={FormEmployeeInformation.dob}
           name="dob"
-          onChange={handleChangeFormEmployee}
-          handleDateChangeProps={handleDateChange}
+          handleDateChangeDob={handleDateChangeDob}
           label="Date of birth"
           isRequired
         />

@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import React, { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -10,39 +10,48 @@ interface IInputDatePickerProps {
   label: string;
   isRequired?: boolean;
   name: string;
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleDateChangeDob?: (date: string | null) => void;
   value: string | number;
   type: string;
   isRp?: boolean;
   upload?: boolean;
-  handleDateChangeProps: (date: string | null) => void;
+  handleDateChangeContractDate?: (date: string | null) => void;
+  className: string;
 }
 
 const InputDatePicker = (props: IInputDatePickerProps) => {
   const {
     label,
     upload,
-    onChange,
-    handleDateChangeProps,
-    value,
     name,
-    isRp,
     isRequired,
     type,
+    value,
+    className,
+    handleDateChangeDob,
+    handleDateChangeContractDate,
   } = props;
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(
+    value ? new Date(value) : null
+  );
   const [isValue, setIsValue] = useState(true);
 
   const handleDateChange = (date: Date | null) => {
     const dateString = moment(date).format("YYYY/MM/DD");
-    console.log(dateString);
+    const formattedDate = dateString.replace(/\//g, "-");
 
     // const formattedDate = dateString.replace(/\//g, "-");
 
     setSelectedDate(date);
 
     if (name === "dob") {
-      handleDateChangeProps(dateString !== "Invalid date" ? dateString : "");
+      handleDateChangeDob?.(dateString !== "Invalid date" ? dateString : "");
+    }
+
+    if (name === "contract_start_date") {
+      handleDateChangeContractDate?.(
+        formattedDate !== "Invalid date" ? formattedDate : ""
+      );
     }
   };
 
@@ -77,11 +86,13 @@ const InputDatePicker = (props: IInputDatePickerProps) => {
               // showYearDropdown
               name={name}
               selected={selectedDate}
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
               onChange={handleDateChange}
               onBlur={handleDateBlur}
               dateFormat="yyyy/MM/dd"
               isClearable
-              className={`input-type-date  h-12 min-w-290 max-w-300  ${
+              className={`${className} input-type-date  h-12 w-[290px]  ${
                 !isValue && !selectedDate && "input-danger"
               }  ${upload && "max-w-[230px]"} `}
             ></DatePicker>

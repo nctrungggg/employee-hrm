@@ -61,7 +61,6 @@ export function InputField({
     trigger(name);
   }, [name, trigger]);
 
-  // const error = String(errors[name]?.message);
 
   const handleIsValueCheck = () => {
     setIsValueCheck((prevValues) => ({ ...prevValues, [name]: value }));
@@ -122,7 +121,7 @@ export function InputField({
             />
           </div>
         ) : isRequired ? (
-          <div className="w-full">
+          <div className="w-full ">
             <Controller
               control={control}
               name={name}
@@ -143,7 +142,7 @@ export function InputField({
                   value={value}
                   onChange={onChange}
                   onBlur={handleIsValueCheck}
-                  onFocus={handleIsValueCheck}
+                  // onFocus={handleIsValueCheck}
                 />
               )}
             />
@@ -155,20 +154,6 @@ export function InputField({
                   {errors[name]?.message?.toString()}
                 </p>
               )}
-
-            {/* <Input
-            control={control}
-            type={type}
-            className={
-              errors[name] && "!border-red1 !bg-red2 !border !border-solid"
-            }
-            name={name}
-          />
-          {errors[name] && (
-            <p className="pt-[5px] px-[14px] text-red3 text-xs">
-              {errors[name]?.message?.toString()}
-            </p>
-          )} */}
           </div>
         ) : (
           <div className="flex flex-col">

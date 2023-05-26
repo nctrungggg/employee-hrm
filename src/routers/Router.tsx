@@ -24,6 +24,10 @@ export const Router = () => {
           path={`${ROUTES.employee}/${ROUTES.createOrUpdate}`}
           element={<CreateEmployeePage />}
         ></Route>
+        <Route
+          path={`${ROUTES.employee}/${ROUTES.createOrUpdate}/:id`}
+          element={<CreateEmployeePage />}
+        ></Route>
       </Route>
     </Routes>
   );

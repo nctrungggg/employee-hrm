@@ -72,3 +72,30 @@ export const genders = [
     value: 1,
   },
 ];
+
+export const employeeType = [
+  {
+    id: "0",
+    name: "Parmanent",
+    code: "MK01",
+    company_id: 1,
+    created_at: "2023-04-27T09:41:28.000000Z",
+    updated_at: null,
+  },
+  {
+    id: "1",
+    name: "Part-time",
+    code: "S01",
+    company_id: 1,
+    created_at: "2023-04-27T09:41:28.000000Z",
+    updated_at: null,
+  },
+  {
+    id: "2",
+    name: "Contract",
+    code: "M01",
+    company_id: 1,
+    created_at: "2023-04-27T09:41:28.000000Z",
+    updated_at: null,
+  },
+];

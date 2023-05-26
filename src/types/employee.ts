@@ -3,7 +3,7 @@ export interface IEmployeeParams {
   old_staff_id: number | null;
   staff_id: string;
   name: string;
-  gender: number;
+  gender: string | number;
   department_id: number;
   company_id: number;
   manager_id: number | null;
@@ -111,4 +111,21 @@ export interface IMarriageStatusParams {
   company_id: number;
   created_at: string;
   updated_at: string | null;
+}
+export interface IContractParams {
+  id: number;
+  employee_id: number;
+  contract_date: string;
+  name: string;
+  document: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+// contract information
+export interface IFormContractEmployeeParams {
+  contract_start_date: string;
+  type: string;
+  contract: IContractParams[];
 }

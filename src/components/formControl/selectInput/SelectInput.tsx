@@ -4,11 +4,11 @@ import ExpandLessIcon from "@mui/icons-material/ExpandMore";
 import { InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { IMarriageStatusParams } from "../../../types/employee";
 import CustomInputSelect, {
   customPaperProps,
 } from "../../customSelect/StyleSelect";
 import { useState } from "react";
-import { IMarriageStatusParams } from "../../../types/employee";
 
 export interface ISelectInputProps {
   label: string;
@@ -17,6 +17,7 @@ export interface ISelectInputProps {
   value?: string | any;
   onChange?: (event: SelectChangeEvent) => void;
   name: string;
+  className?: string;
   isNa?: boolean;
   dataList: object[];
   isType?: boolean;
@@ -31,6 +32,7 @@ export function SelectInput({
   isNa,
   value,
   isType,
+  className,
   onChange,
 }: ISelectInputProps) {
   const schema = Yup.object().shape({
@@ -45,8 +47,18 @@ export function SelectInput({
     mode: "onChange",
     resolver: yupResolver(schema),
   });
+  const [isValue, setIsValue] = useState(true);
 
-  const watchSelect = watch(name);
+  const handleSelectBlur = () => {
+    if (!value) {
+      console.log(123);
+
+      setIsValue(false);
+      console.log(isValue);
+    } else {
+      setIsValue(true);
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -63,13 +75,11 @@ export function SelectInput({
           )}
         </label>
         <Select
-          {...register(name)}
+          {...register(name, { required: true })}
           displayEmpty
-          className={` bg-bgrGray w-full h-[46px] border-none rounded-lg focus:outline-none appearance-none ${
-            errors[name] &&
-            watchSelect === null &&
-            "!border-red1 !bg-red2 !border !border-solid"
-          } ${isType && "select-type-2"}`}
+          className={`${className} bg-bgrGray w-full h-[46px] border-none rounded-lg focus:outline-none appearance-none ${
+            !isValue && "!border-red1 !bg-red2 !border !border-solid"
+          } ${isType && "!w-[250px]"}`}
           id={name}
           input={<CustomInputSelect />}
           MenuProps={{
@@ -77,6 +87,7 @@ export function SelectInput({
           }}
           IconComponent={ExpandLessIcon}
           onChange={onChange}
+          onBlur={handleSelectBlur}
           name={name}
           value={value == "" ? undefined : value}
           defaultValue={isNa ? "" : undefined}
@@ -90,7 +101,6 @@ export function SelectInput({
 
             return selectedItem?.name;
           }}
-          // onBlur={handleSelectBlur}
         >
           <InputLabel shrink={false} className="!hidden">
             {placeholder}
@@ -103,13 +113,13 @@ export function SelectInput({
               {item.name}
             </MenuItem>
           ))}
-        </Select>
 
-        {errors[name] && watchSelect === null && (
-          <div className="text-red3 text-xs pt-[5px] px-[14px]">
-            {errors[name]?.message?.toString()}
-          </div>
-        )}
+          {/* {!isValue && (
+            <div className="text-red3 text-xs pt-[5px] px-[14px]">
+              {errors[name]?.message?.toString()}
+            </div>
+          )} */}
+        </Select>
       </div>
     </div>
   );
