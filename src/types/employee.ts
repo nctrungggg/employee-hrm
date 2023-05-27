@@ -4,11 +4,11 @@ export interface IEmployeeParams {
   staff_id: string;
   name: string;
   gender: string | number;
-  department_id: number;
+  department_id: string | number;
   company_id: number;
   manager_id: number | null;
-  marriage_id: number;
-  position_id: number | null;
+  marriage_id: number | string | null;
+  position_id: string | number | null;
   type: string;
   mother_name: string;
   dob: string;
@@ -128,4 +128,26 @@ export interface IFormContractEmployeeParams {
   contract_start_date: string;
   type: string;
   contract: IContractParams[];
+}
+export interface IFormDetailsEmployeeParams {
+  department_id: string | number | null;
+  position_id: string | number | null;
+}
+
+export interface IDepartmentParams {
+  id: number;
+  company_id: number;
+  code: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IPositionParams {
+  id: number;
+  company_id: number;
+  code: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
 }

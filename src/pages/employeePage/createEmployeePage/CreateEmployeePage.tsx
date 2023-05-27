@@ -16,7 +16,7 @@ import employeeApi from "../../../api/employeeApi";
 import { AppDispatch, RootState } from "../../../app/store";
 import { ROUTES } from "../../../configs/routes";
 import { ContractInfomation } from "../../../modules/employee/components/createEmployee/contractInfomation/ContractInfomation";
-import { EmployeeDetails } from "../../../modules/employee/components/createEmployee/employeeDetails/EmployeeDetails";
+
 import { EmployeeInfomation } from "../../../modules/employee/components/createEmployee/employeeInfomation/EmployeeInfomation";
 import { EmployeeOthers } from "../../../modules/employee/components/createEmployee/employeeOthers/EmployeeOthers";
 import { EmployeeSalary } from "../../../modules/employee/components/createEmployee/employeeSalary/EmployeeSalary";
@@ -26,8 +26,10 @@ import {
 } from "../../../modules/employee/redux/employeeSlice";
 import {
   IFormContractEmployeeParams,
+  IFormDetailsEmployeeParams,
   IFormEmployeeInformationParams,
 } from "../../../types/employee";
+import { EmployeeDetails } from "../../../modules/employee/components/createEmployee/employeeDetails/EmployeeDetails";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -65,6 +67,7 @@ function a11yProps(index: number) {
 export function CreateEmployeePage() {
   const navigate = useNavigate();
   const employee = useSelector((state: RootState) => state.employee.employee);
+
   const { id } = useParams();
 
   const [valueTab, setValueTab] = useState(0);
@@ -73,6 +76,8 @@ export function CreateEmployeePage() {
     employee.contract_start_date || ""
   );
   const [isActiveAdd, setIsActiveAdd] = useState<boolean>(false);
+  const [tabErorr1, setTabError1] = useState<boolean>(false);
+  const [tabErorr2, setTabError2] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -108,23 +113,40 @@ export function CreateEmployeePage() {
       contract: [],
     });
 
+  // state employee detail information
+  const [formDetailEmployee, setFormDetailEmployee] =
+    useState<IFormDetailsEmployeeParams>({
+      department_id: employee.department_id,
+      position_id: employee.position_id,
+    });
+
+  const { name, ktp_no, nc_id, gender } = formEmployeeInfomation;
+  const { contract_start_date, type } = formContractEmployee;
+
   const handleChangeTabs = (event: React.SyntheticEvent, newValue: number) => {
     setValueTab(newValue);
+
+    if (!name && !ktp_no && !nc_id && !gender && newValue !== 0) {
+      setTabError1(true);
+    }
+    if (!contract_start_date && !type && newValue !== 1) {
+      setTabError2(true);
+    }
   };
 
   // handle Add employee information Submitted
-  const handleChangeFormEmployee = (
+  const handleChangeFormInfoEmployee = (
     e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
   ) => {
-    console.log(e);
+    console.log(e.target);
 
-    const value = e.target.value;
+    const { name, value } = e.target;
+
     setFormEmployeeInfomation((prevValues) => ({
       ...prevValues,
-      [e.target.name]: value,
+      [name]: value,
     }));
   };
-
   const handleDateChangeDob = (dateString: string | null) => {
     setFormEmployeeInfomation((prevValues) => ({
       ...prevValues,
@@ -134,7 +156,19 @@ export function CreateEmployeePage() {
     setDob(dateString);
   };
 
-  const handleDateChangeContracDate = (dateString: string | null) => {
+  // handle Add contract information Submitted
+  const handleChangeFormContract = (
+    e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
+  ) => {
+    const { name, value } = e.target;
+
+    setFormContractEmployee((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+      contract_start_date: contractDate || "",
+    }));
+  };
+  const handleDateChangeContractDate = (dateString: string | null) => {
     setFormContractEmployee((prevValues) => ({
       ...prevValues,
       contract_start_date: dateString || "",
@@ -143,38 +177,35 @@ export function CreateEmployeePage() {
     setContractDate(dateString);
   };
 
-  useEffect(() => {
-    const newData = Object.assign(
-      {},
-      formEmployeeInfomation,
-      formContractEmployee
-    );
+  // handle Add Detail Employee Information Submitted
+  const handleChangeFormDetail = () => {
+    (e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
+      console.log(e.target);
 
-    dispatch(changeValueEmployee(newData));
-  }, [dispatch, formContractEmployee, formEmployeeInfomation]);
+      // const { name } = e.target;
+      // const value = e.target.value;
 
-  // handle Add contract information Submitted
-  const handleChangeFormContract = (
-    e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
-  ) => {
-    const value = e.target.value;
-    console.log(e.target);
-
-    setFormContractEmployee((prevValues) => ({
-      ...prevValues,
-      [e.target.name]: value,
-      contract_start_date: contractDate || "",
-    }));
+      // setFormDetailEmployee((prevValues) => ({
+      //   ...prevValues,
+      //   [name]: value,
+      // }));
+    };
   };
 
-  const { name, ktp_no, nc_id, gender } = formEmployeeInfomation;
-
-  const { contract_start_date, type } = formContractEmployee;
-
-  console.log(name, ktp_no, nc_id, gender, contract_start_date, type);
-
+  // check data when adding employee
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkInvalidValueForm = () => {
+    if (name && ktp_no && nc_id && dob && (gender === 0 || gender === 1)) {
+      setTabError1(false);
+    } else {
+      setTimeout(() => {
+        setTabError1(true);
+      }, 2000);
+    }
+    if (contract_start_date && type) {
+      setTabError2(false);
+    }
+
     if (
       name &&
       ktp_no &&
@@ -189,7 +220,6 @@ export function CreateEmployeePage() {
       setIsActiveAdd(false);
     }
   };
-
   useEffect(() => {
     checkInvalidValueForm();
   }, [
@@ -201,6 +231,22 @@ export function CreateEmployeePage() {
     contract_start_date,
     type,
     checkInvalidValueForm,
+  ]);
+
+  // update data vào redux
+  useEffect(() => {
+    const mergedData = {
+      ...formEmployeeInfomation,
+      ...formContractEmployee,
+      ...formDetailEmployee,
+    };
+
+    dispatch(changeValueEmployee(mergedData));
+  }, [
+    dispatch,
+    formContractEmployee,
+    formDetailEmployee,
+    formEmployeeInfomation,
   ]);
 
   // handle add employee
@@ -260,40 +306,40 @@ export function CreateEmployeePage() {
       <Box sx={{ width: "100%" }}>
         <Box>
           <Tabs
-            className="tab-container"
+            className="tab-container "
             value={valueTab}
             onChange={handleChangeTabs}
             aria-label="basic tabs example"
           >
             <Tab
               icon={
-                !isActiveAdd ? (
+                tabErorr1 ? (
                   <ErrorOutlineRoundedIcon style={{ fontSize: 22 }} />
                 ) : (
                   ""
                 )
               }
               iconPosition={"end"}
-              className={`tab-button ${!isActiveAdd && "tab-button-error"}`}
-              // className="tab-button"
+              className={`tab-button  ${tabErorr1 && "tab-button-error"}`}
               component="button"
               label="Employee Information"
               {...a11yProps(0)}
             />
             <Tab
               icon={
-                !isActiveAdd ? (
+                tabErorr2 ? (
                   <ErrorOutlineRoundedIcon style={{ fontSize: 22 }} />
                 ) : (
                   ""
                 )
               }
               iconPosition={"end"}
-              className={`tab-button ${!isActiveAdd && "tab-button-error"}`}
+              className={`tab-button ${tabErorr2 && "tab-button-error"}`}
               component="button"
               label="Contract Information"
               {...a11yProps(1)}
             />
+
             <Tab
               className="tab-button"
               component="button"
@@ -327,8 +373,7 @@ export function CreateEmployeePage() {
             <TabPanel value={valueTab} index={0}>
               <EmployeeInfomation
                 FormEmployeeInformation={formEmployeeInfomation}
-                handleChangeFormEmployee={handleChangeFormEmployee}
-                // handleDateChange={setDob} =
+                handleChangeFormInfoEmployee={handleChangeFormInfoEmployee}
                 handleDateChangeDob={handleDateChangeDob}
               />
             </TabPanel>
@@ -336,13 +381,13 @@ export function CreateEmployeePage() {
               <ContractInfomation
                 formContractEmployee={formContractEmployee}
                 handleChangeFormContract={handleChangeFormContract}
-                handleDateChangeContractDate={handleDateChangeContracDate}
+                handleDateChangeContractDate={handleDateChangeContractDate}
               />
             </TabPanel>
             <TabPanel value={valueTab} index={2}>
               <EmployeeDetails
-              // formDetailEmployee={formDetailEmployee}
-              // handleFormDetailChange={handleFormDetailChange}
+                formDetailEmployee={formDetailEmployee}
+                handleChangeFormDetail={handleChangeFormDetail}
               />
             </TabPanel>
             <TabPanel value={valueTab} index={3}>

@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { ROUTES } from "../configs/routes";
 import { AuthPage } from "../pages/authPage/AuthPage";
 import { ForgotPasswordPage } from "../pages/authPage/components/forgotPasswordPage/ForgotPasswordPage";
@@ -10,6 +10,10 @@ import { CreateEmployeePage } from "../pages/employeePage/createEmployeePage/Cre
 export const Router = () => {
   return (
     <Routes>
+      <Route
+        path="/"
+        element={<Navigate to={`${ROUTES.auth}/${ROUTES.signIn}`} replace />}
+      />
       <Route path={ROUTES.auth} element={<AuthPage />}>
         <Route path={ROUTES.signIn} element={<SignInPage />}></Route>
         <Route

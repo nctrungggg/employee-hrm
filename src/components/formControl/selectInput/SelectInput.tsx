@@ -2,13 +2,13 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import ExpandLessIcon from "@mui/icons-material/ExpandMore";
 import { InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { IMarriageStatusParams } from "../../../types/employee";
 import CustomInputSelect, {
   customPaperProps,
 } from "../../customSelect/StyleSelect";
-import { useState } from "react";
 
 export interface ISelectInputProps {
   label: string;
@@ -41,23 +41,15 @@ export function SelectInput({
 
   const {
     register,
-    watch,
     formState: { errors },
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(schema),
   });
-  const [isValue, setIsValue] = useState(true);
+  const [isValue, setIsValue] = useState(false);
 
   const handleSelectBlur = () => {
-    if (!value) {
-      console.log(123);
-
-      setIsValue(false);
-      console.log(isValue);
-    } else {
-      setIsValue(true);
-    }
+    setIsValue(!String(value));
   };
 
   return (
@@ -78,7 +70,9 @@ export function SelectInput({
           {...register(name, { required: true })}
           displayEmpty
           className={`${className} bg-bgrGray w-full h-[46px] border-none rounded-lg focus:outline-none appearance-none ${
-            !isValue && "!border-red1 !bg-red2 !border !border-solid"
+            isValue &&
+            isRequired &&
+            "!border-red1 !bg-red2 !border !border-solid"
           } ${isType && "!w-[250px]"}`}
           id={name}
           input={<CustomInputSelect />}
@@ -114,11 +108,11 @@ export function SelectInput({
             </MenuItem>
           ))}
 
-          {/* {!isValue && (
+          {isValue && (
             <div className="text-red3 text-xs pt-[5px] px-[14px]">
               {errors[name]?.message?.toString()}
             </div>
-          )} */}
+          )}
         </Select>
       </div>
     </div>

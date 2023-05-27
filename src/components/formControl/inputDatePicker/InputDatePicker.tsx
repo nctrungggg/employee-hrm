@@ -16,7 +16,7 @@ interface IInputDatePickerProps {
   isRp?: boolean;
   upload?: boolean;
   handleDateChangeContractDate?: (date: string | null) => void;
-  className: string;
+  className?: string;
 }
 
 const InputDatePicker = (props: IInputDatePickerProps) => {

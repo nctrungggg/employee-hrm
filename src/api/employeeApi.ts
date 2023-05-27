@@ -36,6 +36,16 @@ const employeeApi = {
     const url = "/marriage";
     return axiosClient.get(url);
   },
+
+  getDepartment() {
+    const url = "/department";
+    return axiosClient.get(url);
+  },
+
+  getPosition() {
+    const url = "/position";
+    return axiosClient.get(url);
+  },
 };
 
 export default employeeApi;

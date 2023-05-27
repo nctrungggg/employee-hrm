@@ -14,7 +14,7 @@ import InputDatePicker from "../../../../../components/formControl/inputDatePick
 
 export interface IEmployeeInfomationProps {
   FormEmployeeInformation: IFormEmployeeInformationParams;
-  handleChangeFormEmployee?: (
+  handleChangeFormInfoEmployee?: (
     event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent
   ) => void;
   handleDateChangeDob: (date: string | null) => void;
@@ -22,7 +22,7 @@ export interface IEmployeeInfomationProps {
 
 export function EmployeeInfomation({
   FormEmployeeInformation,
-  handleChangeFormEmployee,
+  handleChangeFormInfoEmployee,
   handleDateChangeDob,
 }: IEmployeeInfomationProps) {
   const dispatch = useDispatch<AppDispatch>();
@@ -39,8 +39,6 @@ export function EmployeeInfomation({
     })();
   }, [dispatch]);
 
-  console.log("FormEmployeeInformation", FormEmployeeInformation);
-
   return (
     <div className="flex pb-3 gap-[50px] px-5">
       <div className="flex flex-col gap-[10px]">
@@ -49,7 +47,7 @@ export function EmployeeInfomation({
             type="text"
             value={FormEmployeeInformation.nik}
             name="nik"
-            onChange={handleChangeFormEmployee}
+            onChange={handleChangeFormInfoEmployee}
             label="NIK"
           />
         )}
@@ -58,7 +56,7 @@ export function EmployeeInfomation({
           value={FormEmployeeInformation.name}
           name="name"
           isRequired
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="Name"
         />
         <SelectInput
@@ -67,14 +65,14 @@ export function EmployeeInfomation({
           placeholder="Choose Gender"
           isRequired
           value={FormEmployeeInformation.gender}
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           name="gender"
         />
         <InputField
           type="text"
           value={FormEmployeeInformation.mother_name}
           name="mother_name"
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="Mother Name"
         />
         <InputDatePicker
@@ -89,7 +87,7 @@ export function EmployeeInfomation({
           type="text"
           value={FormEmployeeInformation.pob}
           name="pob"
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="Place of birth"
         />
         <InputField
@@ -97,7 +95,7 @@ export function EmployeeInfomation({
           value={FormEmployeeInformation.ktp_no}
           name="ktp_no"
           isRequired
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="KTP No."
         />
         <InputField
@@ -105,21 +103,21 @@ export function EmployeeInfomation({
           value={FormEmployeeInformation.nc_id}
           name="nc_id"
           isRequired
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="National Card ID"
         />
         <InputField
           type="text"
           value={FormEmployeeInformation.home_address_1}
           name="home_address_1"
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="Home Address 1"
         />
         <InputField
           type="text"
           value={FormEmployeeInformation.home_address_2}
           name="home_address_2"
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="Home Address 2"
         />
       </div>
@@ -128,14 +126,14 @@ export function EmployeeInfomation({
           type="text"
           value={FormEmployeeInformation.mobile_no}
           name="mobile_no"
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="Mobile No."
         />
         <InputField
           type="text"
           value={FormEmployeeInformation.tel_no}
           name="tel_no"
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="Tel No."
         />
         <SelectInput
@@ -143,50 +141,50 @@ export function EmployeeInfomation({
           label="Marriage Status"
           placeholder="Choose Marriage Status"
           value={FormEmployeeInformation.marriage_id}
-          onChange={handleChangeFormEmployee}
-          isNa
+          onChange={handleChangeFormInfoEmployee}
           name="marriage_id"
+          isNa
         />
         <InputField
           type="text"
           value={FormEmployeeInformation.card_number}
           name="card_number"
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="Bank Card No."
         />
         <InputField
           type="text"
           value={FormEmployeeInformation.bank_account_no}
           name="bank_account_no"
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="Bank Account No."
         />
         <InputField
           type="text"
           value={FormEmployeeInformation.bank_name}
           name="bank_name"
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="Bank Name"
         />
         <InputField
           type="text"
           value={FormEmployeeInformation.family_card_number}
           name="family_card_number"
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="Family Card Number"
         />
         <InputField
           type="text"
           value={FormEmployeeInformation.safety_insurance_no}
           name="safety_insurance_no"
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="Safety Insurance No."
         />
         <InputField
           type="text"
           value={FormEmployeeInformation.health_insurance_no}
           name="health_insurance_no"
-          onChange={handleChangeFormEmployee}
+          onChange={handleChangeFormInfoEmployee}
           label="Health Insurance No."
         />
       </div>

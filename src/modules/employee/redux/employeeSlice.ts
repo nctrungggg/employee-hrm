@@ -4,8 +4,10 @@ import { toast } from "react-toastify";
 import employeeApi from "../../../api/employeeApi";
 import {
   IDataEmployeeParams,
+  IDepartmentParams,
   IEmployeeParams,
   IMarriageStatusParams,
+  IPositionParams,
 } from "../../../types/employee";
 
 interface initialState {
@@ -13,6 +15,9 @@ interface initialState {
   loadingEmployee: boolean;
   marriageStatus: IMarriageStatusParams[];
   employee: IEmployeeParams;
+
+  departmentList: IDepartmentParams[];
+  positionList: IPositionParams[];
 }
 
 interface EmployeeListParams {
@@ -43,12 +48,28 @@ export const deleteFieldTableEmployee = createAsyncThunk(
   }
 );
 
-export const getMarriageStatus = createAsyncThunk("auth/company", async () => {
+export const getMarriageStatus = createAsyncThunk("auth/marriage", async () => {
   const {
-    data: { data: company },
+    data: { data },
   } = await employeeApi.getMarriageStatusApi();
 
-  return company;
+  return data;
+});
+
+export const getDepartment = createAsyncThunk("auth/department", async () => {
+  const {
+    data: { data },
+  } = await employeeApi.getDepartment();
+
+  return data;
+});
+
+export const getPosition = createAsyncThunk("auth/position", async () => {
+  const {
+    data: { data },
+  } = await employeeApi.getPosition();
+
+  return data;
 });
 
 const initialState: initialState = {
@@ -73,7 +94,6 @@ const initialState: initialState = {
   },
 
   loadingEmployee: false,
-  marriageStatus: [],
 
   employee: {
     attendance_allowance_paid: 1,
@@ -87,7 +107,7 @@ const initialState: initialState = {
     contracts: [],
     created_at: "",
     deleted_at: "",
-    department_id: 1,
+    department_id: "",
     department_name: "",
     dob: "",
     entitle_ot: 1,
@@ -105,7 +125,7 @@ const initialState: initialState = {
     manager_id: 1,
     manager_name: "",
     marriage_code: "",
-    marriage_id: 1,
+    marriage_id: "",
     meal_allowance: 0,
     meal_allowance_paid: 1,
     minimum_salary_used: "",
@@ -116,7 +136,7 @@ const initialState: initialState = {
     old_staff_id: 0,
     operational_allowance_paid: 1,
     pob: "",
-    position_id: 1,
+    position_id: "",
     position_name: "",
     remark: "",
     safety_insurance: 0,
@@ -127,6 +147,10 @@ const initialState: initialState = {
     type: "",
     updated_at: "",
   },
+
+  marriageStatus: [],
+  departmentList: [],
+  positionList: [],
 };
 
 const authSlice = createSlice({
@@ -150,6 +174,14 @@ const authSlice = createSlice({
 
     [getMarriageStatus.fulfilled.toString()]: (state, action) => {
       state.marriageStatus = action.payload;
+    },
+
+    [getDepartment.fulfilled.toString()]: (state, action) => {
+      state.departmentList = action.payload;
+    },
+
+    [getPosition.fulfilled.toString()]: (state, action) => {
+      state.positionList = action.payload;
     },
   },
 });
