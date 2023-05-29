@@ -14,7 +14,7 @@ import InputDatePicker from "../../../../../components/formControl/inputDatePick
 
 export interface IEmployeeInfomationProps {
   FormEmployeeInformation: IFormEmployeeInformationParams;
-  handleChangeFormInfoEmployee?: (
+  handleChangeFormInfoEmployee: (
     event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent
   ) => void;
   handleDateChangeDob: (date: string | null) => void;
@@ -26,7 +26,7 @@ export function EmployeeInfomation({
   handleDateChangeDob,
 }: IEmployeeInfomationProps) {
   const dispatch = useDispatch<AppDispatch>();
-  const { idEmployee } = useParams();
+  const { id } = useParams();
 
   const marriageStatus = useSelector(
     (state: RootState) => state.employee.marriageStatus
@@ -42,7 +42,7 @@ export function EmployeeInfomation({
   return (
     <div className="flex pb-3 gap-[50px] px-5">
       <div className="flex flex-col gap-[10px]">
-        {idEmployee && (
+        {id && (
           <InputField
             type="text"
             value={FormEmployeeInformation.nik}

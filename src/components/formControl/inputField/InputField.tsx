@@ -33,12 +33,27 @@ export function InputField({
     name: Yup.string().required("Please input Name"),
     gender: Yup.string().required("Please input Gender"),
     ktp_no: Yup.string().required("Please input KTP No"),
-    nc_id: Yup.string().required("Please input National Card ID"),
+    nc_id: Yup.string().required("Please input National CardID"),
+    basic_salary: Yup.number()
+      .typeError("Please input Salary")
+      .required()
+      .min(1, "Please input Salary"),
+    audit_salary: Yup.number()
+      .typeError("Please input Salary")
+      .required()
+      .min(1, "Please input Salary (Audit)"),
+    safety_insurance: Yup.number()
+      .typeError("Please input Salary")
+      .required()
+      .min(1, "Please input Safety Insurance Amount"),
+    meal_allowance: Yup.number()
+      .typeError("Please input Salary")
+      .required()
+      .min(1, "Please input Meal Allowance"),
   });
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isValueCheck, setIsValueCheck] = useState([name]);
-
   const {
     control,
     register,
@@ -46,12 +61,9 @@ export function InputField({
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
-  const handleDateChange = (
-    date: Date | null,
-    event: React.SyntheticEvent<any> | undefined
-  ) => {
-    const dateString = moment(date).format("YYYY/MM/DD");
-    const formattedDate = dateString.replace(/\//g, "-");
+  const handleDateChange = (date: Date | null) => {
+    // const dateString = moment(date).format("YYYY/MM/DD");
+    // const formattedDate = dateString.replace(/\//g, "-");
 
     setSelectedDate(date);
   };
@@ -61,8 +73,7 @@ export function InputField({
     trigger(name);
   }, [name, trigger]);
 
-
-  const handleIsValueCheck = () => {
+  const handleCheckValidateValue = () => {
     setIsValueCheck((prevValues) => ({ ...prevValues, [name]: value }));
     trigger(name);
   };
@@ -103,22 +114,49 @@ export function InputField({
             </span>
           </div>
         ) : isRp ? (
-          <div className="relative flex items-center">
-            <span
-              style={{ zIndex: 20 }}
-              className="absolute text-2xl text-[#006adc] font-medium  left-4"
-            >
-              Rp
-            </span>
-
-            <input
-              style={{ zIndex: 10 }}
-              type={type}
-              onChange={onChange}
-              value={value}
-              name={name}
-              className="input-type !text-2xl !pl-14 h-12 min-w-290 max-w-300 "
-            />
+          <div className=" flex items-center">
+            <div>
+              <div className="relative">
+                <span
+                  style={{ zIndex: 20 }}
+                  className="absolute text-16 text-[#006ADC] font-normal top-2/4 -translate-y-2/4 left-3"
+                >
+                  Rp
+                </span>
+                <Controller
+                  control={control}
+                  name={name}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      {...register(name, { required: true })}
+                      className={` input-type !text-16 !pl-14 h-12 min-w-290 max-w-300 
+                  ${
+                    isRequired &&
+                    isValueCheck[name] === "" &&
+                    errors[name]?.message &&
+                    !value &&
+                    "  !border-red1 !bg-red2 !border !border-solid"
+                  } input-type`}
+                      style={{ zIndex: 10 }}
+                      type={type}
+                      value={value}
+                      name={name}
+                      onChange={onChange}
+                      onBlur={handleCheckValidateValue}
+                    />
+                  )}
+                />
+              </div>
+              {isRequired &&
+                isValueCheck[name] === "" &&
+                errors[name]?.message &&
+                !value && (
+                  <p className="pt-[5px] px-[14px] text-red3 text-xs">
+                    {errors[name]?.message?.toString()}
+                  </p>
+                )}
+            </div>
           </div>
         ) : isRequired ? (
           <div className="w-full ">
@@ -128,21 +166,19 @@ export function InputField({
               render={({ field }) => (
                 <input
                   {...field}
-                  {...register(name)}
+                  {...register(name, { required: true })}
                   className={`
                     ${
                       isRequired &&
                       isValueCheck[name] === "" &&
                       errors[name]?.message &&
                       !value &&
-                      !value &&
                       "  !border-red1 !bg-red2 !border !border-solid"
                     } input-type`}
                   type={type}
                   value={value}
                   onChange={onChange}
-                  onBlur={handleIsValueCheck}
-                  // onFocus={handleIsValueCheck}
+                  onBlur={handleCheckValidateValue}
                 />
               )}
             />

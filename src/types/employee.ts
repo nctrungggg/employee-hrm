@@ -151,3 +151,12 @@ export interface IPositionParams {
   created_at: string;
   updated_at: string;
 }
+
+// from employee Salary information
+export interface IFormSalaryEmployeeParams {
+  basic_salary: number;
+  audit_salary: number;
+  safety_insurance: number;
+  health_insurance: number;
+  meal_allowance: number;
+}

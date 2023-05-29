@@ -62,12 +62,12 @@ export const navBarLinks = [
 
 export const genders = [
   {
-    id: 0,
+    id:" 0",
     name: "Male",
     value: 0,
   },
   {
-    id: 1,
+    id: "1",
     name: "Female",
     value: 1,
   },

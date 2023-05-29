@@ -785,3 +785,7 @@ input[type="checkbox"]:checked {
   border-bottom: 1px solid !important;
   border-color: transparent !important;
 }
+
+.custom-color-select > div {
+  color: rgb(17, 24, 28) !important;
+}

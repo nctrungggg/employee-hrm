@@ -7,7 +7,7 @@ import { IFormContractEmployeeParams } from "../../../../../types/employee";
 
 export interface IContractInfomationProps {
   formContractEmployee: IFormContractEmployeeParams;
-  handleChangeFormContract?: (
+  handleChangeFormContract: (
     event: ChangeEvent<HTMLInputElement> | SelectChangeEvent
   ) => void;
   handleDateChangeContractDate: (date: string | null) => void;
@@ -22,7 +22,7 @@ export function ContractInfomation({
     <div>
       <div className="flex flex-col gap-[10px] px-5">
         <InputDatePicker
-          isRequired={true}
+          isRequired
           type="date"
           value={formContractEmployee.contract_start_date}
           name="contract_start_date"
@@ -34,11 +34,11 @@ export function ContractInfomation({
           dataList={employeeType}
           label="Employee Type"
           placeholder="Choose Type"
-          isRequired={true}
           value={formContractEmployee.type}
           onChange={handleChangeFormContract}
           name="type"
           isType
+          isRequired
         />
       </div>
 

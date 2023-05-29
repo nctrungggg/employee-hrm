@@ -28,6 +28,7 @@ import {
   IFormContractEmployeeParams,
   IFormDetailsEmployeeParams,
   IFormEmployeeInformationParams,
+  IFormSalaryEmployeeParams,
 } from "../../../types/employee";
 import { EmployeeDetails } from "../../../modules/employee/components/createEmployee/employeeDetails/EmployeeDetails";
 
@@ -67,7 +68,6 @@ function a11yProps(index: number) {
 export function CreateEmployeePage() {
   const navigate = useNavigate();
   const employee = useSelector((state: RootState) => state.employee.employee);
-
   const { id } = useParams();
 
   const [valueTab, setValueTab] = useState(0);
@@ -76,8 +76,10 @@ export function CreateEmployeePage() {
     employee.contract_start_date || ""
   );
   const [isActiveAdd, setIsActiveAdd] = useState<boolean>(false);
-  const [tabErorr1, setTabError1] = useState<boolean>(false);
-  const [tabErorr2, setTabError2] = useState<boolean>(false);
+
+  const [tabErorrInfo, setTabErrorInfo] = useState<boolean>(false);
+  const [tabErorrContract, setTabErrorContract] = useState<boolean>(false);
+  const [tabErorrSalary, setTabErrorSalary] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -120,17 +122,38 @@ export function CreateEmployeePage() {
       position_id: employee.position_id,
     });
 
+  // state employee Salary information
+  const [formSalaryEmployee, setFormSalaryEmployee] =
+    useState<IFormSalaryEmployeeParams>({
+      basic_salary: employee.basic_salary,
+      audit_salary: employee.audit_salary,
+      safety_insurance: employee.safety_insurance,
+      health_insurance: employee.health_insurance,
+      meal_allowance: employee.meal_allowance,
+    });
+
   const { name, ktp_no, nc_id, gender } = formEmployeeInfomation;
   const { contract_start_date, type } = formContractEmployee;
+  const { basic_salary, audit_salary, safety_insurance, meal_allowance } =
+    formSalaryEmployee;
 
   const handleChangeTabs = (event: React.SyntheticEvent, newValue: number) => {
     setValueTab(newValue);
 
     if (!name && !ktp_no && !nc_id && !gender && newValue !== 0) {
-      setTabError1(true);
+      setTabErrorInfo(true);
     }
     if (!contract_start_date && !type && newValue !== 1) {
-      setTabError2(true);
+      setTabErrorContract(true);
+    }
+
+    if (
+      !String(basic_salary) ||
+      !String(audit_salary) ||
+      !String(safety_insurance) ||
+      (!String(meal_allowance) && newValue !== 3)
+    ) {
+      setTabErrorSalary(true);
     }
   };
 
@@ -138,8 +161,6 @@ export function CreateEmployeePage() {
   const handleChangeFormInfoEmployee = (
     e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
   ) => {
-    console.log(e.target);
-
     const { name, value } = e.target;
 
     setFormEmployeeInfomation((prevValues) => ({
@@ -182,28 +203,45 @@ export function CreateEmployeePage() {
     (e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
       console.log(e.target);
 
-      // const { name } = e.target;
-      // const value = e.target.value;
+      const { name, value } = e.target;
 
-      // setFormDetailEmployee((prevValues) => ({
-      //   ...prevValues,
-      //   [name]: value,
-      // }));
+      setFormDetailEmployee((prevValues) => ({
+        ...prevValues,
+        [name]: value,
+      }));
     };
+  };
+
+  // handle Add Salary Employee Information Submitted
+  const handleFormChangeSalary = (
+    e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
+  ) => {
+    const { name, value } = e.target;
+
+    setFormSalaryEmployee((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
   // check data when adding employee
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkInvalidValueForm = () => {
-    if (name && ktp_no && nc_id && dob && (gender === 0 || gender === 1)) {
-      setTabError1(false);
+    if (name && ktp_no && nc_id && dob && gender) {
+      setTabErrorInfo(false);
     } else {
       setTimeout(() => {
-        setTabError1(true);
+        setTabErrorInfo(true);
       }, 2000);
     }
     if (contract_start_date && type) {
-      setTabError2(false);
+      setTabErrorContract(false);
+    }
+
+    if (
+      String(basic_salary) &&
+      String(audit_salary) &&
+      String(safety_insurance) &&
+      String(safety_insurance)
+    ) {
+      setTabErrorSalary(false);
     }
 
     if (
@@ -213,7 +251,7 @@ export function CreateEmployeePage() {
       dob &&
       contract_start_date &&
       type &&
-      (gender === 0 || gender === 1)
+      gender
     ) {
       setIsActiveAdd(true);
     } else {
@@ -239,6 +277,7 @@ export function CreateEmployeePage() {
       ...formEmployeeInfomation,
       ...formContractEmployee,
       ...formDetailEmployee,
+      ...formSalaryEmployee,
     };
 
     dispatch(changeValueEmployee(mergedData));
@@ -247,6 +286,7 @@ export function CreateEmployeePage() {
     formContractEmployee,
     formDetailEmployee,
     formEmployeeInfomation,
+    formSalaryEmployee,
   ]);
 
   // handle add employee
@@ -255,7 +295,9 @@ export function CreateEmployeePage() {
       {},
       employee,
       formEmployeeInfomation,
-      formContractEmployee
+      formContractEmployee,
+      formDetailEmployee,
+      formSalaryEmployee
     );
 
     try {
@@ -269,7 +311,6 @@ export function CreateEmployeePage() {
         navigate(ROUTES.employee);
       }, 250);
 
-      // reset data về rỗng
       dispatch(resetValueEmployee());
     } catch (error: any) {
       toast.error(error.response.data.message);
@@ -277,131 +318,143 @@ export function CreateEmployeePage() {
   };
 
   return (
-    <div className="pt-[92px] pl-[376px]">
-      <div className="flex justify-between items-center">
-        <h1 className="text-36 font-medium text-textPrimary mb-10">
-          Employee Management
-        </h1>
-        {id ? (
-          <Button
-            type="submit"
-            className="h-[48px] w-[140px] !capitalize !rounded-md !bg-bgrBlue !text-white"
-          >
-            Save Change
-          </Button>
-        ) : (
-          <Button
-            disabled={isActiveAdd ? false : true}
-            className={` !capitalize !py-2 !px-6 !h-12 !font-normal !rounded-md ${
-              isActiveAdd && "!bg-bgrBlue"
-            }`}
-            variant="contained"
-            onClick={handleAddEmployee}
-          >
-            Add
-          </Button>
-        )}
-      </div>
-
-      <Box sx={{ width: "100%" }}>
-        <Box>
-          <Tabs
-            className="tab-container "
-            value={valueTab}
-            onChange={handleChangeTabs}
-            aria-label="basic tabs example"
-          >
-            <Tab
-              icon={
-                tabErorr1 ? (
-                  <ErrorOutlineRoundedIcon style={{ fontSize: 22 }} />
-                ) : (
-                  ""
-                )
-              }
-              iconPosition={"end"}
-              className={`tab-button  ${tabErorr1 && "tab-button-error"}`}
-              component="button"
-              label="Employee Information"
-              {...a11yProps(0)}
-            />
-            <Tab
-              icon={
-                tabErorr2 ? (
-                  <ErrorOutlineRoundedIcon style={{ fontSize: 22 }} />
-                ) : (
-                  ""
-                )
-              }
-              iconPosition={"end"}
-              className={`tab-button ${tabErorr2 && "tab-button-error"}`}
-              component="button"
-              label="Contract Information"
-              {...a11yProps(1)}
-            />
-
-            <Tab
-              className="tab-button"
-              component="button"
-              label="Employment Details"
-              {...a11yProps(2)}
-            />
-            <Tab
-              className="tab-button"
-              component="button"
-              label="Salary & Wages"
-              {...a11yProps(3)}
-            />
-            <Tab
-              className="tab-button"
-              component="button"
-              label="Others"
-              {...a11yProps(4)}
-            />
-          </Tabs>
-        </Box>
-
-        <div className="shadow-md bg-bgrGray2 p-[10px] rounded-xl  mt-5">
-          <div className="flex justify-between">
-            <h3 className="text-18 font-medium">Personal Information</h3>
-            <p className="text-14 font-normal text-textSecondary">
-              Required (<span className="text-red3">*</span>)
-            </p>
-          </div>
-          <div className="w-full h-[1px] bg-[#DFE3E6] my-[10px]"></div>
-          <div className="mb-6">
-            <TabPanel value={valueTab} index={0}>
-              <EmployeeInfomation
-                FormEmployeeInformation={formEmployeeInfomation}
-                handleChangeFormInfoEmployee={handleChangeFormInfoEmployee}
-                handleDateChangeDob={handleDateChangeDob}
-              />
-            </TabPanel>
-            <TabPanel value={valueTab} index={1}>
-              <ContractInfomation
-                formContractEmployee={formContractEmployee}
-                handleChangeFormContract={handleChangeFormContract}
-                handleDateChangeContractDate={handleDateChangeContractDate}
-              />
-            </TabPanel>
-            <TabPanel value={valueTab} index={2}>
-              <EmployeeDetails
-                formDetailEmployee={formDetailEmployee}
-                handleChangeFormDetail={handleChangeFormDetail}
-              />
-            </TabPanel>
-            <TabPanel value={valueTab} index={3}>
-              <EmployeeSalary
-              // formSalaryEmployee={formSalaryEmployee}
-              // handleFormSalaryChange={handleFormSalaryChange}
-              />
-            </TabPanel>
-            <TabPanel value={valueTab} index={4}>
-              <EmployeeOthers />
-            </TabPanel>
-          </div>
+    <div className="pt-[92px] pl-[376px] ">
+      <div className="w-[1030px]">
+        <div className="flex justify-between items-center">
+          <h1 className="text-36 font-medium text-textPrimary mb-10">
+            Employee Management
+          </h1>
+          {id ? (
+            <Button
+              type="submit"
+              className="h-[48px] w-[140px] !capitalize !rounded-md !bg-bgrBlue !text-white"
+            >
+              Save Change
+            </Button>
+          ) : (
+            <Button
+              disabled={isActiveAdd ? false : true}
+              className={` !capitalize !py-2 !px-6 !h-12 !font-normal !rounded-md ${
+                isActiveAdd && "!bg-bgrBlue"
+              }`}
+              variant="contained"
+              onClick={handleAddEmployee}
+            >
+              Add
+            </Button>
+          )}
         </div>
-      </Box>
+
+        <Box sx={{ width: "100%" }}>
+          <Box>
+            <Tabs
+              className="tab-container "
+              value={valueTab}
+              onChange={handleChangeTabs}
+              aria-label="basic tabs example"
+            >
+              <Tab
+                icon={
+                  tabErorrInfo ? (
+                    <ErrorOutlineRoundedIcon style={{ fontSize: 22 }} />
+                  ) : (
+                    ""
+                  )
+                }
+                iconPosition={"end"}
+                className={`tab-button  ${tabErorrInfo && "tab-button-error"}`}
+                component="button"
+                label="Employee Information"
+                {...a11yProps(0)}
+              />
+              <Tab
+                icon={
+                  tabErorrContract ? (
+                    <ErrorOutlineRoundedIcon style={{ fontSize: 22 }} />
+                  ) : (
+                    ""
+                  )
+                }
+                iconPosition={"end"}
+                className={`tab-button ${
+                  tabErorrContract && "tab-button-error"
+                }`}
+                component="button"
+                label="Contract Information"
+                {...a11yProps(1)}
+              />
+
+              <Tab
+                className="tab-button"
+                component="button"
+                label="Employment Details"
+                {...a11yProps(2)}
+              />
+              <Tab
+                icon={
+                  tabErorrSalary ? (
+                    <ErrorOutlineRoundedIcon style={{ fontSize: 22 }} />
+                  ) : (
+                    ""
+                  )
+                }
+                iconPosition={"end"}
+                className={`tab-button ${tabErorrSalary && "tab-button-error"}`}
+                component="button"
+                label="Salary & Wages"
+                {...a11yProps(3)}
+              />
+              <Tab
+                className="tab-button"
+                component="button"
+                label="Others"
+                {...a11yProps(4)}
+              />
+            </Tabs>
+          </Box>
+
+          <div className="shadow-sm bg-bgrGray2 p-[10px] rounded-xl  mt-5">
+            <div className="flex justify-between">
+              <h3 className="text-18 font-medium">Personal Information</h3>
+              <p className="text-14 font-normal text-textSecondary">
+                Required (<span className="text-red3">*</span>)
+              </p>
+            </div>
+            <div className="w-full h-[1px] bg-[#DFE3E6] my-[10px]"></div>
+            <div className="mb-6">
+              <TabPanel value={valueTab} index={0}>
+                <EmployeeInfomation
+                  FormEmployeeInformation={formEmployeeInfomation}
+                  handleChangeFormInfoEmployee={handleChangeFormInfoEmployee}
+                  handleDateChangeDob={handleDateChangeDob}
+                />
+              </TabPanel>
+              <TabPanel value={valueTab} index={1}>
+                <ContractInfomation
+                  formContractEmployee={formContractEmployee}
+                  handleChangeFormContract={handleChangeFormContract}
+                  handleDateChangeContractDate={handleDateChangeContractDate}
+                />
+              </TabPanel>
+              <TabPanel value={valueTab} index={2}>
+                <EmployeeDetails
+                  formDetailEmployee={formDetailEmployee}
+                  handleChangeFormDetail={handleChangeFormDetail}
+                />
+              </TabPanel>
+              <TabPanel value={valueTab} index={3}>
+                <EmployeeSalary
+                  formSalaryEmployee={formSalaryEmployee}
+                  handleFormChangeSalary={handleFormChangeSalary}
+                />
+              </TabPanel>
+              <TabPanel value={valueTab} index={4}>
+                <EmployeeOthers />
+              </TabPanel>
+            </div>
+          </div>
+        </Box>
+      </div>
     </div>
   );
 }

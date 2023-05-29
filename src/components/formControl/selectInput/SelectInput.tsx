@@ -47,6 +47,7 @@ export function SelectInput({
     resolver: yupResolver(schema),
   });
   const [isValue, setIsValue] = useState(false);
+  console.log(value);
 
   const handleSelectBlur = () => {
     setIsValue(!String(value));
@@ -69,7 +70,9 @@ export function SelectInput({
         <Select
           {...register(name, { required: true })}
           displayEmpty
-          className={`${className} bg-bgrGray w-full h-[46px] border-none rounded-lg focus:outline-none appearance-none ${
+          className={`${className} ${
+            value && "custom-color-select"
+          } bg-bgrGray w-full h-[46px] border-none rounded-lg focus:outline-none appearance-none ${
             isValue &&
             isRequired &&
             "!border-red1 !bg-red2 !border !border-solid"
@@ -108,11 +111,11 @@ export function SelectInput({
             </MenuItem>
           ))}
 
-          {isValue && (
+          {/* {isRequired && !isValue && (
             <div className="text-red3 text-xs pt-[5px] px-[14px]">
               {errors[name]?.message?.toString()}
             </div>
-          )}
+          )} */}
         </Select>
       </div>
     </div>

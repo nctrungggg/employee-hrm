@@ -1,16 +1,16 @@
 import { FormControlLabel, FormGroup, SelectChangeEvent } from "@mui/material";
-import { IFormDetailsEmployeeParams } from "../../../../../types/employee";
-import { SelectInput } from "../../../../../components/formControl/selectInput/SelectInput";
-import BpCheckbox from "../../../../../components/bpCheckbox/BpCheckbox";
+import { unwrapResult } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../app/store";
+import BpCheckbox from "../../../../../components/bpCheckbox/BpCheckbox";
+import { SelectInput } from "../../../../../components/formControl/selectInput/SelectInput";
+import { IFormDetailsEmployeeParams } from "../../../../../types/employee";
 import { getDepartment, getPosition } from "../../../redux/employeeSlice";
-import { unwrapResult } from "@reduxjs/toolkit";
 
 interface IEmployeeDetailsProps {
   formDetailEmployee: IFormDetailsEmployeeParams;
-  handleChangeFormDetail?: (
+  handleChangeFormDetail: (
     event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent
   ) => void;
 }
@@ -27,11 +27,9 @@ export function EmployeeDetails({
   handleChangeFormDetail,
 }: IEmployeeDetailsProps) {
   const dispatch = useDispatch<AppDispatch>();
-
   const { departmentList, positionList } = useSelector(
     (state: RootState) => state.employee
   );
-
   const [checkboxValues, setCheckboxValues] = useState<CheckboxValues>({
     entitledOT: false,
     mealAllowancePaid: false,
@@ -83,6 +81,7 @@ export function EmployeeDetails({
           name="department_id"
           isNa
         />
+
         <SelectInput
           dataList={positionList}
           label="Position"
@@ -93,7 +92,8 @@ export function EmployeeDetails({
           isNa
         />
       </div>
-      <div className="mt-5 px-2">
+
+      <div className="mt-5 px-2 inline-block">
         <FormGroup className="flex flex-col gap-5">
           <FormControlLabel
             control={
@@ -114,6 +114,7 @@ export function EmployeeDetails({
               },
             }}
           />
+
           <FormControlLabel
             control={
               <BpCheckbox
@@ -133,6 +134,7 @@ export function EmployeeDetails({
               },
             }}
           />
+
           <FormControlLabel
             disabled
             checked
@@ -154,6 +156,7 @@ export function EmployeeDetails({
               },
             }}
           />
+
           <FormControlLabel
             disabled
             checked
