@@ -31,6 +31,7 @@ import {
   IFormSalaryEmployeeParams,
 } from "../../../types/employee";
 import { EmployeeDetails } from "../../../modules/employee/components/createEmployee/employeeDetails/EmployeeDetails";
+import { error } from "console";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -131,6 +132,7 @@ export function CreateEmployeePage() {
       health_insurance: employee.health_insurance,
       meal_allowance: employee.meal_allowance,
     });
+  console.log(formSalaryEmployee);
 
   const { name, ktp_no, nc_id, gender } = formEmployeeInfomation;
   const { contract_start_date, type } = formContractEmployee;
@@ -143,6 +145,7 @@ export function CreateEmployeePage() {
     if (!name && !ktp_no && !nc_id && !gender && newValue !== 0) {
       setTabErrorInfo(true);
     }
+
     if (!contract_start_date && !type && newValue !== 1) {
       setTabErrorContract(true);
     }
@@ -199,17 +202,15 @@ export function CreateEmployeePage() {
   };
 
   // handle Add Detail Employee Information Submitted
-  const handleChangeFormDetail = () => {
-    (e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>) => {
-      console.log(e.target);
+  const handleChangeFormDetail = (
+    e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
+  ) => {
+    const { name, value } = e.target;
 
-      const { name, value } = e.target;
-
-      setFormDetailEmployee((prevValues) => ({
-        ...prevValues,
-        [name]: value,
-      }));
-    };
+    setFormDetailEmployee((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
   };
 
   // handle Add Salary Employee Information Submitted
@@ -217,6 +218,7 @@ export function CreateEmployeePage() {
     e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
   ) => {
     const { name, value } = e.target;
+    console.log(e.target);
 
     setFormSalaryEmployee((prevValues) => ({ ...prevValues, [name]: value }));
   };
@@ -224,26 +226,36 @@ export function CreateEmployeePage() {
   // check data when adding employee
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkInvalidValueForm = () => {
-    if (name && ktp_no && nc_id && dob && gender) {
-      setTabErrorInfo(false);
-    } else {
-      setTimeout(() => {
-        setTabErrorInfo(true);
-      }, 2000);
-    }
+    // if (name && ktp_no && nc_id && dob && gender) {
+    //   setTabErrorInfo(false);
+    // } else {
+    //   setTimeout(() => {
+    //     setTabErrorInfo(true);
+    //   }, 2000);
+    // }
+
+    // check tabs err information
+    const hasErrorInfo = !(name && ktp_no && nc_id && dob && gender);
+    setTabErrorInfo(hasErrorInfo);
+
+    // check tabs err salary
+    const fieldsToCheck = [
+      basic_salary,
+      audit_salary,
+      safety_insurance,
+      meal_allowance,
+    ];
+    const hasErrorSalary = !fieldsToCheck.every(
+      (field) => String(field) && Number(field) >= 0
+    );
+    setTabErrorSalary(hasErrorSalary);
+
+    // check tabs err contract
     if (contract_start_date && type) {
       setTabErrorContract(false);
     }
 
-    if (
-      String(basic_salary) &&
-      String(audit_salary) &&
-      String(safety_insurance) &&
-      String(safety_insurance)
-    ) {
-      setTabErrorSalary(false);
-    }
-
+    // set active button add
     if (
       name &&
       ktp_no &&
@@ -251,13 +263,15 @@ export function CreateEmployeePage() {
       dob &&
       contract_start_date &&
       type &&
-      gender
+      gender &&
+      !hasErrorSalary
     ) {
       setIsActiveAdd(true);
     } else {
       setIsActiveAdd(false);
     }
   };
+
   useEffect(() => {
     checkInvalidValueForm();
   }, [

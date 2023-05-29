@@ -34,18 +34,22 @@ export function InputField({
     gender: Yup.string().required("Please input Gender"),
     ktp_no: Yup.string().required("Please input KTP No"),
     nc_id: Yup.string().required("Please input National CardID"),
+
     basic_salary: Yup.number()
       .typeError("Please input Salary")
-      .required()
+      .required("Please input Salary")
       .min(1, "Please input Salary"),
+
     audit_salary: Yup.number()
       .typeError("Please input Salary")
       .required()
       .min(1, "Please input Salary (Audit)"),
+
     safety_insurance: Yup.number()
       .typeError("Please input Salary")
       .required()
       .min(1, "Please input Safety Insurance Amount"),
+
     meal_allowance: Yup.number()
       .typeError("Please input Salary")
       .required()
@@ -60,6 +64,8 @@ export function InputField({
     trigger,
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
+
+  console.log(errors);
 
   const handleDateChange = (date: Date | null) => {
     // const dateString = moment(date).format("YYYY/MM/DD");
@@ -133,10 +139,10 @@ export function InputField({
                       className={` input-type !text-16 !pl-14 h-12 min-w-290 max-w-300 
                   ${
                     isRequired &&
-                    isValueCheck[name] === "" &&
+                    (isValueCheck[name] === "" ||
+                      Number(isValueCheck[name]) < 0) &&
                     errors[name]?.message &&
-                    !value &&
-                    "  !border-red1 !bg-red2 !border !border-solid"
+                    "!border-red1 !bg-red2 !border !border-solid"
                   } input-type`}
                       style={{ zIndex: 10 }}
                       type={type}
@@ -148,14 +154,15 @@ export function InputField({
                   )}
                 />
               </div>
-              {isRequired &&
-                isValueCheck[name] === "" &&
-                errors[name]?.message &&
-                !value && (
-                  <p className="pt-[5px] px-[14px] text-red3 text-xs">
-                    {errors[name]?.message?.toString()}
-                  </p>
-                )}
+              {isRequired && errors[name]?.message && (
+                <p className="pt-[5px] px-[14px] text-red3 text-xs">
+                  {isValueCheck[name] === ""
+                    ? errors[name]?.message?.toString()
+                    : Number(isValueCheck[name]) < 0
+                    ? "Please input value min is 0"
+                    : null}
+                </p>
+              )}
             </div>
           </div>
         ) : isRequired ? (

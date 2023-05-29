@@ -57,6 +57,8 @@ export function EmployeeDetails({
     setCheckboxValues(updatedValues);
   };
 
+  console.log(formDetailEmployee);
+
   useEffect(() => {
     (async () => {
       await Promise.all([
