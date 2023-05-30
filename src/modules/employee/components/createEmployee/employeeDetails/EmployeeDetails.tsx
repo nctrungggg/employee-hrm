@@ -57,8 +57,6 @@ export function EmployeeDetails({
     setCheckboxValues(updatedValues);
   };
 
-  console.log(formDetailEmployee);
-
   useEffect(() => {
     (async () => {
       await Promise.all([
@@ -72,115 +70,126 @@ export function EmployeeDetails({
   }, [dispatch]);
 
   return (
-    <div className="max-w-[560px]">
-      <div className="flex flex-col gap-[10px] px-2 ">
-        <SelectInput
-          dataList={departmentList}
-          label="Department"
-          placeholder="Choose Department"
-          value={formDetailEmployee.department_id}
-          onChange={handleChangeFormDetail}
-          name="department_id"
-          isNa
-        />
-
-        <SelectInput
-          dataList={positionList}
-          label="Position"
-          placeholder="Choose Position"
-          value={formDetailEmployee.position_id}
-          onChange={handleChangeFormDetail}
-          name="position_id"
-          isNa
-        />
+    <div>
+      <div className="flex justify-between">
+        <h3 className="text-18 font-medium text-textPrimary">
+          Employment Details
+        </h3>
+        <p className="text-14 font-normal text-textSecondary">
+          Required (<span className="text-red3">*</span>)
+        </p>
       </div>
-
-      <div className="mt-5 px-2 inline-block">
-        <FormGroup className="flex flex-col gap-5">
-          <FormControlLabel
-            control={
-              <BpCheckbox
-                name="entitledOT"
-                checked={checkboxValues.entitledOT}
-                onChange={handleCheckboxChange}
-              />
-            }
-            label="Entitled OT"
-            sx={{
-              "& .MuiSvgIcon-root": {
-                fontSize: 24,
-                color: "#30a46c",
-              },
-              "& .MuiFormControlLabel-label": {
-                fontSize: 14,
-              },
-            }}
+      <div className="w-full h-[1px] bg-[#DFE3E6] my-[10px]"></div>
+      <div className="max-w-[560px]">
+        <div className="flex flex-col gap-[10px] px-2 ">
+          <SelectInput
+            dataList={departmentList}
+            label="Department"
+            placeholder="Choose Department"
+            value={formDetailEmployee.department_id}
+            onChange={handleChangeFormDetail}
+            name="department_id"
+            isNa
           />
 
-          <FormControlLabel
-            control={
-              <BpCheckbox
-                name="mealAllowancePaid"
-                checked={checkboxValues.mealAllowancePaid}
-                onChange={handleCheckboxChange}
-              />
-            }
-            label="Meal Allowance Paid"
-            sx={{
-              "& .MuiSvgIcon-root": {
-                fontSize: 24,
-                color: "#30a46c",
-              },
-              "& .MuiFormControlLabel-label": {
-                fontSize: 14,
-              },
-            }}
+          <SelectInput
+            dataList={positionList}
+            label="Position"
+            placeholder="Choose Position"
+            value={formDetailEmployee.position_id}
+            onChange={handleChangeFormDetail}
+            name="position_id"
+            isNa
           />
+        </div>
 
-          <FormControlLabel
-            disabled
-            checked
-            control={
-              <BpCheckbox
-                name="operationalAllowancePaid"
-                checked={checkboxValues.operationalAllowancePaid}
-                onChange={handleCheckboxChange}
-              />
-            }
-            label="Operational Allowance Paid"
-            sx={{
-              "& .MuiSvgIcon-root": {
-                fontSize: 24,
-                color: "#c1c8cdcc",
-              },
-              "& .MuiFormControlLabel-label": {
-                fontSize: 14,
-              },
-            }}
-          />
+        <div className="mt-5 px-2 inline-block">
+          <FormGroup className="flex flex-col gap-5">
+            <FormControlLabel
+              control={
+                <BpCheckbox
+                  name="entitledOT"
+                  checked={checkboxValues.entitledOT}
+                  onChange={handleCheckboxChange}
+                />
+              }
+              label="Entitled OT"
+              sx={{
+                "& .MuiSvgIcon-root": {
+                  fontSize: 24,
+                  color: "#30a46c",
+                },
+                "& .MuiFormControlLabel-label": {
+                  fontSize: 14,
+                },
+              }}
+            />
 
-          <FormControlLabel
-            disabled
-            checked
-            control={
-              <BpCheckbox
-                name="attendanceAllowancePaid"
-                checked={checkboxValues.attendanceAllowancePaid}
-                onChange={handleCheckboxChange}
-              />
-            }
-            label="Attendance Allowance Paid"
-            sx={{
-              "& .MuiSvgIcon-root": {
-                fontSize: 24,
-                color: "#c1c8cdcc",
-              },
-              "& .MuiFormControlLabel-label": {
-                fontSize: 14,
-              },
-            }}
-          />
-        </FormGroup>
+            <FormControlLabel
+              control={
+                <BpCheckbox
+                  name="mealAllowancePaid"
+                  checked={checkboxValues.mealAllowancePaid}
+                  onChange={handleCheckboxChange}
+                />
+              }
+              label="Meal Allowance Paid"
+              sx={{
+                "& .MuiSvgIcon-root": {
+                  fontSize: 24,
+                  color: "#30a46c",
+                },
+                "& .MuiFormControlLabel-label": {
+                  fontSize: 14,
+                },
+              }}
+            />
+
+            <FormControlLabel
+              disabled
+              checked
+              control={
+                <BpCheckbox
+                  name="operationalAllowancePaid"
+                  checked={checkboxValues.operationalAllowancePaid}
+                  onChange={handleCheckboxChange}
+                />
+              }
+              label="Operational Allowance Paid"
+              sx={{
+                "& .MuiSvgIcon-root": {
+                  fontSize: 24,
+                  color: "#c1c8cdcc",
+                },
+                "& .MuiFormControlLabel-label": {
+                  fontSize: 14,
+                },
+              }}
+            />
+
+            <FormControlLabel
+              disabled
+              checked
+              control={
+                <BpCheckbox
+                  name="attendanceAllowancePaid"
+                  checked={checkboxValues.attendanceAllowancePaid}
+                  onChange={handleCheckboxChange}
+                />
+              }
+              label="Attendance Allowance Paid"
+              sx={{
+                "& .MuiSvgIcon-root": {
+                  fontSize: 24,
+                  color: "#c1c8cdcc",
+                },
+                "& .MuiFormControlLabel-label": {
+                  fontSize: 14,
+                },
+              }}
+            />
+          </FormGroup>
+        </div>
       </div>
     </div>
   );

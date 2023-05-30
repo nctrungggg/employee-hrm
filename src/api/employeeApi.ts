@@ -46,6 +46,16 @@ const employeeApi = {
     const url = "/position";
     return axiosClient.get(url);
   },
+
+  getGrades() {
+    const url = "/grade";
+    return axiosClient.get(url);
+  },
+
+  getBenefits() {
+    const url = "/benefit";
+    return axiosClient.get(url);
+  },
 };
 
 export default employeeApi;

@@ -82,8 +82,6 @@ export function EmployeePage() {
   );
 
   const handleDeleteFieldTable = async (selectedTables: number[]) => {
-    console.log(selectedTables);
-
     setLoading(true);
 
     const updatedPage =

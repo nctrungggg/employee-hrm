@@ -25,13 +25,13 @@ import {
   resetValueEmployee,
 } from "../../../modules/employee/redux/employeeSlice";
 import {
+  IBenefitParams,
   IFormContractEmployeeParams,
   IFormDetailsEmployeeParams,
   IFormEmployeeInformationParams,
   IFormSalaryEmployeeParams,
 } from "../../../types/employee";
 import { EmployeeDetails } from "../../../modules/employee/components/createEmployee/employeeDetails/EmployeeDetails";
-import { error } from "console";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -69,6 +69,7 @@ function a11yProps(index: number) {
 export function CreateEmployeePage() {
   const navigate = useNavigate();
   const employee = useSelector((state: RootState) => state.employee.employee);
+  console.log("📢[CreateEmployeePage.tsx:72]: employee: ", employee);
   const { id } = useParams();
 
   const [valueTab, setValueTab] = useState(0);
@@ -132,14 +133,23 @@ export function CreateEmployeePage() {
       health_insurance: employee.health_insurance,
       meal_allowance: employee.meal_allowance,
     });
-  console.log(formSalaryEmployee);
+
+  const [formOthersEmployee, setFormOthersEmployee] = useState<{
+    remark: string;
+    grade_id: number;
+    benefits: IBenefitParams[];
+  }>({
+    remark: employee.remark,
+    grade_id: employee.grade_id,
+    benefits: employee.benefits,
+  });
 
   const { name, ktp_no, nc_id, gender } = formEmployeeInfomation;
   const { contract_start_date, type } = formContractEmployee;
   const { basic_salary, audit_salary, safety_insurance, meal_allowance } =
     formSalaryEmployee;
 
-  const handleChangeTabs = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChangeTabs = (_event: React.SyntheticEvent, newValue: number) => {
     setValueTab(newValue);
 
     if (!name && !ktp_no && !nc_id && !gender && newValue !== 0) {
@@ -218,22 +228,26 @@ export function CreateEmployeePage() {
     e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
   ) => {
     const { name, value } = e.target;
-    console.log(e.target);
 
     setFormSalaryEmployee((prevValues) => ({ ...prevValues, [name]: value }));
+  };
+
+  // handle Add Others Employee Information Submitted
+  const handleFormChangeOthers = (
+    selectedGradeId: number,
+    selectedOption: IBenefitParams[],
+    remark: string
+  ) => {
+    setFormOthersEmployee({
+      remark: remark,
+      grade_id: selectedGradeId,
+      benefits: selectedOption,
+    });
   };
 
   // check data when adding employee
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkInvalidValueForm = () => {
-    // if (name && ktp_no && nc_id && dob && gender) {
-    //   setTabErrorInfo(false);
-    // } else {
-    //   setTimeout(() => {
-    //     setTabErrorInfo(true);
-    //   }, 2000);
-    // }
-
     // check tabs err information
     const hasErrorInfo = !(name && ktp_no && nc_id && dob && gender);
     setTabErrorInfo(hasErrorInfo);
@@ -292,6 +306,7 @@ export function CreateEmployeePage() {
       ...formContractEmployee,
       ...formDetailEmployee,
       ...formSalaryEmployee,
+      ...formOthersEmployee,
     };
 
     dispatch(changeValueEmployee(mergedData));
@@ -300,18 +315,27 @@ export function CreateEmployeePage() {
     formContractEmployee,
     formDetailEmployee,
     formEmployeeInfomation,
+    formOthersEmployee,
     formSalaryEmployee,
   ]);
 
   // handle add employee
   const handleAddEmployee = async () => {
+    const { benefits } = formOthersEmployee;
+    const benefitsIds = benefits.map((benefit) => benefit.id);
+    const newFormOthersEmployee = {
+      ...formOthersEmployee,
+      benefits: benefitsIds,
+    };
+
     const newData = Object.assign(
       {},
       employee,
       formEmployeeInfomation,
       formContractEmployee,
       formDetailEmployee,
-      formSalaryEmployee
+      formSalaryEmployee,
+      newFormOthersEmployee
     );
 
     try {
@@ -428,13 +452,6 @@ export function CreateEmployeePage() {
           </Box>
 
           <div className="shadow-sm bg-bgrGray2 p-[10px] rounded-xl  mt-5">
-            <div className="flex justify-between">
-              <h3 className="text-18 font-medium">Personal Information</h3>
-              <p className="text-14 font-normal text-textSecondary">
-                Required (<span className="text-red3">*</span>)
-              </p>
-            </div>
-            <div className="w-full h-[1px] bg-[#DFE3E6] my-[10px]"></div>
             <div className="mb-6">
               <TabPanel value={valueTab} index={0}>
                 <EmployeeInfomation
@@ -463,7 +480,10 @@ export function CreateEmployeePage() {
                 />
               </TabPanel>
               <TabPanel value={valueTab} index={4}>
-                <EmployeeOthers />
+                <EmployeeOthers
+                  formOthersEmployee={formOthersEmployee}
+                  handleFormChangeOthers={handleFormChangeOthers}
+                />
               </TabPanel>
             </div>
           </div>

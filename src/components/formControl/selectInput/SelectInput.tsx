@@ -47,7 +47,6 @@ export function SelectInput({
     resolver: yupResolver(schema),
   });
   const [isValue, setIsValue] = useState(false);
-  console.log("value:", value);
 
   const handleSelectBlur = () => {
     setIsValue(!String(value));

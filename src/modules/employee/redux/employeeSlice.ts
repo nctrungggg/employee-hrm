@@ -3,9 +3,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import employeeApi from "../../../api/employeeApi";
 import {
+  IBenefitParams,
   IDataEmployeeParams,
   IDepartmentParams,
   IEmployeeParams,
+  IGradeParams,
   IMarriageStatusParams,
   IPositionParams,
 } from "../../../types/employee";
@@ -18,6 +20,8 @@ interface initialState {
 
   departmentList: IDepartmentParams[];
   positionList: IPositionParams[];
+  benefitsList: IBenefitParams[];
+  gradeList: IGradeParams[];
 }
 
 interface EmployeeListParams {
@@ -72,6 +76,22 @@ export const getPosition = createAsyncThunk("auth/position", async () => {
   return data;
 });
 
+export const getGrades = createAsyncThunk("auth/grades", async () => {
+  const {
+    data: { data },
+  } = await employeeApi.getGrades();
+
+  return data;
+});
+
+export const getBenefits = createAsyncThunk("auth/benefits", async () => {
+  const {
+    data: { data },
+  } = await employeeApi.getBenefits();
+
+  return data;
+});
+
 const initialState: initialState = {
   dataEmployee: {
     current_page: 0,
@@ -113,7 +133,7 @@ const initialState: initialState = {
     entitle_ot: 1,
     family_card_number: "",
     gender: "",
-    grade_id: 1,
+    grade_id: 0,
     grade_name: "",
     grade_prefix: "",
     health_insurance: 0,
@@ -146,11 +166,15 @@ const initialState: initialState = {
     tel_no: "",
     type: "",
     updated_at: "",
+    // grade: [],
+    benefits: [],
   },
 
   marriageStatus: [],
   departmentList: [],
   positionList: [],
+  gradeList: [],
+  benefitsList: [],
 };
 
 const authSlice = createSlice({
@@ -182,6 +206,14 @@ const authSlice = createSlice({
 
     [getPosition.fulfilled.toString()]: (state, action) => {
       state.positionList = action.payload;
+    },
+
+    [getGrades.fulfilled.toString()]: (state, action) => {
+      state.gradeList = action.payload;
+    },
+
+    [getBenefits.fulfilled.toString()]: (state, action) => {
+      state.benefitsList = action.payload;
     },
   },
 });

@@ -49,6 +49,29 @@ export interface IEmployeeParams {
   grade_name: string;
   manager_name: string | null;
   contracts: IContractParams[];
+  // grade: IGradeParams[];
+  benefits: IBenefitParams[];
+}
+
+export interface IBenefitParams {
+  id: number;
+  name: string;
+  code: string;
+  type: number;
+  value: string;
+  company_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IGradeParams {
+  id: number;
+  name: string;
+  prefix: string;
+  company_id: number;
+  created_at: string;
+  updated_at: string;
+  benefits: IBenefitParams[];
 }
 
 export interface IDataEmployeeParams {

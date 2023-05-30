@@ -3,7 +3,7 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandMore";
 import moment from "moment-timezone";
 import datePicker from "../../../assets/datePicker.svg";
 interface IInputDatePickerProps {
@@ -100,7 +100,7 @@ const InputDatePicker = (props: IInputDatePickerProps) => {
               <img src={datePicker} className="w-6" alt="" />
             </span>
             <span className="absolute top-[50%] -translate-y-2/4 right-2">
-              <ExpandMoreIcon />
+              <ExpandLessIcon />
             </span>
           </div>
         )}

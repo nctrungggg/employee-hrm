@@ -297,7 +297,6 @@ export function EmployeeList({
                           isRowSelected(row.id) ? "row-selected" : ""
                         } `}
                         onDoubleClick={() => {
-                          console.log(row.id);
                           navigate(
                             `${ROUTES.employee}/${ROUTES.createOrUpdate}/${row.id}`
                           );

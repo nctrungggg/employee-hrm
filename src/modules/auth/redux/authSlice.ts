@@ -20,7 +20,6 @@ export const signIn = createAsyncThunk(
       Cookies.set(ACCESS_TOKEN_KEY, data.data.token);
 
       return data.data.token;
-
     } catch (error: any) {
       toast.error(error.response.data.message);
     }
@@ -33,10 +32,7 @@ export const forgotPassword = createAsyncThunk(
     try {
       const data = await authApi.fortgotPassword(payload);
       toast.success(data.data.message);
-
     } catch (error: any) {
-      console.log(error);
-
       toast.error(error.response.data.message);
     }
   }

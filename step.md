@@ -6,4 +6,6 @@ bug: lỗi phần validate salary & wages: đã fix
 
 bug: khi tab 1 lôi xong tab sang trang 2 xong back về tab 1 thì mất lỗi. (chưa nghĩ ra cách)
 
-29/5: làm phần contract upload img và fix 3 bug trên.
+29/5: làm phần other img và fix 3 bug trên. ( sắp xong )
+
+30/5:

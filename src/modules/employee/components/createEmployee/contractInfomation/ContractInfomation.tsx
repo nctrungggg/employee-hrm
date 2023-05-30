@@ -20,6 +20,15 @@ export function ContractInfomation({
 }: IContractInfomationProps) {
   return (
     <div>
+      <div className="flex justify-between">
+        <h3 className="text-18 font-medium text-textPrimary">
+          Contract Information
+        </h3>
+        <p className="text-14 font-normal text-textSecondary">
+          Required (<span className="text-red3">*</span>)
+        </p>
+      </div>
+      <div className="w-full h-[1px] bg-[#DFE3E6] my-[10px]"></div>
       <div className="flex flex-col gap-[10px] px-5">
         <InputDatePicker
           isRequired

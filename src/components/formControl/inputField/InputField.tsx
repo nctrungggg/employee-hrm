@@ -65,7 +65,6 @@ export function InputField({
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
-  console.log(errors);
 
   const handleDateChange = (date: Date | null) => {
     // const dateString = moment(date).format("YYYY/MM/DD");

@@ -202,3 +202,12 @@ th {
 .MuiBox-root .css-19kzrtu {
   padding: 0 !important;
 }
+
+.MuiBox-root .css-i4bv87-MuiSvgIcon-root,
+.css-hfutr2-MuiSvgIcon-root-MuiSelect-icon {
+  font-size: 18px !important;
+}
+
+.css-1mmoate-MuiFormControl-root-MuiTextField-root {
+  margin-top: 0 !important;
+}
