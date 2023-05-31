@@ -1,12 +1,10 @@
 import ClearIcon from "@mui/icons-material/Clear";
-import { Autocomplete, Chip, TextField, styled } from "@mui/material";
-import { unwrapResult } from "@reduxjs/toolkit";
-import { ChangeEvent, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../../../app/store";
-import { IBenefitParams } from "../../../../../types/employee";
-import { getBenefits, getGrades } from "../../../redux/employeeSlice";
 import ExpandLessIcon from "@mui/icons-material/ExpandMore";
+import { Autocomplete, Chip, TextField, styled } from "@mui/material";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../app/store";
+import { IBenefitParams, IEmployeeParams } from "../../../../../types/employee";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const autocompleteStyles = {
@@ -69,12 +67,7 @@ const TextAreaStyle = styled("textarea")(() => ({
 }));
 
 export interface IEmployeeOthersProps {
-  formOthersEmployee: {
-    remark: string;
-    grade_id: number;
-    benefits: IBenefitParams[];
-  };
-
+  employeeState: IEmployeeParams;
   handleFormChangeOthers: (
     selectedGradeId: number,
     selectedOption: IBenefitParams[],
@@ -84,20 +77,26 @@ export interface IEmployeeOthersProps {
 
 export function EmployeeOthers({
   handleFormChangeOthers,
-  formOthersEmployee,
+  employeeState,
 }: IEmployeeOthersProps) {
-  const dispatch = useDispatch<AppDispatch>();
-  const [selectedGradeIndex, setSelectedGradeIndex] = useState(-1);
-  const [selectedGradeId, setSelectedGradeId] = useState(
-    formOthersEmployee.grade_id
+  const { gradeList, benefitsList } = useSelector(
+    (state: RootState) => state.employee
   );
-  const [remark, setRemark] = useState(formOthersEmployee.remark);
+  const [selectedGradeId, setSelectedGradeId] = useState(
+    employeeState.grade_id
+  );
+
+  const [selectedGradeIndex, setSelectedGradeIndex] = useState(
+    gradeList.findIndex((item) => item.id === employeeState.grade_id)
+  );
+
+  const [remark, setRemark] = useState(employeeState.remark);
   const [selectedOption, setSelectedOption] = useState<IBenefitParams[]>(
-    formOthersEmployee.benefits
+    employeeState.benefits
   );
 
   const handleOptionChange = (_event: unknown, newValue: IBenefitParams[]) => {
-    setSelectedOption(newValue);
+    setSelectedOption(newValue ?? undefined);
   };
 
   const handleDeleteOption = (option: IBenefitParams) => {
@@ -105,26 +104,12 @@ export function EmployeeOthers({
     setSelectedOption(updatedOptions);
   };
 
-  const { gradeList, benefitsList } = useSelector(
-    (state: RootState) => state.employee
-  );
   useEffect(() => {
-    (async () => {
-      await Promise.all([dispatch(getGrades()), dispatch(getBenefits())]).then(
-        ([resultActionDepartment, resultActionPosition]) => {
-          unwrapResult(resultActionDepartment);
-          unwrapResult(resultActionPosition);
-        }
-      );
-    })();
-  }, [dispatch]);
-
-  useEffect(() => {
-    // const idSelected = selectedOption.map((item) => item.id);
-
     handleFormChangeOthers(selectedGradeId, selectedOption, remark);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remark, selectedGradeId, selectedOption]);
+
+  console.log(selectedOption);
 
   const hanleChangeRemark = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setRemark(e.target.value);
@@ -155,9 +140,8 @@ export function EmployeeOthers({
               getOptionLabel={(option) => option.name}
               renderInput={(params) => <TextField {...params} />}
               defaultValue={
-                gradeList.find(
-                  (item) => item.id === formOthersEmployee.grade_id
-                ) || null
+                gradeList.find((item) => item.id === employeeState.grade_id) ||
+                null
               }
               onChange={(_event, newValue) => {
                 if (newValue) {
@@ -209,6 +193,9 @@ export function EmployeeOthers({
             options={benefitsList}
             getOptionLabel={(option) => option.name}
             value={selectedOption ?? undefined}
+            // defaultValue={benefitsList.filter((item) =>
+            //   employeeState.benefits.includes(item.id as any)
+            // )}
             sx={autocompleteStyles}
             onChange={handleOptionChange}
             disableCloseOnSelect
@@ -225,33 +212,43 @@ export function EmployeeOthers({
                 }}
               />
             )}
-            renderOption={(props, option, { selected }) => (
-              <li
-                {...props}
-                style={{
-                  backgroundColor: selected ? "#e9f9ee" : "inherit",
-                  color: selected ? "#30a46c" : "inherit",
-                  padding: "6px 16px",
-                  fontSize: "14px",
-                }}
-              >
-                {option.name}
-              </li>
-            )}
+            renderOption={(props, option, { selected }) => {
+              const isSelected =
+                selectedOption &&
+                selectedOption.some((item) => item.id === option.id);
+
+              console.log(isSelected);
+
+              return (
+                <li
+                  {...props}
+                  style={{
+                    backgroundColor: isSelected ? "#e9f9ee" : "inherit",
+                    color: isSelected ? "#30a46c" : "inherit",
+                    padding: "6px 16px",
+                    fontSize: "14px",
+                  }}
+                >
+                  {option.name}
+                </li>
+              );
+            }}
             renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip
-                  label={option.name}
-                  {...getTagProps({ index })}
-                  onDelete={() => handleDeleteOption(option)}
-                  deleteIcon={
-                    <ClearIcon
-                      onClick={() => handleDeleteOption(option)}
-                      style={{ fontSize: 16 }}
-                    />
-                  }
-                />
-              ))
+              value.map((option, index) => {
+                return (
+                  <Chip
+                    label={option.name}
+                    {...getTagProps({ index })}
+                    onDelete={() => handleDeleteOption(option)}
+                    deleteIcon={
+                      <ClearIcon
+                        onClick={() => handleDeleteOption(option)}
+                        style={{ fontSize: 16 }}
+                      />
+                    }
+                  />
+                );
+              })
             }
           />
         </div>

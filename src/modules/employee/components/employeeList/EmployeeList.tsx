@@ -16,7 +16,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import addIcon from "../../../../assets/add.svg";
 import noData from "../../../../assets/noData.svg";
@@ -24,6 +24,10 @@ import trashIcon from "../../../../assets/trash.svg";
 import trashDisableIcon from "../../../../assets/trashDisable.svg";
 import { IDataEmployeeParams } from "../../../../types/employee";
 import { ROUTES } from "../../../../configs/routes";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../../app/store";
+import { getIdEmployee, resetValueEmployee } from "../../redux/employeeSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
 interface IEmployeeListProps {
   dataEmployee: IDataEmployeeParams;
   onDeleteFieldTable: (listId: number[]) => void;
@@ -103,8 +107,9 @@ export function EmployeeList({
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_event: unknown, newPage: number) => {
     onChangePage(search, newPage);
   };
 
@@ -293,7 +298,7 @@ export function EmployeeList({
                         key={row.id}
                         selected={isRowSelected(row.id)}
                         onClick={() => handleSelectRow(row.id)}
-                        className={`row-start-select  ${
+                        className={`row-start-select cursor-pointer  ${
                           isRowSelected(row.id) ? "row-selected" : ""
                         } `}
                         onDoubleClick={() => {
@@ -337,10 +342,10 @@ export function EmployeeList({
                         <TableCell>{row.audit_salary}</TableCell>
                         <TableCell>{row.position_name}</TableCell>
                         <TableCell>
-                          {row.attendance_allowance_paid === 1 ? "Yes" : "No"}
+                          {row.attendance_allowance_paid ? "Yes" : "No"}
                         </TableCell>
                         <TableCell>
-                          {row.attendance_allowance_paid === 1 ? "Yes" : "No"}
+                          {row.attendance_allowance_paid ? "Yes" : "No"}
                         </TableCell>
                         <TableCell>{row.health_insurance}</TableCell>
                         <TableCell>{row.grade_name}</TableCell>
@@ -370,7 +375,7 @@ export function EmployeeList({
             </TableContainer>
           </div>
           {loading && (
-            <div className="absolute inset-0 bg-slate-200 bg-opacity-30 rounded-lg">
+            <div className="absolute inset-0 bg-slate-50 rounded-lg">
               <div className="absolute top-[50%] right-[50%]">
                 <svg
                   aria-hidden="true"

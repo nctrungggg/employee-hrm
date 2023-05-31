@@ -3,6 +3,7 @@ import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import {
   Button,
   SelectChangeEvent,
+  Skeleton,
   Tab,
   Tabs,
   Typography,
@@ -17,21 +18,18 @@ import { AppDispatch, RootState } from "../../../app/store";
 import { ROUTES } from "../../../configs/routes";
 import { ContractInfomation } from "../../../modules/employee/components/createEmployee/contractInfomation/ContractInfomation";
 
+import { unwrapResult } from "@reduxjs/toolkit";
+import { EmployeeDetails } from "../../../modules/employee/components/createEmployee/employeeDetails/EmployeeDetails";
 import { EmployeeInfomation } from "../../../modules/employee/components/createEmployee/employeeInfomation/EmployeeInfomation";
 import { EmployeeOthers } from "../../../modules/employee/components/createEmployee/employeeOthers/EmployeeOthers";
 import { EmployeeSalary } from "../../../modules/employee/components/createEmployee/employeeSalary/EmployeeSalary";
 import {
-  changeValueEmployee,
+  getBenefits,
+  getGrades,
+  getIdEmployee,
   resetValueEmployee,
 } from "../../../modules/employee/redux/employeeSlice";
-import {
-  IBenefitParams,
-  IFormContractEmployeeParams,
-  IFormDetailsEmployeeParams,
-  IFormEmployeeInformationParams,
-  IFormSalaryEmployeeParams,
-} from "../../../types/employee";
-import { EmployeeDetails } from "../../../modules/employee/components/createEmployee/employeeDetails/EmployeeDetails";
+import { IBenefitParams, IValueCheckboxParams } from "../../../types/employee";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -68,86 +66,45 @@ function a11yProps(index: number) {
 
 export function CreateEmployeePage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
   const employee = useSelector((state: RootState) => state.employee.employee);
-  console.log("📢[CreateEmployeePage.tsx:72]: employee: ", employee);
+  const [employeeState, setEmployeeState] = useState(employee);
+
+  useEffect(() => {
+    setEmployeeState(employee);
+  }, [employee]);
+
   const { id } = useParams();
+  const idEmployee = Number(id);
 
   const [valueTab, setValueTab] = useState(0);
-  const [dob, setDob] = useState<string | null>(employee?.dob || "");
+
   const [contractDate, setContractDate] = useState<string | null>(
-    employee.contract_start_date || ""
+    employeeState.contract_start_date || ""
   );
+
   const [isActiveAdd, setIsActiveAdd] = useState<boolean>(false);
 
   const [tabErorrInfo, setTabErrorInfo] = useState<boolean>(false);
   const [tabErorrContract, setTabErrorContract] = useState<boolean>(false);
   const [tabErorrSalary, setTabErrorSalary] = useState<boolean>(false);
 
-  const dispatch = useDispatch<AppDispatch>();
+  const [loadingBttUpdate, setLoadingBttUpdate] = useState(false);
 
-  // state employee Information form
-  const [formEmployeeInfomation, setFormEmployeeInfomation] =
-    useState<IFormEmployeeInformationParams>({
-      nik: employee.staff_id,
-      name: employee.name,
-      gender: employee.gender,
-      mother_name: employee.mother_name,
-      dob: employee.dob,
-      pob: String(employee.pob),
-      ktp_no: employee.ktp_no,
-      nc_id: employee.nc_id,
-      home_address_1: employee.home_address_1,
-      home_address_2: String(employee.home_address_2),
-      mobile_no: String(employee.mobile_no),
-      tel_no: employee.tel_no,
-      marriage_id: String(employee.marriage_id),
-      card_number: String(employee.card_number),
-      bank_account_no: employee.bank_account_no,
-      bank_name: employee.bank_name,
-      family_card_number: employee.family_card_number,
-      safety_insurance_no: employee.safety_insurance_no,
-      health_insurance_no: employee.health_insurance_no,
-    });
-
-  // state contract information form
-  const [formContractEmployee, setFormContractEmployee] =
-    useState<IFormContractEmployeeParams>({
-      contract_start_date: employee.contract_start_date,
-      type: String(employee.type),
-      contract: [],
-    });
-
-  // state employee detail information
-  const [formDetailEmployee, setFormDetailEmployee] =
-    useState<IFormDetailsEmployeeParams>({
-      department_id: employee.department_id,
-      position_id: employee.position_id,
-    });
-
-  // state employee Salary information
-  const [formSalaryEmployee, setFormSalaryEmployee] =
-    useState<IFormSalaryEmployeeParams>({
-      basic_salary: employee.basic_salary,
-      audit_salary: employee.audit_salary,
-      safety_insurance: employee.safety_insurance,
-      health_insurance: employee.health_insurance,
-      meal_allowance: employee.meal_allowance,
-    });
-
-  const [formOthersEmployee, setFormOthersEmployee] = useState<{
-    remark: string;
-    grade_id: number;
-    benefits: IBenefitParams[];
-  }>({
-    remark: employee.remark,
-    grade_id: employee.grade_id,
-    benefits: employee.benefits,
-  });
-
-  const { name, ktp_no, nc_id, gender } = formEmployeeInfomation;
-  const { contract_start_date, type } = formContractEmployee;
-  const { basic_salary, audit_salary, safety_insurance, meal_allowance } =
-    formSalaryEmployee;
+  const {
+    name,
+    ktp_no,
+    nc_id,
+    gender,
+    contract_start_date,
+    type,
+    basic_salary,
+    audit_salary,
+    safety_insurance,
+    meal_allowance,
+    dob,
+  } = employeeState;
 
   const handleChangeTabs = (_event: React.SyntheticEvent, newValue: number) => {
     setValueTab(newValue);
@@ -176,18 +133,19 @@ export function CreateEmployeePage() {
   ) => {
     const { name, value } = e.target;
 
-    setFormEmployeeInfomation((prevValues) => ({
+    setEmployeeState((prevValues) => ({
       ...prevValues,
       [name]: value,
     }));
   };
+
   const handleDateChangeDob = (dateString: string | null) => {
-    setFormEmployeeInfomation((prevValues) => ({
+    setEmployeeState((prevValues) => ({
       ...prevValues,
       dob: dateString || "",
     }));
 
-    setDob(dateString);
+    // setDob(dateString);
   };
 
   // handle Add contract information Submitted
@@ -195,15 +153,14 @@ export function CreateEmployeePage() {
     e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
   ) => {
     const { name, value } = e.target;
-
-    setFormContractEmployee((prevValues) => ({
+    setEmployeeState((prevValues) => ({
       ...prevValues,
       [name]: value,
       contract_start_date: contractDate || "",
     }));
   };
   const handleDateChangeContractDate = (dateString: string | null) => {
-    setFormContractEmployee((prevValues) => ({
+    setEmployeeState((prevValues) => ({
       ...prevValues,
       contract_start_date: dateString || "",
     }));
@@ -216,10 +173,21 @@ export function CreateEmployeePage() {
     e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
   ) => {
     const { name, value } = e.target;
-
-    setFormDetailEmployee((prevValues) => ({
+    setEmployeeState((prevValues) => ({
       ...prevValues,
       [name]: value,
+    }));
+  };
+
+  const handleChangeCheckboxFormDetail = (
+    valueCheckbox: IValueCheckboxParams
+  ) => {
+    setEmployeeState((prevValues) => ({
+      ...prevValues,
+      entitle_ot: valueCheckbox.entitledOT,
+      meal_allowance_paid: valueCheckbox.mealAllowancePaid,
+      operational_allowance_paid: valueCheckbox.operationalAllowancePaid,
+      attendance_allowance_paid: valueCheckbox.attendanceAllowancePaid,
     }));
   };
 
@@ -228,8 +196,7 @@ export function CreateEmployeePage() {
     e: ChangeEvent<HTMLInputElement> | SelectChangeEvent<string>
   ) => {
     const { name, value } = e.target;
-
-    setFormSalaryEmployee((prevValues) => ({ ...prevValues, [name]: value }));
+    setEmployeeState((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
   // handle Add Others Employee Information Submitted
@@ -238,18 +205,19 @@ export function CreateEmployeePage() {
     selectedOption: IBenefitParams[],
     remark: string
   ) => {
-    setFormOthersEmployee({
+    setEmployeeState((prevValue) => ({
+      ...prevValue,
       remark: remark,
       grade_id: selectedGradeId,
       benefits: selectedOption,
-    });
+    }));
   };
 
   // check data when adding employee
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkInvalidValueForm = () => {
     // check tabs err information
-    const hasErrorInfo = !(name && ktp_no && nc_id && dob && gender);
+    const hasErrorInfo = !(name && ktp_no && nc_id && dob && String(gender));
     setTabErrorInfo(hasErrorInfo);
 
     // check tabs err salary
@@ -259,6 +227,7 @@ export function CreateEmployeePage() {
       safety_insurance,
       meal_allowance,
     ];
+
     const hasErrorSalary = !fieldsToCheck.every(
       (field) => String(field) && Number(field) >= 0
     );
@@ -270,16 +239,7 @@ export function CreateEmployeePage() {
     }
 
     // set active button add
-    if (
-      name &&
-      ktp_no &&
-      nc_id &&
-      dob &&
-      contract_start_date &&
-      type &&
-      gender &&
-      !hasErrorSalary
-    ) {
+    if (!tabErorrInfo && !tabErorrContract && !tabErorrSalary) {
       setIsActiveAdd(true);
     } else {
       setIsActiveAdd(false);
@@ -300,41 +260,31 @@ export function CreateEmployeePage() {
   ]);
 
   // update data vào redux
-  useEffect(() => {
-    const mergedData = {
-      ...formEmployeeInfomation,
-      ...formContractEmployee,
-      ...formDetailEmployee,
-      ...formSalaryEmployee,
-      ...formOthersEmployee,
-    };
-
-    dispatch(changeValueEmployee(mergedData));
-  }, [
-    dispatch,
-    formContractEmployee,
-    formDetailEmployee,
-    formEmployeeInfomation,
-    formOthersEmployee,
-    formSalaryEmployee,
-  ]);
+  // useEffect(() => {
+  //   // dispatch(changeValueEmployee(employeeState));
+  // }, [dispatch, employeeState]);
 
   // handle add employee
   const handleAddEmployee = async () => {
-    const { benefits } = formOthersEmployee;
+    // transformed data form others
+    const { benefits } = employeeState;
     const benefitsIds = benefits.map((benefit) => benefit.id);
     const newFormOthersEmployee = {
-      ...formOthersEmployee,
       benefits: benefitsIds,
     };
 
+    // convert data form detail
+    const transformedFormDetailEmployee = Object.fromEntries(
+      Object.entries(employeeState).map(([key, value]) => [
+        key,
+        value === true ? 1 : value === false ? 0 : value,
+      ])
+    );
+
     const newData = Object.assign(
       {},
-      employee,
-      formEmployeeInfomation,
-      formContractEmployee,
-      formDetailEmployee,
-      formSalaryEmployee,
+      employeeState,
+      transformedFormDetailEmployee,
       newFormOthersEmployee
     );
 
@@ -355,6 +305,68 @@ export function CreateEmployeePage() {
     }
   };
 
+  // call api grades and benefits
+  useEffect(() => {
+    (async () => {
+      await Promise.all([dispatch(getGrades()), dispatch(getBenefits())]).then(
+        ([resultActionDepartment, resultActionPosition]) => {
+          unwrapResult(resultActionDepartment);
+          unwrapResult(resultActionPosition);
+        }
+      );
+    })();
+  }, [dispatch]);
+
+  // call api id employee
+  useEffect(() => {
+    (async () => {
+      if (idEmployee) {
+        const resultAction = await dispatch(getIdEmployee(idEmployee));
+        unwrapResult(resultAction);
+      }
+    })();
+  }, [dispatch, idEmployee]);
+
+  // handle update employee
+  const handleUpdateEmployee = async () => {
+    const { benefits } = employeeState;
+    const benefitsIds = benefits.map((benefit) => benefit.id);
+    const newFormOthersEmployee = {
+      benefits: benefitsIds,
+    };
+
+    // convert data form detail
+    const transformedFormDetailEmployee = Object.fromEntries(
+      Object.entries(employeeState).map(([key, value]) => [
+        key,
+        value === true ? 1 : value === false ? 0 : value,
+      ])
+    );
+    const newData = Object.assign(
+      {},
+      employeeState,
+      transformedFormDetailEmployee,
+      newFormOthersEmployee
+    );
+    try {
+      setLoadingBttUpdate(true);
+
+      const {
+        data: { message },
+      } = await employeeApi.updateEmployee(newData, id);
+
+      toast.success(message);
+
+      setLoadingBttUpdate(false);
+
+      navigate(ROUTES.employee);
+
+      dispatch(resetValueEmployee());
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
+  };
+
   return (
     <div className="pt-[92px] pl-[376px] ">
       <div className="w-[1030px]">
@@ -364,10 +376,37 @@ export function CreateEmployeePage() {
           </h1>
           {id ? (
             <Button
+              variant="contained"
               type="submit"
-              className="h-[48px] w-[140px] !capitalize !rounded-md !bg-bgrBlue !text-white"
+              className={`h-[48px] w-[140px] !capitalize !rounded-md ${
+                isActiveAdd && "!bg-bgrBlue"
+              } !text-white cursor-pointer`}
+              disabled={isActiveAdd ? false : true}
+              onClick={handleUpdateEmployee}
             >
-              Save Change
+              {loadingBttUpdate ? (
+                <div>
+                  <svg
+                    aria-hidden="true"
+                    className="inline-block w-6 h-6 text-center text-white animate-spin dark:text-gray-600 fill-white"
+                    viewBox="0 0 100 101"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      className="text-slate-300"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="currentFill"
+                    />
+                  </svg>
+                </div>
+              ) : (
+                "Save Change"
+              )}
             </Button>
           ) : (
             <Button
@@ -455,33 +494,36 @@ export function CreateEmployeePage() {
             <div className="mb-6">
               <TabPanel value={valueTab} index={0}>
                 <EmployeeInfomation
-                  FormEmployeeInformation={formEmployeeInfomation}
+                  employeeState={employeeState}
                   handleChangeFormInfoEmployee={handleChangeFormInfoEmployee}
                   handleDateChangeDob={handleDateChangeDob}
                 />
               </TabPanel>
               <TabPanel value={valueTab} index={1}>
                 <ContractInfomation
-                  formContractEmployee={formContractEmployee}
+                  employeeState={employeeState}
                   handleChangeFormContract={handleChangeFormContract}
                   handleDateChangeContractDate={handleDateChangeContractDate}
                 />
               </TabPanel>
               <TabPanel value={valueTab} index={2}>
                 <EmployeeDetails
-                  formDetailEmployee={formDetailEmployee}
+                  employeeState={employeeState}
                   handleChangeFormDetail={handleChangeFormDetail}
+                  handleChangeCheckboxFormDetail={
+                    handleChangeCheckboxFormDetail
+                  }
                 />
               </TabPanel>
               <TabPanel value={valueTab} index={3}>
                 <EmployeeSalary
-                  formSalaryEmployee={formSalaryEmployee}
+                  employeeState={employeeState}
                   handleFormChangeSalary={handleFormChangeSalary}
                 />
               </TabPanel>
               <TabPanel value={valueTab} index={4}>
                 <EmployeeOthers
-                  formOthersEmployee={formOthersEmployee}
+                  employeeState={employeeState}
                   handleFormChangeOthers={handleFormChangeOthers}
                 />
               </TabPanel>

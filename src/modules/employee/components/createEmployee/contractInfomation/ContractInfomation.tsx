@@ -3,10 +3,12 @@ import { ChangeEvent } from "react";
 import InputDatePicker from "../../../../../components/formControl/inputDatePicker/InputDatePicker";
 import { SelectInput } from "../../../../../components/formControl/selectInput/SelectInput";
 import { employeeType } from "../../../../../contexts/dataLink";
-import { IFormContractEmployeeParams } from "../../../../../types/employee";
+import {
+  IEmployeeParams
+} from "../../../../../types/employee";
 
 export interface IContractInfomationProps {
-  formContractEmployee: IFormContractEmployeeParams;
+  employeeState: IEmployeeParams;
   handleChangeFormContract: (
     event: ChangeEvent<HTMLInputElement> | SelectChangeEvent
   ) => void;
@@ -14,7 +16,7 @@ export interface IContractInfomationProps {
 }
 
 export function ContractInfomation({
-  formContractEmployee,
+  employeeState,
   handleChangeFormContract,
   handleDateChangeContractDate,
 }: IContractInfomationProps) {
@@ -33,7 +35,7 @@ export function ContractInfomation({
         <InputDatePicker
           isRequired
           type="date"
-          value={formContractEmployee.contract_start_date}
+          value={employeeState.contract_start_date}
           name="contract_start_date"
           handleDateChangeContractDate={handleDateChangeContractDate}
           label="Date Start"
@@ -43,7 +45,7 @@ export function ContractInfomation({
           dataList={employeeType}
           label="Employee Type"
           placeholder="Choose Type"
-          value={formContractEmployee.type}
+          value={employeeState.type}
           onChange={handleChangeFormContract}
           name="type"
           isType

@@ -40,8 +40,19 @@ export const getEmployeeList = createAsyncThunk(
   }
 );
 
+export const getIdEmployee = createAsyncThunk(
+  "employee/id",
+  async (id: number) => {
+    const {
+      data: { data },
+    } = await employeeApi.getIdEmployeeApi(id);
+
+    return data;
+  }
+);
+
 export const deleteFieldTableEmployee = createAsyncThunk(
-  "product/deleteProduct",
+  "product/deleteEmployee",
   async (record_ids: number[]) => {
     const {
       data: { message },
@@ -116,7 +127,11 @@ const initialState: initialState = {
   loadingEmployee: false,
 
   employee: {
-    attendance_allowance_paid: 1,
+    attendance_allowance_paid: true,
+    operational_allowance_paid: true,
+    entitle_ot: false,
+    meal_allowance_paid: false,
+    meal_allowance: 0,
     audit_salary: 0,
     bank_account_no: "",
     bank_name: "",
@@ -130,7 +145,6 @@ const initialState: initialState = {
     department_id: "",
     department_name: "",
     dob: "",
-    entitle_ot: 1,
     family_card_number: "",
     gender: "",
     grade_id: 0,
@@ -146,15 +160,12 @@ const initialState: initialState = {
     manager_name: "",
     marriage_code: "",
     marriage_id: "",
-    meal_allowance: 0,
-    meal_allowance_paid: 1,
     minimum_salary_used: "",
     mobile_no: "",
     mother_name: "",
     name: "",
     nc_id: "",
     old_staff_id: 0,
-    operational_allowance_paid: 1,
     pob: "",
     position_id: "",
     position_name: "",
@@ -194,6 +205,9 @@ const authSlice = createSlice({
   extraReducers: {
     [getEmployeeList.fulfilled.toString()]: (state, action) => {
       state.dataEmployee = action.payload;
+    },
+    [getIdEmployee.fulfilled.toString()]: (state, action) => {
+      state.employee = action.payload;
     },
 
     [getMarriageStatus.fulfilled.toString()]: (state, action) => {

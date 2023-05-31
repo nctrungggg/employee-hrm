@@ -5,15 +5,15 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../../../../../app/store";
+import InputDatePicker from "../../../../../components/formControl/inputDatePicker/InputDatePicker";
 import { InputField } from "../../../../../components/formControl/inputField/InputField";
 import { SelectInput } from "../../../../../components/formControl/selectInput/SelectInput";
 import { genders } from "../../../../../contexts/dataLink";
-import { IFormEmployeeInformationParams } from "../../../../../types/employee";
+import { IEmployeeParams } from "../../../../../types/employee";
 import { getMarriageStatus } from "../../../redux/employeeSlice";
-import InputDatePicker from "../../../../../components/formControl/inputDatePicker/InputDatePicker";
 
 export interface IEmployeeInfomationProps {
-  FormEmployeeInformation: IFormEmployeeInformationParams;
+  employeeState: IEmployeeParams;
   handleChangeFormInfoEmployee: (
     event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent
   ) => void;
@@ -21,7 +21,7 @@ export interface IEmployeeInfomationProps {
 }
 
 export function EmployeeInfomation({
-  FormEmployeeInformation,
+  employeeState,
   handleChangeFormInfoEmployee,
   handleDateChangeDob,
 }: IEmployeeInfomationProps) {
@@ -39,6 +39,8 @@ export function EmployeeInfomation({
     })();
   }, [dispatch]);
 
+  console.log(employeeState);
+
   return (
     <div>
       <div className="flex justify-between">
@@ -54,8 +56,9 @@ export function EmployeeInfomation({
         <div className="flex flex-col gap-[10px]">
           {id && (
             <InputField
+              disabled
               type="text"
-              value={FormEmployeeInformation.nik}
+              value={employeeState.staff_id}
               name="nik"
               onChange={handleChangeFormInfoEmployee}
               label="NIK"
@@ -63,7 +66,7 @@ export function EmployeeInfomation({
           )}
           <InputField
             type="text"
-            value={FormEmployeeInformation.name}
+            value={employeeState.name}
             name="name"
             isRequired
             onChange={handleChangeFormInfoEmployee}
@@ -74,20 +77,20 @@ export function EmployeeInfomation({
             label="Gender"
             placeholder="Choose Gender"
             isRequired
-            value={FormEmployeeInformation.gender}
+            value={String(employeeState.gender)}
             onChange={handleChangeFormInfoEmployee}
             name="gender"
           />
           <InputField
             type="text"
-            value={FormEmployeeInformation.mother_name}
+            value={employeeState.mother_name}
             name="mother_name"
             onChange={handleChangeFormInfoEmployee}
             label="Mother Name"
           />
           <InputDatePicker
             type="date"
-            value={FormEmployeeInformation.dob}
+            value={employeeState.dob}
             name="dob"
             handleDateChangeDob={handleDateChangeDob}
             label="Date of birth"
@@ -95,14 +98,14 @@ export function EmployeeInfomation({
           />
           <InputField
             type="text"
-            value={FormEmployeeInformation.pob}
+            value={employeeState.pob}
             name="pob"
             onChange={handleChangeFormInfoEmployee}
             label="Place of birth"
           />
           <InputField
             type="text"
-            value={FormEmployeeInformation.ktp_no}
+            value={employeeState.ktp_no}
             name="ktp_no"
             isRequired
             onChange={handleChangeFormInfoEmployee}
@@ -110,7 +113,7 @@ export function EmployeeInfomation({
           />
           <InputField
             type="text"
-            value={FormEmployeeInformation.nc_id}
+            value={employeeState.nc_id}
             name="nc_id"
             isRequired
             onChange={handleChangeFormInfoEmployee}
@@ -118,14 +121,14 @@ export function EmployeeInfomation({
           />
           <InputField
             type="text"
-            value={FormEmployeeInformation.home_address_1}
+            value={employeeState.home_address_1}
             name="home_address_1"
             onChange={handleChangeFormInfoEmployee}
             label="Home Address 1"
           />
           <InputField
             type="text"
-            value={FormEmployeeInformation.home_address_2}
+            value={employeeState.home_address_2}
             name="home_address_2"
             onChange={handleChangeFormInfoEmployee}
             label="Home Address 2"
@@ -134,14 +137,14 @@ export function EmployeeInfomation({
         <div className="flex flex-col gap-[10px]">
           <InputField
             type="text"
-            value={FormEmployeeInformation.mobile_no}
+            value={employeeState.mobile_no}
             name="mobile_no"
             onChange={handleChangeFormInfoEmployee}
             label="Mobile No."
           />
           <InputField
             type="text"
-            value={FormEmployeeInformation.tel_no}
+            value={employeeState.tel_no}
             name="tel_no"
             onChange={handleChangeFormInfoEmployee}
             label="Tel No."
@@ -150,49 +153,49 @@ export function EmployeeInfomation({
             dataList={marriageStatus}
             label="Marriage Status"
             placeholder="Choose Marriage Status"
-            value={FormEmployeeInformation.marriage_id}
+            value={employeeState.marriage_id}
             onChange={handleChangeFormInfoEmployee}
             name="marriage_id"
             isNa
           />
           <InputField
             type="text"
-            value={FormEmployeeInformation.card_number}
+            value={employeeState.card_number}
             name="card_number"
             onChange={handleChangeFormInfoEmployee}
             label="Bank Card No."
           />
           <InputField
             type="text"
-            value={FormEmployeeInformation.bank_account_no}
+            value={employeeState.bank_account_no}
             name="bank_account_no"
             onChange={handleChangeFormInfoEmployee}
             label="Bank Account No."
           />
           <InputField
             type="text"
-            value={FormEmployeeInformation.bank_name}
+            value={employeeState.bank_name}
             name="bank_name"
             onChange={handleChangeFormInfoEmployee}
             label="Bank Name"
           />
           <InputField
             type="text"
-            value={FormEmployeeInformation.family_card_number}
+            value={employeeState.family_card_number}
             name="family_card_number"
             onChange={handleChangeFormInfoEmployee}
             label="Family Card Number"
           />
           <InputField
             type="text"
-            value={FormEmployeeInformation.safety_insurance_no}
+            value={employeeState.safety_insurance_no}
             name="safety_insurance_no"
             onChange={handleChangeFormInfoEmployee}
             label="Safety Insurance No."
           />
           <InputField
             type="text"
-            value={FormEmployeeInformation.health_insurance_no}
+            value={employeeState.health_insurance_no}
             name="health_insurance_no"
             onChange={handleChangeFormInfoEmployee}
             label="Health Insurance No."

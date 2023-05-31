@@ -1,17 +1,20 @@
-import { ChangeEvent } from "react";
-import { IFormSalaryEmployeeParams } from "../../../../../types/employee";
 import { SelectChangeEvent } from "@mui/material";
+import { ChangeEvent } from "react";
 import { InputField } from "../../../../../components/formControl/inputField/InputField";
+import {
+  IEmployeeParams
+} from "../../../../../types/employee";
 
 export interface IEmployeeSalaryProps {
-  formSalaryEmployee: IFormSalaryEmployeeParams;
+  employeeState: IEmployeeParams;
+
   handleFormChangeSalary?: (
     event: ChangeEvent<HTMLInputElement> | SelectChangeEvent
   ) => void;
 }
 
 export function EmployeeSalary({
-  formSalaryEmployee,
+  employeeState,
   handleFormChangeSalary,
 }: IEmployeeSalaryProps) {
   return (
@@ -26,7 +29,7 @@ export function EmployeeSalary({
       <div className="flex flex-col gap-[10px]">
         <InputField
           type="number"
-          value={formSalaryEmployee.basic_salary}
+          value={employeeState.basic_salary}
           name="basic_salary"
           isRequired
           onChange={handleFormChangeSalary}
@@ -35,7 +38,7 @@ export function EmployeeSalary({
         />
         <InputField
           type="number"
-          value={formSalaryEmployee.audit_salary}
+          value={employeeState.audit_salary}
           name="audit_salary"
           isRequired
           onChange={handleFormChangeSalary}
@@ -44,7 +47,7 @@ export function EmployeeSalary({
         />
         <InputField
           type="number"
-          value={formSalaryEmployee.safety_insurance}
+          value={employeeState.safety_insurance}
           name="safety_insurance"
           isRequired
           onChange={handleFormChangeSalary}
@@ -53,7 +56,7 @@ export function EmployeeSalary({
         />
         <InputField
           type="number"
-          value={formSalaryEmployee.health_insurance}
+          value={employeeState.health_insurance}
           name="health_insurance"
           onChange={handleFormChangeSalary}
           label="Healthy Insurance Amount"
@@ -61,7 +64,7 @@ export function EmployeeSalary({
         />
         <InputField
           type="number"
-          value={formSalaryEmployee.meal_allowance}
+          value={employeeState.meal_allowance}
           name="meal_allowance"
           isRequired
           onChange={handleFormChangeSalary}

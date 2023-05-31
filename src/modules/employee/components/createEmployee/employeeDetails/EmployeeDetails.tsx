@@ -5,14 +5,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../app/store";
 import BpCheckbox from "../../../../../components/bpCheckbox/BpCheckbox";
 import { SelectInput } from "../../../../../components/formControl/selectInput/SelectInput";
-import { IFormDetailsEmployeeParams } from "../../../../../types/employee";
+import {
+  IEmployeeParams,
+  IValueCheckboxParams
+} from "../../../../../types/employee";
 import { getDepartment, getPosition } from "../../../redux/employeeSlice";
 
 interface IEmployeeDetailsProps {
-  formDetailEmployee: IFormDetailsEmployeeParams;
+  employeeState: IEmployeeParams;
+
   handleChangeFormDetail: (
     event: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent
   ) => void;
+  handleChangeCheckboxFormDetail: (valueCheckbox: IValueCheckboxParams) => void;
 }
 
 interface CheckboxValues {
@@ -23,18 +28,19 @@ interface CheckboxValues {
 }
 
 export function EmployeeDetails({
-  formDetailEmployee,
+  employeeState,
   handleChangeFormDetail,
+  handleChangeCheckboxFormDetail,
 }: IEmployeeDetailsProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { departmentList, positionList } = useSelector(
     (state: RootState) => state.employee
   );
   const [checkboxValues, setCheckboxValues] = useState<CheckboxValues>({
-    entitledOT: false,
-    mealAllowancePaid: false,
-    operationalAllowancePaid: true,
-    attendanceAllowancePaid: true,
+    entitledOT: employeeState.entitle_ot,
+    mealAllowancePaid: employeeState.meal_allowance_paid,
+    operationalAllowancePaid: employeeState.operational_allowance_paid,
+    attendanceAllowancePaid: employeeState.attendance_allowance_paid,
   });
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +61,8 @@ export function EmployeeDetails({
       };
     }
     setCheckboxValues(updatedValues);
+
+    handleChangeCheckboxFormDetail(updatedValues);
   };
 
   useEffect(() => {
@@ -86,7 +94,7 @@ export function EmployeeDetails({
             dataList={departmentList}
             label="Department"
             placeholder="Choose Department"
-            value={formDetailEmployee.department_id}
+            value={employeeState.department_id}
             onChange={handleChangeFormDetail}
             name="department_id"
             isNa
@@ -96,7 +104,7 @@ export function EmployeeDetails({
             dataList={positionList}
             label="Position"
             placeholder="Choose Position"
-            value={formDetailEmployee.position_id}
+            value={employeeState.position_id}
             onChange={handleChangeFormDetail}
             name="position_id"
             isNa

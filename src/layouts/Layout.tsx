@@ -47,7 +47,7 @@ const Layout = ({ children }: ILayoutProps) => {
             <div>{children}</div>
           </div>
 
-          <Footer />
+          {/* <Footer /> */}
         </>
       ) : (
         <>{children}</>

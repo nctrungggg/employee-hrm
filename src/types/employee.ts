@@ -30,10 +30,10 @@ export interface IEmployeeParams {
   health_insurance: number;
   safety_insurance: number;
   meal_allowance: number;
-  entitle_ot: number;
-  meal_allowance_paid: number;
-  operational_allowance_paid: number;
-  attendance_allowance_paid: number;
+  entitle_ot: boolean;
+  meal_allowance_paid: boolean;
+  operational_allowance_paid: boolean;
+  attendance_allowance_paid: boolean;
   minimum_salary_used: string;
   contract_start_date: string;
   shift: string;
@@ -54,6 +54,7 @@ export interface IEmployeeParams {
 }
 
 export interface IBenefitParams {
+  include(): any;
   id: number;
   name: string;
   code: string;
@@ -155,6 +156,10 @@ export interface IFormContractEmployeeParams {
 export interface IFormDetailsEmployeeParams {
   department_id: string | number | null;
   position_id: string | number | null;
+  entitle_ot: boolean;
+  meal_allowance_paid: boolean;
+  operational_allowance_paid: boolean;
+  attendance_allowance_paid: boolean;
 }
 
 export interface IDepartmentParams {
@@ -182,4 +187,11 @@ export interface IFormSalaryEmployeeParams {
   safety_insurance: number;
   health_insurance: number;
   meal_allowance: number;
+}
+
+export interface IValueCheckboxParams {
+  entitledOT: boolean;
+  mealAllowancePaid: boolean;
+  operationalAllowancePaid: boolean;
+  attendanceAllowancePaid: boolean;
 }

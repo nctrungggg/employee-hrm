@@ -39,10 +39,7 @@ export function SelectInput({
     gender: Yup.string().required("Please input Gender"),
   });
 
-  const {
-    register,
-    formState: { errors },
-  } = useForm({
+  const { register } = useForm({
     mode: "onChange",
     resolver: yupResolver(schema),
   });
@@ -85,7 +82,7 @@ export function SelectInput({
           onChange={onChange}
           onBlur={handleSelectBlur}
           name={name}
-          value={value == "" ? undefined : value}
+          value={value}
           defaultValue={isNa ? "" : undefined}
           renderValue={(selected: any) => {
             if (selected === "" || selected === undefined) {

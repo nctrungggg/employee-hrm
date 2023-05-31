@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -31,16 +31,18 @@ const InputDatePicker = (props: IInputDatePickerProps) => {
     handleDateChangeDob,
     handleDateChangeContractDate,
   } = props;
+
   const [selectedDate, setSelectedDate] = useState<Date | null>(
     value ? new Date(value) : null
   );
+
+  console.log(value);
+
   const [isValue, setIsValue] = useState(true);
 
   const handleDateChange = (date: Date | null) => {
     const dateString = moment(date).format("YYYY/MM/DD");
     const formattedDate = dateString.replace(/\//g, "-");
-
-    // const formattedDate = dateString.replace(/\//g, "-");
 
     setSelectedDate(date);
 
@@ -85,7 +87,7 @@ const InputDatePicker = (props: IInputDatePickerProps) => {
             <DatePicker
               // showYearDropdown
               name={name}
-              selected={selectedDate}
+              selected={value ? new Date(value) : null}
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               onChange={handleDateChange}

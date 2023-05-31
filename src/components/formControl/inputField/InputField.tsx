@@ -1,22 +1,19 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import moment from "moment-timezone";
-import { ChangeEvent, useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
-import { Controller, useForm } from "react-hook-form";
-import { MdKeyboardArrowDown } from "react-icons/md";
-import * as Yup from "yup";
-import datePickerSvg from "../../../assets/datePicker.svg";
 import { Box } from "@mui/material";
+import { ChangeEvent, useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import * as Yup from "yup";
 
 export interface IInputFieldProps {
   label: string;
   isRequired?: boolean;
-  name: string | any;
+  name: any;
+  value: any;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  value: string | number;
   type: string;
   isRp?: boolean;
   upload?: boolean;
+  disabled?: boolean;
 }
 
 export function InputField({
@@ -28,6 +25,7 @@ export function InputField({
   isRp,
   isRequired,
   type,
+  disabled,
 }: IInputFieldProps) {
   const schema = Yup.object().shape({
     name: Yup.string().required("Please input Name"),
@@ -56,7 +54,6 @@ export function InputField({
       .min(1, "Please input Meal Allowance"),
   });
 
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isValueCheck, setIsValueCheck] = useState([name]);
   const {
     control,
@@ -64,14 +61,6 @@ export function InputField({
     trigger,
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
-
-
-  const handleDateChange = (date: Date | null) => {
-    // const dateString = moment(date).format("YYYY/MM/DD");
-    // const formattedDate = dateString.replace(/\//g, "-");
-
-    setSelectedDate(date);
-  };
 
   useEffect(() => {
     // Kiểm tra lỗi khi ô input blur
@@ -100,25 +89,7 @@ export function InputField({
           )}
         </label>
 
-        {type === "date" ? (
-          <div className="relative">
-            <DatePicker
-              // showYearDropdown
-              name={name}
-              selected={selectedDate}
-              onChange={handleDateChange}
-              dateFormat="yyyy/MM/dd"
-              isClearable
-              className="input-type-date h-12 min-w-290 "
-            ></DatePicker>
-            <span className="absolute top-[1.35rem] left-5">
-              <img src={datePickerSvg} className="w-7" alt="" />
-            </span>
-            <span className="absolute top-6 right-3">
-              <MdKeyboardArrowDown size={16} />
-            </span>
-          </div>
-        ) : isRp ? (
+        {isRp ? (
           <div className=" flex items-center">
             <div>
               <div className="relative">
@@ -200,11 +171,14 @@ export function InputField({
         ) : (
           <div className="flex flex-col">
             <input
+              disabled={disabled}
               type={type}
               onChange={onChange}
               value={value}
               name={name}
-              className={`input-type h-12 min-w-290 max-w-300  ${
+              className={`${
+                disabled && "!text-[#687076] !bg-[#e1e1e1]"
+              } input-type h-12 min-w-290 max-w-300  ${
                 upload && "max-w-[230px]"
               }`}
             />

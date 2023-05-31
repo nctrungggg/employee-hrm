@@ -18,6 +18,11 @@ const employeeApi = {
     });
   },
 
+  getIdEmployeeApi(id: number) {
+    const url = `employee/${id}`;
+    return axiosClient.get(url);
+  },
+
   addEmployeeApi(formData: IEmployeeParams) {
     const url = `employee`;
     return axiosClient.post(url, formData);
@@ -30,6 +35,11 @@ const employeeApi = {
         record_ids: record_ids,
       },
     });
+  },
+
+  updateEmployee(data: IEmployeeParams, id: string | undefined) {
+    const url = `employee/${id}`;
+    return axiosClient.put(url, data);
   },
 
   getMarriageStatusApi() {

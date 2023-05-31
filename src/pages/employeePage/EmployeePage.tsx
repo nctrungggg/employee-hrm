@@ -26,6 +26,7 @@ export function EmployeePage() {
   const dataEmployee = useSelector(
     (state: RootState) => state.employee.dataEmployee
   );
+  console.log(dataEmployee);
 
   const [dataTables, setDataTables] =
     useState<IDataEmployeeParams>(dataEmployee);
