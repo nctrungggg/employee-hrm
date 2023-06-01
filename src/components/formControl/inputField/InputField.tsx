@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import * as Yup from "yup";
+import * as yup from "yup";
 
 export interface IInputFieldProps {
   label: string;
@@ -27,28 +27,35 @@ export function InputField({
   type,
   disabled,
 }: IInputFieldProps) {
-  const schema = Yup.object().shape({
-    name: Yup.string().required("Please input Name"),
-    gender: Yup.string().required("Please input Gender"),
-    ktp_no: Yup.string().required("Please input KTP No"),
-    nc_id: Yup.string().required("Please input National CardID"),
+  const schema = yup.object().shape({
+    name: yup
+      .string()
+      .max(5, "Maximum length is 50 characters")
+      .required("Please input Name"),
+    gender: yup.string().required("Please input Gender"),
+    ktp_no: yup.string().required("Please input KTP No"),
+    nc_id: yup.string().required("Please input National CardID"),
 
-    basic_salary: Yup.number()
+    basic_salary: yup
+      .number()
       .typeError("Please input Salary")
       .required("Please input Salary")
       .min(1, "Please input Salary"),
 
-    audit_salary: Yup.number()
+    audit_salary: yup
+      .number()
       .typeError("Please input Salary")
       .required()
       .min(1, "Please input Salary (Audit)"),
 
-    safety_insurance: Yup.number()
+    safety_insurance: yup
+      .number()
       .typeError("Please input Salary")
       .required()
       .min(1, "Please input Safety Insurance Amount"),
 
-    meal_allowance: Yup.number()
+    meal_allowance: yup
+      .number()
       .typeError("Please input Salary")
       .required()
       .min(1, "Please input Meal Allowance"),
@@ -61,6 +68,8 @@ export function InputField({
     trigger,
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
+
+  console.log(errors);
 
   useEffect(() => {
     // Kiểm tra lỗi khi ô input blur

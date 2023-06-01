@@ -118,8 +118,16 @@ export function CreateEmployeePage() {
     if (!name && !ktp_no && !nc_id && !gender && newValue !== 0) {
       setTabErrorInfo(true);
     }
+    console.log(contract_start_date);
 
-    if (!contract_start_date && !type && newValue !== 1) {
+    if (
+      (!contract_start_date ||
+        contract_start_date === "Invalid date" ||
+        !type) &&
+      newValue !== 1
+    ) {
+      console.log(123);
+
       setTabErrorContract(true);
     }
 
@@ -212,7 +220,6 @@ export function CreateEmployeePage() {
     remark: string,
     gradeOption: IGradeParams
   ) => {
-
     setEmployeeState((prevValue) => ({
       ...prevValue,
       grade: {
@@ -254,9 +261,15 @@ export function CreateEmployeePage() {
     if (contract_start_date && type) {
       setTabErrorContract(false);
     }
-
+    
     // set active button add
-    if (!tabErorrInfo && contract_start_date && type && !tabErorrSalary) {
+    if (
+      !tabErorrInfo &&
+      contract_start_date &&
+      contract_start_date !== "Invalid date" &&
+      type &&
+      !tabErorrSalary
+    ) {
       setIsActiveAdd(true);
     } else {
       setIsActiveAdd(false);
