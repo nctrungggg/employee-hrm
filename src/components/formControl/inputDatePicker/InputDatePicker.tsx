@@ -6,12 +6,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import ExpandLessIcon from "@mui/icons-material/ExpandMore";
 import moment from "moment-timezone";
 import datePicker from "../../../assets/datePicker.svg";
+import { parseDateValue } from "../../../utils/parseDateValue";
 interface IInputDatePickerProps {
   label: string;
   isRequired?: boolean;
   name: string;
   handleDateChangeDob?: (date: string | null) => void;
-  value: string | number;
+  value: string | null;
   type: string;
   isRp?: boolean;
   upload?: boolean;
@@ -33,12 +34,11 @@ const InputDatePicker = (props: IInputDatePickerProps) => {
   } = props;
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(
-    value ? new Date(value) : null
+    parseDateValue(value)
   );
 
   useEffect(() => {
-    console.log(value);
-    setSelectedDate(value && value !== "Invalid date" ? new Date(value) : null);
+    setSelectedDate(parseDateValue(value));
   }, [value]);
 
   const [isValue, setIsValue] = useState(true);

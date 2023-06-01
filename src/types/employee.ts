@@ -11,7 +11,7 @@ export interface IEmployeeParams {
   position_id: string | number | null;
   type: string;
   mother_name: string;
-  dob: string;
+  dob: string | null;
   pob: string | null;
   ktp_no: string;
   nc_id: string;
@@ -35,7 +35,7 @@ export interface IEmployeeParams {
   operational_allowance_paid: boolean;
   attendance_allowance_paid: boolean;
   minimum_salary_used: string;
-  contract_start_date: string;
+  contract_start_date: string | null;
   shift: string;
   grade_id: number | null;
   remark: string;
