@@ -29,7 +29,11 @@ import {
   getIdEmployee,
   resetValueEmployee,
 } from "../../../modules/employee/redux/employeeSlice";
-import { IBenefitParams, IValueCheckboxParams } from "../../../types/employee";
+import {
+  IBenefitParams,
+  IGradeParams,
+  IValueCheckboxParams,
+} from "../../../types/employee";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -74,6 +78,8 @@ export function CreateEmployeePage() {
   useEffect(() => {
     setEmployeeState(employee);
   }, [employee]);
+
+  console.log(employeeState);
 
   const { id } = useParams();
   const idEmployee = Number(id);
@@ -201,12 +207,23 @@ export function CreateEmployeePage() {
 
   // handle Add Others Employee Information Submitted
   const handleFormChangeOthers = (
-    selectedGradeId: number,
+    selectedGradeId: number | null,
     selectedOption: IBenefitParams[],
-    remark: string
+    remark: string,
+    gradeOption: IGradeParams
   ) => {
+
     setEmployeeState((prevValue) => ({
       ...prevValue,
+      grade: {
+        id: selectedGradeId,
+        company_id: gradeOption?.company_id,
+        name: gradeOption?.name,
+        benefits: gradeOption?.benefits,
+        created_at: gradeOption?.created_at,
+        prefix: gradeOption?.prefix,
+        updated_at: gradeOption?.updated_at,
+      },
       remark: remark,
       grade_id: selectedGradeId,
       benefits: selectedOption,
@@ -239,7 +256,7 @@ export function CreateEmployeePage() {
     }
 
     // set active button add
-    if (!tabErorrInfo && !tabErorrContract && !tabErorrSalary) {
+    if (!tabErorrInfo && contract_start_date && type && !tabErorrSalary) {
       setIsActiveAdd(true);
     } else {
       setIsActiveAdd(false);
@@ -265,12 +282,16 @@ export function CreateEmployeePage() {
   // }, [dispatch, employeeState]);
 
   // handle add employee
+
   const handleAddEmployee = async () => {
     // transformed data form others
-    const { benefits } = employeeState;
+    const { benefits, gender } = employeeState;
+
     const benefitsIds = benefits.map((benefit) => benefit.id);
-    const newFormOthersEmployee = {
+
+    const newFormEmployee = {
       benefits: benefitsIds,
+      gender: Number(gender),
     };
 
     // convert data form detail
@@ -285,7 +306,7 @@ export function CreateEmployeePage() {
       {},
       employeeState,
       transformedFormDetailEmployee,
-      newFormOthersEmployee
+      newFormEmployee
     );
 
     try {
@@ -323,6 +344,8 @@ export function CreateEmployeePage() {
       if (idEmployee) {
         const resultAction = await dispatch(getIdEmployee(idEmployee));
         unwrapResult(resultAction);
+      } else {
+        dispatch(resetValueEmployee());
       }
     })();
   }, [dispatch, idEmployee]);

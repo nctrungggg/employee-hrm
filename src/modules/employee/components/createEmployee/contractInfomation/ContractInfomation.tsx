@@ -3,9 +3,8 @@ import { ChangeEvent } from "react";
 import InputDatePicker from "../../../../../components/formControl/inputDatePicker/InputDatePicker";
 import { SelectInput } from "../../../../../components/formControl/selectInput/SelectInput";
 import { employeeType } from "../../../../../contexts/dataLink";
-import {
-  IEmployeeParams
-} from "../../../../../types/employee";
+import { IEmployeeParams } from "../../../../../types/employee";
+import { useParams } from "react-router-dom";
 
 export interface IContractInfomationProps {
   employeeState: IEmployeeParams;
@@ -20,6 +19,8 @@ export function ContractInfomation({
   handleChangeFormContract,
   handleDateChangeContractDate,
 }: IContractInfomationProps) {
+  const { id } = useParams();
+
   return (
     <div>
       <div className="flex justify-between">
@@ -42,6 +43,7 @@ export function ContractInfomation({
           className={"!w-[250px]"}
         />
         <SelectInput
+          disabled={id ? true : false}
           dataList={employeeType}
           label="Employee Type"
           placeholder="Choose Type"

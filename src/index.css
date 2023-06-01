@@ -1,8 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("https://fonts.googleapis.com/css2?family=Public+Sans:wght@100;200;300;400;500&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
 /* reset css */
 /* http://meyerweb.com/eric/tools/css/reset/
@@ -467,7 +466,7 @@ body {
   font-weight: 400;
   overflow-x: hidden;
   background: #f8f9fa;
-  font-family: "Inter", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .container {
@@ -491,6 +490,9 @@ body {
 /* row selected */
 .row-selected {
   background-color: rgb(233, 249, 238) !important;
+}
+.row-selected > td {
+  color: rgb(17, 24, 28) !important;
 }
 
 .row-start-select:hover {
@@ -709,22 +711,23 @@ input[type="checkbox"]:checked {
 .react-datepicker__close-icon::after {
   cursor: pointer !important;
   background-color: transparent !important;
-  color: #a0a0a0 !important;
+  color: rgb(104, 112, 118) !important;
   border-radius: 50% !important;
-  height: 24px !important;
-  width: 24px !important;
+  height: 20px !important;
+  width: 20px !important;
   padding: 2px !important;
-  font-size: 19px !important;
+  font-size: 16px !important;
   line-height: 1 !important;
   text-align: center !important;
   display: table-cell !important;
   vertical-align: middle !important;
   content: "×" !important;
+  font-weight: 340;
 }
 
 .isRequired {
   color: #e5484d;
-  font-size: 1.5rem;
+  font-size: 20px;
 }
 
 /* tab button create employee */
@@ -788,4 +791,12 @@ input[type="checkbox"]:checked {
 
 .custom-color-select > div {
   color: rgb(17, 24, 28) !important;
+}
+/* table- border */
+.table-upload th:first-child {
+  border-top-left-radius: 8px !important;
+}
+
+.table-upload th:last-child {
+  border-top-right-radius: 8px !important;
 }

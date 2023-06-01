@@ -4,7 +4,12 @@ import { Autocomplete, Chip, TextField, styled } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../app/store";
-import { IBenefitParams, IEmployeeParams } from "../../../../../types/employee";
+import {
+  IBenefitParams,
+  IEmployeeParams,
+  IGradeParams,
+} from "../../../../../types/employee";
+import OtherUpload from "./OtherUpload";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const autocompleteStyles = {
@@ -69,9 +74,10 @@ const TextAreaStyle = styled("textarea")(() => ({
 export interface IEmployeeOthersProps {
   employeeState: IEmployeeParams;
   handleFormChangeOthers: (
-    selectedGradeId: number,
+    selectedGradeId: number | null,
     selectedOption: IBenefitParams[],
-    remark: string
+    remark: string,
+    gradeOption: IGradeParams
   ) => void;
 }
 
@@ -90,6 +96,8 @@ export function EmployeeOthers({
     gradeList.findIndex((item) => item.id === employeeState.grade_id)
   );
 
+  const [gradeOption, setGradeOption] = useState<any>();
+
   const [remark, setRemark] = useState(employeeState.remark);
   const [selectedOption, setSelectedOption] = useState<IBenefitParams[]>(
     employeeState.benefits
@@ -105,11 +113,14 @@ export function EmployeeOthers({
   };
 
   useEffect(() => {
-    handleFormChangeOthers(selectedGradeId, selectedOption, remark);
+    handleFormChangeOthers(
+      selectedGradeId,
+      selectedOption,
+      remark,
+      gradeOption
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [remark, selectedGradeId, selectedOption]);
-
-  console.log(selectedOption);
+  }, [remark, selectedGradeId, selectedOption, gradeOption]);
 
   const hanleChangeRemark = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setRemark(e.target.value);
@@ -155,19 +166,22 @@ export function EmployeeOthers({
                   setSelectedGradeIndex(-1);
                 }
               }}
-              renderOption={(props, option, { selected }) => (
-                <li
-                  {...props}
-                  style={{
-                    backgroundColor: selected ? "#e9f9ee" : "inherit",
-                    color: selected ? "#30a46c" : "inherit",
-                    padding: "6px 16px",
-                    fontSize: "14px",
-                  }}
-                >
-                  {option.name}
-                </li>
-              )}
+              renderOption={(props, option, { selected }) => {
+                setGradeOption(option);
+                return (
+                  <li
+                    {...props}
+                    style={{
+                      backgroundColor: selected ? "#e9f9ee" : "inherit",
+                      color: selected ? "#30a46c" : "inherit",
+                      padding: "6px 16px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {option.name}
+                  </li>
+                );
+              }}
             />
 
             <div className="flex items-center max-w-[300px] h-auto">
@@ -193,9 +207,6 @@ export function EmployeeOthers({
             options={benefitsList}
             getOptionLabel={(option) => option.name}
             value={selectedOption ?? undefined}
-            // defaultValue={benefitsList.filter((item) =>
-            //   employeeState.benefits.includes(item.id as any)
-            // )}
             sx={autocompleteStyles}
             onChange={handleOptionChange}
             disableCloseOnSelect
@@ -216,8 +227,6 @@ export function EmployeeOthers({
               const isSelected =
                 selectedOption &&
                 selectedOption.some((item) => item.id === option.id);
-
-              console.log(isSelected);
 
               return (
                 <li
@@ -289,9 +298,9 @@ export function EmployeeOthers({
         </div>
       </div>
 
-      {/* <div className="mt-3">
+      <div className="mt-3 border border-[#dfe3e6] border-solid rounded-md">
         <OtherUpload />
-      </div> */}
+      </div>
     </div>
   );
 }

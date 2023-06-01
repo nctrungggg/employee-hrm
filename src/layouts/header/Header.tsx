@@ -80,7 +80,7 @@ export function Header() {
                   {userInfo.company.tel_no}
                 </span>
               </p>
-              <p className="mb-5 text-xs font-normal text-justify line-clamp-2">
+              <p className="mb-5 text-xs font-normal  line-clamp-2">
                 Address:{" "}
                 <span className="font-medium text-[13px]">
                   {userInfo.company.address}

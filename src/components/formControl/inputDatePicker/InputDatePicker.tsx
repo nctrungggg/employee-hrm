@@ -36,7 +36,10 @@ const InputDatePicker = (props: IInputDatePickerProps) => {
     value ? new Date(value) : null
   );
 
-  console.log(value);
+  useEffect(() => {
+    console.log(value);
+    setSelectedDate(value && value !== "Invalid date" ? new Date(value) : null);
+  }, [value]);
 
   const [isValue, setIsValue] = useState(true);
 
@@ -46,15 +49,8 @@ const InputDatePicker = (props: IInputDatePickerProps) => {
 
     setSelectedDate(date);
 
-    if (name === "dob") {
-      handleDateChangeDob?.(dateString !== "Invalid date" ? dateString : "");
-    }
-
-    if (name === "contract_start_date") {
-      handleDateChangeContractDate?.(
-        formattedDate !== "Invalid date" ? formattedDate : ""
-      );
-    }
+    handleDateChangeDob?.(formattedDate);
+    handleDateChangeContractDate?.(formattedDate);
   };
 
   const handleDateBlur = () => {
@@ -77,7 +73,11 @@ const InputDatePicker = (props: IInputDatePickerProps) => {
         >
           {label}
           {isRequired ? (
-            <span className={`isRequired text-required font-normal `}>*</span>
+            <span
+              className={`isRequired text-required font-light leading-none`}
+            >
+              *
+            </span>
           ) : (
             ""
           )}
@@ -87,7 +87,7 @@ const InputDatePicker = (props: IInputDatePickerProps) => {
             <DatePicker
               // showYearDropdown
               name={name}
-              selected={value ? new Date(value) : null}
+              selected={selectedDate}
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore
               onChange={handleDateChange}

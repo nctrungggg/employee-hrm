@@ -37,7 +37,7 @@ export interface IEmployeeParams {
   minimum_salary_used: string;
   contract_start_date: string;
   shift: string;
-  grade_id: number;
+  grade_id: number | null;
   remark: string;
   created_at: string;
   updated_at: string;
@@ -49,8 +49,8 @@ export interface IEmployeeParams {
   grade_name: string;
   manager_name: string | null;
   contracts: IContractParams[];
-  // grade: IGradeParams[];
   benefits: IBenefitParams[];
+  grade: IGradeParams;
 }
 
 export interface IBenefitParams {
@@ -66,7 +66,7 @@ export interface IBenefitParams {
 }
 
 export interface IGradeParams {
-  id: number;
+  id: number | null;
   name: string;
   prefix: string;
   company_id: number;

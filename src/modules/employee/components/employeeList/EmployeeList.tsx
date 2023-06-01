@@ -322,33 +322,68 @@ export function EmployeeList({
                         <TableCell>
                           {row.gender === 1 ? "Female" : "Male"}
                         </TableCell>
-                        <TableCell>{row.card_number}</TableCell>
-                        <TableCell>{row.bank_account_no}</TableCell>
-                        <TableCell>{row.family_card_number}</TableCell>
-                        <TableCell>{row.marriage_code}</TableCell>
-                        <TableCell>{row.mother_name}</TableCell>
-                        <TableCell>{row.pob}</TableCell>
-                        <TableCell>{row.dob}</TableCell>
-                        <TableCell>{row.home_address_1}</TableCell>
-                        <TableCell>{row.nc_id}</TableCell>
-                        <TableCell>{row.contract_start_date}</TableCell>
-                        <TableCell>{row.contract_start_date}</TableCell>
-                        <TableCell>{row.card_number}</TableCell>
-                        <TableCell>{row.card_number}</TableCell>
-                        <TableCell>{row.department_name}</TableCell>
+                        <TableCell>
+                          {row.card_number ? row.card_number : "---"}
+                        </TableCell>
+                        <TableCell>
+                          {row.bank_account_no ? row.bank_account_no : "---"}
+                        </TableCell>
+                        <TableCell>
+                          {row.family_card_number
+                            ? row.family_card_number
+                            : "---"}
+                        </TableCell>
+                        <TableCell>
+                          {row.marriage_code ? row.marriage_code : "---"}
+                        </TableCell>
+                        <TableCell>
+                          {row.mother_name ? row.mother_name : "---"}
+                        </TableCell>
+                        <TableCell>{row.pob ? row.pob : "---"}</TableCell>
+                        <TableCell>{row.dob ? row.dob : "---"}</TableCell>
+                        <TableCell>
+                          {row.home_address_1 ? row.home_address_1 : "---"}
+                        </TableCell>
+                        <TableCell>
+                          {row.home_address_2 ? row.home_address_2 : "---"}
+                        </TableCell>
+
+                        <TableCell>{row.nc_id ? row.nc_id : "---"}</TableCell>
+                        <TableCell>
+                          {row.contract_start_date
+                            ? row.contract_start_date
+                            : "---"}
+                        </TableCell>
+
+                        <TableCell>{row.type ? row.type : "---"}</TableCell>
+                        <TableCell>
+                          {row.department_name ? row.department_name : "---"}
+                        </TableCell>
+
                         <TableCell>
                           {row.department_id === 1 ? "Permanent" : ""}
                         </TableCell>
-                        <TableCell>{row.audit_salary}</TableCell>
-                        <TableCell>{row.position_name}</TableCell>
                         <TableCell>
-                          {row.attendance_allowance_paid ? "Yes" : "No"}
+                          {row.card_number ? row.card_number : "---"}
+                        </TableCell>
+                        <TableCell>
+                          {row.audit_salary ? row.audit_salary : "---"}
+                        </TableCell>
+                        <TableCell>
+                          {row.position_name ? row.position_name : "---"}
                         </TableCell>
                         <TableCell>
                           {row.attendance_allowance_paid ? "Yes" : "No"}
                         </TableCell>
-                        <TableCell>{row.health_insurance}</TableCell>
-                        <TableCell>{row.grade_name}</TableCell>
+                        <TableCell>
+                          {row.attendance_allowance_paid ? "Yes" : "No"}
+                        </TableCell>
+                        <TableCell>
+                          {row.health_insurance ? row.health_insurance : "---"}
+                        </TableCell>
+                        <TableCell>
+                          {row.grade_name ? row.grade_name : "---"}
+                        </TableCell>
                       </TableRow>
                     );
                   })}

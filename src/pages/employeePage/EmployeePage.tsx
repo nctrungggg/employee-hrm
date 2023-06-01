@@ -51,6 +51,7 @@ export function EmployeePage() {
       setLoading(true);
 
       await getDataEmployeeList(search, page);
+
       setLoading(false);
     })();
   }, [search, page, getDataEmployeeList]);
@@ -90,7 +91,7 @@ export function EmployeePage() {
       selectedTables.length >= dataTables.data.length
         ? Number(page) -
             Math.floor(selectedTables.length / dataEmployee.per_page) || 1
-        : page;
+        : page || dataEmployee.current_page;
 
     await dispatch(deleteFieldTableEmployee(selectedTables));
     await getDataEmployeeList(search, String(updatedPage));

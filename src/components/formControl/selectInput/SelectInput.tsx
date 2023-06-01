@@ -21,6 +21,7 @@ export interface ISelectInputProps {
   isNa?: boolean;
   dataList: object[];
   isType?: boolean;
+  disabled?: boolean;
 }
 
 export function SelectInput({
@@ -33,6 +34,7 @@ export function SelectInput({
   value,
   isType,
   className,
+  disabled,
   onChange,
 }: ISelectInputProps) {
   const schema = Yup.object().shape({
@@ -58,15 +60,18 @@ export function SelectInput({
         >
           {label}
           {isRequired && (
-            <span className="text-required font-normal isRequired text-lg">
+            <span className="text-required font-light leading-none isRequired text-lg">
               *{" "}
             </span>
           )}
         </label>
         <Select
+          disabled={disabled}
           {...register(name, { required: true })}
           displayEmpty
           className={`${className} ${
+            disabled && "!text-[#687076] !bg-[#e1e1e1]"
+          } ${
             value && "custom-color-select"
           } bg-bgrGray w-full h-[46px] border-none rounded-lg focus:outline-none appearance-none ${
             isValue &&

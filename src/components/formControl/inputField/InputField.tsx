@@ -83,7 +83,11 @@ export function InputField({
         >
           {label}
           {isRequired ? (
-            <span className={`isRequired text-required font-normal `}>*</span>
+            <span
+              className={`isRequired text-required font-light leading-none`}
+            >
+              *
+            </span>
           ) : (
             ""
           )}
