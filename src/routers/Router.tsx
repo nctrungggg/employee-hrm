@@ -4,7 +4,7 @@ import { AuthPage } from "../pages/authPage/AuthPage";
 import { ForgotPasswordPage } from "../pages/authPage/components/forgotPasswordPage/ForgotPasswordPage";
 import { SignInPage } from "../pages/authPage/components/signInPage/SignInPage";
 import { EmployeePage } from "../pages/employeePage/EmployeePage";
-import { PrivateRoutes } from "../utils/PrivateRoutes";
+import { PrivateRoutes } from "./PrivateRoutes";
 import { CreateEmployeePage } from "../pages/employeePage/createEmployeePage/CreateEmployeePage";
 
 export const Router = () => {

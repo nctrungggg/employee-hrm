@@ -79,8 +79,6 @@ export function CreateEmployeePage() {
     setEmployeeState(employee);
   }, [employee]);
 
-  console.log(employeeState);
-
   const { id } = useParams();
   const idEmployee = Number(id);
 
@@ -118,7 +116,6 @@ export function CreateEmployeePage() {
     if (!name && !ktp_no && !nc_id && !gender && newValue !== 0) {
       setTabErrorInfo(true);
     }
-    console.log(contract_start_date);
 
     if (
       (!contract_start_date ||
@@ -126,8 +123,6 @@ export function CreateEmployeePage() {
         !type) &&
       newValue !== 1
     ) {
-      console.log(123);
-
       setTabErrorContract(true);
     }
 
@@ -241,7 +236,14 @@ export function CreateEmployeePage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkInvalidValueForm = () => {
     // check tabs err information
-    const hasErrorInfo = !(name && ktp_no && nc_id && dob && String(gender));
+    const hasErrorInfo = !(
+      name &&
+      ktp_no &&
+      nc_id &&
+      dob &&
+      dob !== "Invalid date" &&
+      String(gender)
+    );
     setTabErrorInfo(hasErrorInfo);
 
     // check tabs err salary
@@ -258,10 +260,10 @@ export function CreateEmployeePage() {
     setTabErrorSalary(hasErrorSalary);
 
     // check tabs err contract
-    if (contract_start_date && type) {
+    if (contract_start_date && contract_start_date !== "Invalid date" && type) {
       setTabErrorContract(false);
     }
-    
+
     // set active button add
     if (
       !tabErorrInfo &&

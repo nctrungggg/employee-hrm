@@ -69,8 +69,6 @@ export function InputField({
     formState: { errors },
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
-  console.log(errors);
-
   useEffect(() => {
     // Kiểm tra lỗi khi ô input blur
     trigger(name);

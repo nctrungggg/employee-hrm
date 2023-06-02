@@ -39,8 +39,6 @@ export function EmployeeInfomation({
     })();
   }, [dispatch]);
 
-  console.log(employeeState);
-
   return (
     <div>
       <div className="flex justify-between">
