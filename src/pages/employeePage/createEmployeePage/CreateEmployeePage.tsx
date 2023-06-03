@@ -27,6 +27,7 @@ import {
   getBenefits,
   getGrades,
   getIdEmployee,
+  resetErorrsEmployee,
   resetValueEmployee,
 } from "../../../modules/employee/redux/employeeSlice";
 import {
@@ -75,10 +76,6 @@ export function CreateEmployeePage() {
   const employee = useSelector((state: RootState) => state.employee.employee);
   const [employeeState, setEmployeeState] = useState(employee);
 
-  useEffect(() => {
-    setEmployeeState(employee);
-  }, [employee]);
-
   const { id } = useParams();
   const idEmployee = Number(id);
 
@@ -109,6 +106,14 @@ export function CreateEmployeePage() {
     meal_allowance,
     dob,
   } = employeeState;
+
+  useEffect(() => {
+    setEmployeeState(employee);
+  }, [dispatch, employee]);
+
+  useEffect(() => {
+    dispatch(resetErorrsEmployee());
+  }, [dispatch]);
 
   const handleChangeTabs = (_event: React.SyntheticEvent, newValue: number) => {
     setValueTab(newValue);

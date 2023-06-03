@@ -3,6 +3,9 @@ import { Box } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
+import { setErrorsEmployee } from "../../../modules/employee/redux/employeeSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../app/store";
 
 export interface IInputFieldProps {
   label: string;
@@ -27,11 +30,15 @@ export function InputField({
   type,
   disabled,
 }: IInputFieldProps) {
+  const dispatch = useDispatch<AppDispatch>();
+  const erorrsEmployee = useSelector(
+    (state: RootState) => state.employee.errorsEmployee
+  );
+
+  console.log("erorrsEmployee:", erorrsEmployee);
+
   const schema = yup.object().shape({
-    name: yup
-      .string()
-      .max(5, "Maximum length is 50 characters")
-      .required("Please input Name"),
+    name: yup.string().required("Please input Name"),
     gender: yup.string().required("Please input Gender"),
     ktp_no: yup.string().required("Please input KTP No"),
     nc_id: yup.string().required("Please input National CardID"),
@@ -71,12 +78,15 @@ export function InputField({
 
   useEffect(() => {
     // Kiểm tra lỗi khi ô input blur
+
     trigger(name);
   }, [name, trigger]);
 
   const handleCheckValidateValue = () => {
     setIsValueCheck((prevValues) => ({ ...prevValues, [name]: value }));
     trigger(name);
+
+    dispatch(setErrorsEmployee(errors));
   };
 
   return (
@@ -115,14 +125,15 @@ export function InputField({
                   name={name}
                   render={({ field }) => (
                     <input
+                      min="0"
                       {...field}
                       {...register(name, { required: true })}
                       className={` input-type !text-16 !pl-14 h-12 min-w-290 max-w-300 
                   ${
                     isRequired &&
-                    (isValueCheck[name] === "" ||
-                      Number(isValueCheck[name]) < 0) &&
-                    errors[name]?.message &&
+                    (!isValueCheck[name] || Number(isValueCheck[name]) < 0) &&
+                    (value === "" || Number(value) < 0) &&
+                    erorrsEmployee[name] &&
                     "!border-red1 !bg-red2 !border !border-solid"
                   } input-type`}
                       style={{ zIndex: 10 }}
@@ -135,15 +146,15 @@ export function InputField({
                   )}
                 />
               </div>
-              {isRequired && errors[name]?.message && (
-                <p className="pt-[5px] px-[14px] text-red3 text-xs">
-                  {isValueCheck[name] === ""
-                    ? errors[name]?.message?.toString()
-                    : Number(isValueCheck[name]) < 0
-                    ? "Please input value min is 0"
-                    : null}
-                </p>
-              )}
+              {isRequired &&
+                erorrsEmployee &&
+                (value === "" || Number(value) < 0) && (
+                  <p className="pt-[5px] px-[14px] text-red3 text-xs">
+                    {!isValueCheck[name]
+                      ? erorrsEmployee[name]
+                      : "Please input value min is 0"}
+                  </p>
+                )}
             </div>
           </div>
         ) : isRequired ? (
@@ -158,8 +169,8 @@ export function InputField({
                   className={`
                     ${
                       isRequired &&
-                      isValueCheck[name] === "" &&
-                      errors[name]?.message &&
+                      !isValueCheck[name] &&
+                      erorrsEmployee[name] &&
                       !value &&
                       "  !border-red1 !bg-red2 !border !border-solid"
                     } input-type`}
@@ -170,14 +181,11 @@ export function InputField({
                 />
               )}
             />
-            {isRequired &&
-              isValueCheck[name] === "" &&
-              errors[name]?.message &&
-              !value && (
-                <p className="pt-[5px] px-[14px] text-red3 text-xs">
-                  {errors[name]?.message?.toString()}
-                </p>
-              )}
+            {isRequired && erorrsEmployee && !value && (
+              <p className="pt-[5px] px-[14px] text-red3 text-xs">
+                {erorrsEmployee ? erorrsEmployee[name] : ""}
+              </p>
+            )}
           </div>
         ) : (
           <div className="flex flex-col">

@@ -22,6 +22,8 @@ interface initialState {
   positionList: IPositionParams[];
   benefitsList: IBenefitParams[];
   gradeList: IGradeParams[];
+
+  errorsEmployee: any;
 }
 
 interface EmployeeListParams {
@@ -194,6 +196,7 @@ const initialState: initialState = {
   positionList: [],
   gradeList: [],
   benefitsList: [],
+  errorsEmployee: {},
 };
 
 const authSlice = createSlice({
@@ -207,6 +210,18 @@ const authSlice = createSlice({
 
     resetValueEmployee: (state) => {
       state.employee = initialState.employee;
+    },
+
+    setErrorsEmployee: (state, action) => {
+      const errorFields = Object.keys(action.payload);
+
+      errorFields.forEach((field) => {
+        state.errorsEmployee[field] = action.payload[field].message;
+      });
+    },
+
+    resetErorrsEmployee: (state) => {
+      state.errorsEmployee = initialState.errorsEmployee;
     },
   },
 
@@ -241,5 +256,10 @@ const authSlice = createSlice({
 });
 
 const { actions, reducer } = authSlice;
-export const { changeValueEmployee, resetValueEmployee } = actions;
+export const {
+  changeValueEmployee,
+  resetValueEmployee,
+  resetErorrsEmployee,
+  setErrorsEmployee,
+} = actions;
 export default reducer;

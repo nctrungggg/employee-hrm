@@ -17,6 +17,7 @@ interface IInputDatePickerProps {
   isRp?: boolean;
   upload?: boolean;
   handleDateChangeContractDate?: (date: string | null) => void;
+  handleDateChangeUploadContract?: (date: string | null) => void;
   className?: string;
 }
 
@@ -31,6 +32,7 @@ const InputDatePicker = (props: IInputDatePickerProps) => {
     className,
     handleDateChangeDob,
     handleDateChangeContractDate,
+    handleDateChangeUploadContract,
   } = props;
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(
@@ -51,6 +53,7 @@ const InputDatePicker = (props: IInputDatePickerProps) => {
 
     handleDateChangeDob?.(formattedDate);
     handleDateChangeContractDate?.(formattedDate);
+    handleDateChangeUploadContract?.(formattedDate);
   };
 
   const handleDateBlur = () => {

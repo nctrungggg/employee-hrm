@@ -41,7 +41,10 @@ export function SelectInput({
     gender: Yup.string().required("Please input Gender"),
   });
 
-  const { register } = useForm({
+  const {
+    register,
+    formState: { errors },
+  } = useForm({
     mode: "onChange",
     resolver: yupResolver(schema),
   });
@@ -50,6 +53,8 @@ export function SelectInput({
   const handleSelectBlur = () => {
     setIsValue(!String(value));
   };
+
+  console.log(errors);
 
   return (
     <div className="flex flex-col">
@@ -112,11 +117,11 @@ export function SelectInput({
             </MenuItem>
           ))}
 
-          {/* {isRequired && !isValue && (
+          {
             <div className="text-red3 text-xs pt-[5px] px-[14px]">
               {errors[name]?.message?.toString()}
             </div>
-          )} */}
+          }
         </Select>
       </div>
     </div>
