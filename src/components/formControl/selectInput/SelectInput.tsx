@@ -38,7 +38,10 @@ export function SelectInput({
   onChange,
 }: ISelectInputProps) {
   const schema = Yup.object().shape({
-    gender: Yup.string().required("Please input Gender"),
+    gender: Yup.string().oneOf(
+      ["male", "female"],
+      "Please select a valid gender"
+    ),
   });
 
   const {
@@ -48,13 +51,12 @@ export function SelectInput({
     mode: "onChange",
     resolver: yupResolver(schema),
   });
+  
   const [isValue, setIsValue] = useState(false);
 
   const handleSelectBlur = () => {
     setIsValue(!String(value));
   };
-
-  console.log(errors);
 
   return (
     <div className="flex flex-col">
@@ -81,7 +83,7 @@ export function SelectInput({
           } bg-bgrGray w-full h-[46px] border-none rounded-lg focus:outline-none appearance-none ${
             isValue &&
             isRequired &&
-            "!border-red1 !bg-red2 !border !border-solid"
+            "!border-red1 !bg-red2 !border !border-solid select-err"
           } ${isType && "!w-[250px]"}`}
           id={name}
           input={<CustomInputSelect />}
@@ -93,6 +95,7 @@ export function SelectInput({
           onBlur={handleSelectBlur}
           name={name}
           value={value}
+          error={Boolean(errors[name])}
           defaultValue={isNa ? "" : undefined}
           renderValue={(selected: any) => {
             if (selected === "" || selected === undefined) {
@@ -116,14 +119,13 @@ export function SelectInput({
               {item.name}
             </MenuItem>
           ))}
-
-          {
-            <div className="text-red3 text-xs pt-[5px] px-[14px]">
-              {errors[name]?.message?.toString()}
-            </div>
-          }
         </Select>
       </div>
+      {
+        <div className="text-red3 text-xs pt-[5px] px-[14px]">
+          {errors[name]?.message?.toString()}
+        </div>
+      }
     </div>
   );
 }

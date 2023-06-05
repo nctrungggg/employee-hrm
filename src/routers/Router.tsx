@@ -6,16 +6,27 @@ import { SignInPage } from "../pages/authPage/components/signInPage/SignInPage";
 import { EmployeePage } from "../pages/employeePage/EmployeePage";
 import { PrivateRoutes } from "./PrivateRoutes";
 import { CreateEmployeePage } from "../pages/employeePage/createEmployeePage/CreateEmployeePage";
+import { useSelector } from "react-redux";
+import { RootState } from "../app/store";
 
 export const Router = () => {
+  const authToken = useSelector((state: RootState) => state.auth.authToken);
+
+  function requireNoToken() {
+    if (authToken) {
+      return <Navigate to={ROUTES.employee} replace />;
+    }
+
+    return null;
+  }
+
   return (
     <Routes>
-      <Route
-        path="/"
-        element={<Navigate to={`${ROUTES.auth}/${ROUTES.signIn}`} replace />}
-      />
       <Route path={ROUTES.auth} element={<AuthPage />}>
-        <Route path={ROUTES.signIn} element={<SignInPage />}></Route>
+        <Route
+          path={ROUTES.signIn}
+          element={requireNoToken() || <SignInPage />}
+        ></Route>
         <Route
           path={ROUTES.fortgotPassword}
           element={<ForgotPasswordPage />}

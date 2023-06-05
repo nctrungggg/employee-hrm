@@ -1,5 +1,4 @@
 import { ChangeEvent, useState, useCallback } from "react";
-import "./Upload.scss";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import Button from "@mui/material/Button";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -18,11 +17,12 @@ import { styled } from "@mui/material/styles";
 import { useParams } from "react-router-dom";
 
 import moment from "moment-timezone";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import InputDatePicker from "../../../../../components/formControl/inputDatePicker/InputDatePicker";
 import { InputField } from "../../../../../components/formControl/inputField/InputField";
 import downloadIcon from "../../../../../assets/download.svg";
 import { IContractParams } from "../../../../../types/employee";
+import { RootState } from "../../../../../app/store";
 
 interface Column {
   id: "No" | "Contract Name" | "Sign Date" | "Action";
@@ -76,7 +76,10 @@ const ContractUpload = () => {
   }));
 
   const dispatch = useDispatch();
-  const { idEmployee } = useParams();
+  const contractList = useSelector(
+    (state: RootState) => state.contract.contractList
+  );
+  const { id } = useParams();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [openFirstModal, setOpenFirstModal] = useState(false);
   const [formContract, setFormContract] = useState({ date: "", name: "" });
@@ -129,11 +132,11 @@ const ContractUpload = () => {
   };
 
   return (
-    <div className="flex flex-col border border-[#dfe3e6] rounded-md">
-      <span className="font-semibold text-lg bg-[#f1f3f5] text-[#687076] px-[18px] py-2">
+    <div className=" flex flex-col border border-solid  border-[#dfe3e6] rounded-xl">
+      <h4 className="font-semibold text-xs bg-bgrGray text-textSecondary px-[18px] py-2">
         CONTRACT:
-      </span>
-      <p className="px-[18px] py-3 text-[#687076] text-xl">
+      </h4>
+      <p className="px-[18px] py-3 text-textSecondary text-14">
         Please upload pdf, png, xlsx, docx file format!
       </p>
       <hr className="hr-border" />

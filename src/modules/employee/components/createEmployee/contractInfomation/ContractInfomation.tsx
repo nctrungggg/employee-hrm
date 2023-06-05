@@ -5,6 +5,7 @@ import { SelectInput } from "../../../../../components/formControl/selectInput/S
 import { employeeType } from "../../../../../contexts/dataLink";
 import { IEmployeeParams } from "../../../../../types/employee";
 import { useParams } from "react-router-dom";
+import ContractUpload from "./ContractUpload";
 
 export interface IContractInfomationProps {
   employeeState: IEmployeeParams;
@@ -55,9 +56,9 @@ export function ContractInfomation({
         />
       </div>
 
-      {/* <div className="mt-5">
-        <ContractUpload contractList={contractListInfo} />
-      </div> */}
+      <div className="mt-5">
+        <ContractUpload />
+      </div>
     </div>
   );
 }

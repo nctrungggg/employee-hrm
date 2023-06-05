@@ -23,7 +23,7 @@ interface initialState {
   benefitsList: IBenefitParams[];
   gradeList: IGradeParams[];
 
-  errorsEmployee: any;
+  errorsInputEmployee: any;
 }
 
 interface EmployeeListParams {
@@ -127,6 +127,7 @@ const initialState: initialState = {
   },
 
   loadingEmployee: false,
+  
 
   employee: {
     attendance_allowance_paid: true,
@@ -196,7 +197,7 @@ const initialState: initialState = {
   positionList: [],
   gradeList: [],
   benefitsList: [],
-  errorsEmployee: {},
+  errorsInputEmployee: {},
 };
 
 const authSlice = createSlice({
@@ -212,16 +213,16 @@ const authSlice = createSlice({
       state.employee = initialState.employee;
     },
 
-    setErrorsEmployee: (state, action) => {
+    setErrorsInputEmployee: (state, action) => {
       const errorFields = Object.keys(action.payload);
 
       errorFields.forEach((field) => {
-        state.errorsEmployee[field] = action.payload[field].message;
+        state.errorsInputEmployee[field] = action.payload[field].message;
       });
     },
 
     resetErorrsEmployee: (state) => {
-      state.errorsEmployee = initialState.errorsEmployee;
+      state.errorsInputEmployee = initialState.errorsInputEmployee;
     },
   },
 
@@ -260,6 +261,6 @@ export const {
   changeValueEmployee,
   resetValueEmployee,
   resetErorrsEmployee,
-  setErrorsEmployee,
+  setErrorsInputEmployee,
 } = actions;
 export default reducer;

@@ -3,9 +3,10 @@ import { Box } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
-import { setErrorsEmployee } from "../../../modules/employee/redux/employeeSlice";
+
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../app/store";
+import { setErrorsInputEmployee } from "../../../modules/employee/redux/employeeSlice";
 
 export interface IInputFieldProps {
   label: string;
@@ -32,10 +33,10 @@ export function InputField({
 }: IInputFieldProps) {
   const dispatch = useDispatch<AppDispatch>();
   const erorrsEmployee = useSelector(
-    (state: RootState) => state.employee.errorsEmployee
+    (state: RootState) => state.employee.errorsInputEmployee
   );
 
-  console.log("erorrsEmployee:", erorrsEmployee);
+  console.log(erorrsEmployee);
 
   const schema = yup.object().shape({
     name: yup.string().required("Please input Name"),
@@ -77,8 +78,6 @@ export function InputField({
   } = useForm({ mode: "onChange", resolver: yupResolver(schema) });
 
   useEffect(() => {
-    // Kiểm tra lỗi khi ô input blur
-
     trigger(name);
   }, [name, trigger]);
 
@@ -86,7 +85,7 @@ export function InputField({
     setIsValueCheck((prevValues) => ({ ...prevValues, [name]: value }));
     trigger(name);
 
-    dispatch(setErrorsEmployee(errors));
+    dispatch(setErrorsInputEmployee(errors));
   };
 
   return (
@@ -116,7 +115,14 @@ export function InputField({
               <div className="relative">
                 <span
                   style={{ zIndex: 20 }}
-                  className="absolute text-16 text-[#006ADC] font-normal top-2/4 -translate-y-2/4 left-3"
+                  className={`absolute text-16  font-normal top-2/4 -translate-y-2/4 left-3  ${
+                    isRequired &&
+                    (!isValueCheck[name] || Number(isValueCheck[name]) < 0) &&
+                    (value === "" || Number(value) < 0) &&
+                    erorrsEmployee[name]
+                      ? "text-bgrRed"
+                      : "text-[#006ADC]"
+                  } `}
                 >
                   Rp
                 </span>

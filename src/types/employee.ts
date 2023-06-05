@@ -106,6 +106,14 @@ export interface IContractParams {
   deleted_at: string | null;
 }
 
+export interface IContractInfoParams {
+  employee_id: string;
+  names: string[];
+  contract_dates: string[];
+  documents: File[];
+  modified_contracts: string[];
+}
+
 // form employee Information
 export interface IFormEmployeeInformationParams {
   nik: string;
