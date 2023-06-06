@@ -67,8 +67,15 @@ const OtherUpload = () => {
   const idEmployee = id;
 
   const { dataDocument } = useSelector((state: RootState) => state.others);
+
   const employee = useSelector((state: RootState) => state.employee.employee);
-  const mergeDataDocument = [...employee.documents, ...dataDocument];
+
+  const mergeDataDocument = [
+    ...employee.documents,
+    ...dataDocument.filter(
+      (doc) => !employee.documents.some((empDoc) => empDoc.id === doc.id)
+    ),
+  ];
 
   const handleUploadFile = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files && e.target.files[0];
@@ -76,14 +83,13 @@ const OtherUpload = () => {
     if (selectedFile) {
       dispatch(
         addDataToDocument({
-          employee_id:
-            String(Math.floor(Math.random() * Number(idEmployee))) || "0",
+          employee_id: idEmployee || "0",
           documents: [selectedFile],
         })
       );
       dispatch(
         addDataTableDocument({
-          id: Math.floor(Math.random() * Number(idEmployee)),
+          id: Number(idEmployee),
           employee_id: -1,
           created_at: moment(selectedFile.lastModified).format("YYYY-MM-DD"),
           document: selectedFile.name,
@@ -105,8 +111,7 @@ const OtherUpload = () => {
     if (updated_at !== "") {
       dispatch(
         addDataToDocument({
-          employee_id:
-            String(Math.floor(Math.random() * Number(idEmployee))) || "0",
+          employee_id: idEmployee || "0",
           deleted_ids: [id],
         })
       );
@@ -169,8 +174,6 @@ const OtherUpload = () => {
             <TableBody>
               {mergeDataDocument &&
                 mergeDataDocument?.map((row: any, index: number) => {
-                  console.log(row);
-
                   return (
                     <CustomTableRow
                       hover

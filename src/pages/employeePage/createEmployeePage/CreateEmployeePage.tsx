@@ -337,22 +337,21 @@ export function CreateEmployeePage() {
       newFormEmployee
     );
 
-    dispatch(setValueEmployee(newData));
+    console.log("newData;", newData);
 
     try {
+      const { data } = await employeeApi.addEmployeeApi(newData);
+      dispatch(setValueEmployee(data.data));
+
+      toast.success(data.message);
+
       if (contractInfo.documents.length > 0) {
-        dispatch(addDataUploadContract({ formData: contractInfo }));
+        await dispatch(addDataUploadContract({ formData: contractInfo }));
       }
 
       if (dataFormDocument.documents && dataFormDocument.documents.length > 0) {
-        dispatch(addDataDocument({ formData: dataFormDocument }));
+        await dispatch(addDataDocument({ formData: dataFormDocument }));
       }
-
-      const {
-        data: { message },
-      } = await employeeApi.addEmployeeApi(newData);
-
-      toast.success(message);
 
       setTimeout(() => {
         navigate(ROUTES.employee);

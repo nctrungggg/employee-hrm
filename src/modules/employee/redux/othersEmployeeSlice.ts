@@ -22,7 +22,7 @@ const initialState: contractUploadState = {
 };
 
 export const addDataDocument = createAsyncThunk(
-  "document/addDocument",
+  "others/addDocument",
   async ({ formData }: { formData: IDocumentFormDataParams }, { getState }) => {
     const { employee } = getState() as RootState;
     const newFormdata = new FormData();
@@ -48,7 +48,7 @@ export const addDataDocument = createAsyncThunk(
 );
 
 const othersEmployeeSlice = createSlice({
-  name: "documentUploadSlice",
+  name: "othersEmployeeSlice",
   initialState,
 
   reducers: {
@@ -77,7 +77,7 @@ const othersEmployeeSlice = createSlice({
 
     removeDataDocument: (state, action: PayloadAction<number>) => {
       const id = action.payload;
-      state.dataDocument.splice(id, 1);
+      state.dataDocument = state.dataDocument.filter((post) => post.id !== id);
     },
 
     removeAllDataFromDocument: (state) => {
