@@ -3,7 +3,6 @@ import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import {
   Button,
   SelectChangeEvent,
-  Skeleton,
   Tab,
   Tabs,
   Typography,
@@ -24,17 +23,27 @@ import { EmployeeInfomation } from "../../../modules/employee/components/createE
 import { EmployeeOthers } from "../../../modules/employee/components/createEmployee/employeeOthers/EmployeeOthers";
 import { EmployeeSalary } from "../../../modules/employee/components/createEmployee/employeeSalary/EmployeeSalary";
 import {
+  addDataUploadContract,
+  removeAllDataContract,
+  removeAllDataFormConTract,
+} from "../../../modules/employee/redux/contractEmployeeSlice";
+import {
   getBenefits,
   getGrades,
   getIdEmployee,
   resetErorrsEmployee,
   resetValueEmployee,
+  setValueEmployee,
 } from "../../../modules/employee/redux/employeeSlice";
 import {
   IBenefitParams,
   IGradeParams,
   IValueCheckboxParams,
 } from "../../../types/employee";
+import {
+  addDataDocument,
+  removeAllDataDocument,
+} from "../../../modules/employee/redux/othersEmployeeSlice";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -74,25 +83,21 @@ export function CreateEmployeePage() {
   const dispatch = useDispatch<AppDispatch>();
 
   const employee = useSelector((state: RootState) => state.employee.employee);
-  const [employeeState, setEmployeeState] = useState(employee);
 
+  const { contractInfo } = useSelector((state: RootState) => state.contract);
+  const { dataFormDocument } = useSelector((state: RootState) => state.others);
+  const [employeeState, setEmployeeState] = useState(employee);
   const { id } = useParams();
   const idEmployee = Number(id);
-
   const [valueTab, setValueTab] = useState(0);
-
   const [contractDate, setContractDate] = useState<string | null>(
     employeeState.contract_start_date || ""
   );
-
   const [isActiveAdd, setIsActiveAdd] = useState<boolean>(false);
-
   const [tabErorrInfo, setTabErrorInfo] = useState<boolean>(false);
   const [tabErorrContract, setTabErrorContract] = useState<boolean>(false);
   const [tabErorrSalary, setTabErrorSalary] = useState<boolean>(false);
-
   const [loadingBttUpdate, setLoadingBttUpdate] = useState(false);
-
   const {
     name,
     ktp_no,
@@ -113,6 +118,9 @@ export function CreateEmployeePage() {
 
   useEffect(() => {
     dispatch(resetErorrsEmployee());
+    dispatch(removeAllDataFormConTract());
+    dispatch(removeAllDataContract());
+    dispatch(removeAllDataDocument());
   }, [dispatch]);
 
   const handleChangeTabs = (_event: React.SyntheticEvent, newValue: number) => {
@@ -329,7 +337,17 @@ export function CreateEmployeePage() {
       newFormEmployee
     );
 
+    dispatch(setValueEmployee(newData));
+
     try {
+      if (contractInfo.documents.length > 0) {
+        dispatch(addDataUploadContract({ formData: contractInfo }));
+      }
+
+      if (dataFormDocument.documents && dataFormDocument.documents.length > 0) {
+        dispatch(addDataDocument({ formData: dataFormDocument }));
+      }
+
       const {
         data: { message },
       } = await employeeApi.addEmployeeApi(newData);
@@ -393,6 +411,14 @@ export function CreateEmployeePage() {
     );
     try {
       setLoadingBttUpdate(true);
+
+      if (contractInfo.documents.length > 0) {
+        dispatch(addDataUploadContract({ formData: contractInfo }));
+      }
+
+      if (dataFormDocument.documents && dataFormDocument.documents.length > 0) {
+        dispatch(addDataDocument({ formData: dataFormDocument }));
+      }
 
       const {
         data: { message },

@@ -66,6 +66,36 @@ const employeeApi = {
     const url = "/benefit";
     return axiosClient.get(url);
   },
+
+  getIdEmployeeContractUpload(id: number) {
+    const url = `/contract/get-employee-contracts?employee_id=${id}`;
+    return axiosClient.get(url);
+  },
+
+  // addEmployeeContractUpload(formData: FormData) {
+  //   const url = `/contract/save-multiple`;
+  //   return axiosClient.post(url, formData);
+  // },
+  addEmployeeContractUpload(formData: FormData) {
+    const url = `/contract/save-multiple`;
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    return axiosClient.post(url, formData, config);
+  },
+
+  addEmployeeOthersUpload(formData: FormData) {
+    const url = `/employee-document/upload`;
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    return axiosClient.post(url, formData, config);
+  },
 };
 
 export default employeeApi;

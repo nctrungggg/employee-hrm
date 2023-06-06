@@ -98,7 +98,7 @@ const InputDatePicker = (props: IInputDatePickerProps) => {
               dateFormat="yyyy/MM/dd"
               isClearable
               className={`${className} input-type-date  h-12 w-[290px]  ${
-                !isValue && !selectedDate && "input-danger"
+                !isValue && !selectedDate && isRequired && "input-danger"
               }  ${upload && "max-w-[230px]"} `}
             ></DatePicker>
             <span className="absolute top-[50%] -translate-y-2/4 left-3">

@@ -7,7 +7,22 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  styled,
 } from "@mui/material";
+import { ChangeEvent } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
+import {
+  addDataTableDocument,
+  addDataToDocument,
+  removeAllDataFromDocument,
+  removeDataDocument,
+  removeDataFormDocument,
+} from "../../../redux/othersEmployeeSlice";
+import moment from "moment-timezone";
+import { RootState } from "../../../../../app/store";
+import { MdDeleteOutline } from "react-icons/md";
+import downloadIcon from "../../../../../assets/download.svg";
 
 interface Column {
   id: "No" | "Document Name" | "Created At" | "Action";
@@ -25,6 +40,79 @@ const columns: readonly Column[] = [
 ];
 
 const OtherUpload = () => {
+  const CustomTableRow = styled(TableRow)(({ theme, selected }) => ({
+    cursor: "pointer",
+    height: "36px",
+    backgroundColor: selected
+      ? "rgb(237 246 255) !important"
+      : "rgb(248, 249, 250)",
+
+    "&:hover": {
+      backgroundColor: "rgb(237, 246, 255) !important",
+    },
+    "&.MuiTableCell-root": {
+      color: "transparent",
+    },
+  }));
+  // eslint-disable-next-line no-empty-pattern
+  const TableCellCustom = styled(TableCell)(({}) => ({
+    border: "1px solid white",
+    color: "rgb(104, 112, 118)",
+    fontSize: "12px",
+    padding: "0 10px",
+  }));
+
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const idEmployee = id;
+
+  const { dataDocument } = useSelector((state: RootState) => state.others);
+  const employee = useSelector((state: RootState) => state.employee.employee);
+  const mergeDataDocument = [...employee.documents, ...dataDocument];
+
+  const handleUploadFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files && e.target.files[0];
+
+    if (selectedFile) {
+      dispatch(
+        addDataToDocument({
+          employee_id:
+            String(Math.floor(Math.random() * Number(idEmployee))) || "0",
+          documents: [selectedFile],
+        })
+      );
+      dispatch(
+        addDataTableDocument({
+          id: Math.floor(Math.random() * Number(idEmployee)),
+          employee_id: -1,
+          created_at: moment(selectedFile.lastModified).format("YYYY-MM-DD"),
+          document: selectedFile.name,
+          updated_at: "",
+        })
+      );
+    }
+  };
+
+  const handleDeleteFileDocument = (
+    updated_at: string,
+    index: number,
+    id: number
+  ) => {
+    dispatch(removeDataDocument(index));
+    dispatch(removeDataFormDocument(index));
+    dispatch(removeAllDataFromDocument());
+
+    if (updated_at !== "") {
+      dispatch(
+        addDataToDocument({
+          employee_id:
+            String(Math.floor(Math.random() * Number(idEmployee))) || "0",
+          deleted_ids: [id],
+        })
+      );
+    }
+  };
+
   return (
     <div className="flex flex-col ">
       <div className="flex items-center gap-32 mt-4 px-4">
@@ -51,10 +139,16 @@ const OtherUpload = () => {
           >
             <FileUploadOutlinedIcon style={{ fontSize: 20 }} />
             <span className="upload-file">Upload</span>
-            <input accept="image/*,.pdf,.csv,.xlsx,.docx" type="file" hidden />
+            <input
+              accept="image/*,.pdf,.csv,.xlsx,.docx"
+              type="file"
+              hidden
+              onChange={handleUploadFile}
+            />
           </Button>
         </div>
       </div>
+
       <div className="py-4 px-4">
         <TableContainer style={{ height: "250px" }} className="">
           <Table stickyHeader aria-label="sticky table">
@@ -72,7 +166,59 @@ const OtherUpload = () => {
               </TableRow>
             </TableHead>
 
-            <TableBody>{/* Content off here */}</TableBody>
+            <TableBody>
+              {mergeDataDocument &&
+                mergeDataDocument?.map((row: any, index: number) => {
+                  console.log(row);
+
+                  return (
+                    <CustomTableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.id}
+                      sx={{
+                        cursor: "pointer",
+                      }}
+                    >
+                      <TableCellCustom>{index + 1}</TableCellCustom>
+                      <TableCellCustom style={{ minWidth: `50px` }}>
+                        {row?.document.split("/").pop()}
+                      </TableCellCustom>
+                      <TableCellCustom>
+                        {moment(row?.create_at).format("YYYY-MM-DD")}
+                      </TableCellCustom>
+                      <TableCellCustom>
+                        <div className="flex justify-center items-center gap-2  ">
+                          <span className=" transition-all rounded-md py-1 px-[10px] bg-[#e9f9ee] hover:bg-[#30a46c14]">
+                            {idEmployee && (
+                              <Link
+                                to={row.document}
+                                target="_blank"
+                                className="flex gap-1 "
+                              >
+                                <img src={downloadIcon} className="" alt="" />
+                              </Link>
+                            )}
+                          </span>
+                          <Button
+                            onClick={() =>
+                              handleDeleteFileDocument(
+                                row?.updated_at,
+                                index,
+                                row?.id
+                              )
+                            }
+                            className="button-contract-upload "
+                          >
+                            <MdDeleteOutline size={14} className="-mt-1" />
+                          </Button>
+                        </div>
+                      </TableCellCustom>
+                    </CustomTableRow>
+                  );
+                })}
+            </TableBody>
           </Table>
         </TableContainer>
       </div>

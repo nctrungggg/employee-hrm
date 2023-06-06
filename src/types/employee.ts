@@ -51,6 +51,7 @@ export interface IEmployeeParams {
   contracts: IContractParams[];
   benefits: IBenefitParams[];
   grade: IGradeParams;
+  documents: IDocumentParams[];
 }
 
 export interface IBenefitParams {
@@ -202,4 +203,18 @@ export interface IValueCheckboxParams {
   mealAllowancePaid: boolean;
   operationalAllowancePaid: boolean;
   attendanceAllowancePaid: boolean;
+}
+
+export interface IDocumentFormDataParams {
+  employee_id: string | null;
+  documents?: File[];
+  deleted_ids?: number[];
+}
+
+export interface IDocumentParams {
+  id: number;
+  employee_id: number;
+  created_at: string;
+  document: string;
+  updated_at: string | null;
 }

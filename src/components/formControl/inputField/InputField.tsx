@@ -17,6 +17,7 @@ export interface IInputFieldProps {
   type: string;
   isRp?: boolean;
   upload?: boolean;
+  className?: string;
   disabled?: boolean;
 }
 
@@ -30,16 +31,16 @@ export function InputField({
   isRequired,
   type,
   disabled,
+  className,
 }: IInputFieldProps) {
   const dispatch = useDispatch<AppDispatch>();
   const erorrsEmployee = useSelector(
     (state: RootState) => state.employee.errorsInputEmployee
   );
 
-  console.log(erorrsEmployee);
-
   const schema = yup.object().shape({
     name: yup.string().required("Please input Name"),
+    // contract_name: yup.string().required("Please input Contract Name"),
     gender: yup.string().required("Please input Gender"),
     ktp_no: yup.string().required("Please input KTP No"),
     nc_id: yup.string().required("Please input National CardID"),
@@ -201,10 +202,9 @@ export function InputField({
               onChange={onChange}
               value={value}
               name={name}
-              className={`${
+              className={`${className} ${
                 disabled && "!text-[#687076] !bg-[#e1e1e1]"
-              } input-type h-12 min-w-290 max-w-300  ${
-                upload && "max-w-[230px]"
+              } input-type h-12 min-w-290 max-w-300"
               }`}
             />
           </div>

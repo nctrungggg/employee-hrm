@@ -28,6 +28,8 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../app/store";
 import { getIdEmployee, resetValueEmployee } from "../../redux/employeeSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
+
+
 interface IEmployeeListProps {
   dataEmployee: IDataEmployeeParams;
   onDeleteFieldTable: (listId: number[]) => void;
@@ -107,7 +109,6 @@ export function EmployeeList({
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     onChangePage(search, newPage);

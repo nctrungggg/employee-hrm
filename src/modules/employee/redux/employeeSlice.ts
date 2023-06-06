@@ -127,7 +127,6 @@ const initialState: initialState = {
   },
 
   loadingEmployee: false,
-  
 
   employee: {
     attendance_allowance_paid: true,
@@ -190,6 +189,7 @@ const initialState: initialState = {
       updated_at: "",
     },
     benefits: [],
+    documents: [],
   },
 
   marriageStatus: [],
@@ -211,6 +211,10 @@ const authSlice = createSlice({
 
     resetValueEmployee: (state) => {
       state.employee = initialState.employee;
+    },
+
+    setValueEmployee: (state, action) => {
+      state.employee = action.payload;
     },
 
     setErrorsInputEmployee: (state, action) => {
@@ -262,5 +266,6 @@ export const {
   resetValueEmployee,
   resetErorrsEmployee,
   setErrorsInputEmployee,
+  setValueEmployee,
 } = actions;
 export default reducer;
