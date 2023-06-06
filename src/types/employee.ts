@@ -209,6 +209,7 @@ export interface IDocumentFormDataParams {
   employee_id: string | null;
   documents?: File[];
   deleted_ids?: number[];
+  newSelect?: boolean;
 }
 
 export interface IDocumentParams {

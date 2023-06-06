@@ -43,6 +43,8 @@ import {
 import {
   addDataDocument,
   removeAllDataDocument,
+  removeAllDataFromDocument,
+  removeNewDocs,
 } from "../../../modules/employee/redux/othersEmployeeSlice";
 
 interface TabPanelProps {
@@ -85,7 +87,9 @@ export function CreateEmployeePage() {
   const employee = useSelector((state: RootState) => state.employee.employee);
 
   const { contractInfo } = useSelector((state: RootState) => state.contract);
-  const { dataFormDocument } = useSelector((state: RootState) => state.others);
+  const { dataFormDocument, newDocs } = useSelector(
+    (state: RootState) => state.others
+  );
   const [employeeState, setEmployeeState] = useState(employee);
   const { id } = useParams();
   const idEmployee = Number(id);
@@ -343,15 +347,18 @@ export function CreateEmployeePage() {
       const { data } = await employeeApi.addEmployeeApi(newData);
       dispatch(setValueEmployee(data.data));
 
-      toast.success(data.message);
-
       if (contractInfo.documents.length > 0) {
         await dispatch(addDataUploadContract({ formData: contractInfo }));
       }
 
-      if (dataFormDocument.documents && dataFormDocument.documents.length > 0) {
-        await dispatch(addDataDocument({ formData: dataFormDocument }));
+      if (newDocs && newDocs.length > 0) {
+        const newDataFormDocument = { ...dataFormDocument, documents: newDocs };
+
+        await dispatch(addDataDocument({ formData: newDataFormDocument }));
       }
+
+      dispatch(removeNewDocs());
+      toast.success(data.message);
 
       setTimeout(() => {
         navigate(ROUTES.employee);
@@ -411,20 +418,23 @@ export function CreateEmployeePage() {
     try {
       setLoadingBttUpdate(true);
 
-      if (contractInfo.documents.length > 0) {
-        dispatch(addDataUploadContract({ formData: contractInfo }));
-      }
-
-      if (dataFormDocument.documents && dataFormDocument.documents.length > 0) {
-        dispatch(addDataDocument({ formData: dataFormDocument }));
-      }
-
       const {
         data: { message },
       } = await employeeApi.updateEmployee(newData, id);
 
-      toast.success(message);
+      if (contractInfo.documents.length > 0) {
+        await dispatch(addDataUploadContract({ formData: contractInfo }));
+      }
 
+      if (newDocs && newDocs.length > 0) {
+        const newDataFormDocument = { ...dataFormDocument, documents: newDocs };
+
+        await dispatch(addDataDocument({ formData: newDataFormDocument }));
+      }
+
+      dispatch(removeNewDocs());
+
+      toast.success(message);
       setLoadingBttUpdate(false);
 
       navigate(ROUTES.employee);

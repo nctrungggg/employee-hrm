@@ -9,20 +9,18 @@ import {
   TableRow,
   styled,
 } from "@mui/material";
-import { ChangeEvent } from "react";
+import moment from "moment-timezone";
+import { ChangeEvent, useEffect, useState } from "react";
+import { MdDeleteOutline } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import { RootState } from "../../../../../app/store";
+import downloadIcon from "../../../../../assets/download.svg";
 import {
   addDataTableDocument,
   addDataToDocument,
-  removeAllDataFromDocument,
   removeDataDocument,
-  removeDataFormDocument,
 } from "../../../redux/othersEmployeeSlice";
-import moment from "moment-timezone";
-import { RootState } from "../../../../../app/store";
-import { MdDeleteOutline } from "react-icons/md";
-import downloadIcon from "../../../../../assets/download.svg";
 
 interface Column {
   id: "No" | "Document Name" | "Created At" | "Action";
@@ -65,17 +63,18 @@ const OtherUpload = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const idEmployee = id;
-
   const { dataDocument } = useSelector((state: RootState) => state.others);
-
   const employee = useSelector((state: RootState) => state.employee.employee);
 
-  const mergeDataDocument = [
+  // const mergeDataDocument = [...employee.documents, ...dataDocument];
+  const [mergeDataDocument, setMergeDataDocument] = useState([
     ...employee.documents,
-    ...dataDocument.filter(
-      (doc) => !employee.documents.some((empDoc) => empDoc.id === doc.id)
-    ),
-  ];
+    ...dataDocument,
+  ]);
+
+  useEffect(() => {
+    setMergeDataDocument([...employee.documents, ...dataDocument]);
+  }, [dataDocument, employee.documents]);
 
   const handleUploadFile = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files && e.target.files[0];
@@ -87,6 +86,7 @@ const OtherUpload = () => {
           documents: [selectedFile],
         })
       );
+
       dispatch(
         addDataTableDocument({
           id: Number(idEmployee),
@@ -99,23 +99,12 @@ const OtherUpload = () => {
     }
   };
 
-  const handleDeleteFileDocument = (
-    updated_at: string,
-    index: number,
-    id: number
-  ) => {
-    dispatch(removeDataDocument(index));
-    dispatch(removeDataFormDocument(index));
-    dispatch(removeAllDataFromDocument());
+  const handleDeleteFileDocument = (id: number) => {
+    const newMrgeDataDocument = mergeDataDocument.filter(
+      (post, index) => index !== id
+    );
 
-    if (updated_at !== "") {
-      dispatch(
-        addDataToDocument({
-          employee_id: idEmployee || "0",
-          deleted_ids: [id],
-        })
-      );
-    }
+    setMergeDataDocument(newMrgeDataDocument);
   };
 
   return (
@@ -159,9 +148,9 @@ const OtherUpload = () => {
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow className="table-upload">
-                {columns.map((column) => (
+                {columns.map((column, index) => (
                   <TableCell
-                    key={column.id}
+                    key={index}
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
                   >
@@ -205,13 +194,7 @@ const OtherUpload = () => {
                             )}
                           </span>
                           <Button
-                            onClick={() =>
-                              handleDeleteFileDocument(
-                                row?.updated_at,
-                                index,
-                                row?.id
-                              )
-                            }
+                            onClick={() => handleDeleteFileDocument(index)}
                             className="button-contract-upload "
                           >
                             <MdDeleteOutline size={14} className="-mt-1" />

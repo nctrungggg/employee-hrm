@@ -62,14 +62,19 @@ export const addDataUploadContract = createAsyncThunk(
 
     const newFormdata = new FormData();
     newFormdata.append("employee_id", String(employee.employee.id));
+
     formData.names.forEach((name) => newFormdata.append("names[]", name));
     formData.contract_dates.forEach((date) =>
       newFormdata.append("contract_dates[]", date)
     );
+
     formData.documents.forEach((doc) =>
       newFormdata.append("documents[]", doc, doc.name)
     );
+
     newFormdata.append("modified_contracts[]", "");
+
+    console.log("HIHIHI", formData);
 
     const {
       data: { data },
@@ -95,7 +100,6 @@ const contractUploadSlice = createSlice({
         state.contractInfo.documents.push(...documents);
       }
     },
-
     addDataTableContract: (state, action: PayloadAction<IContractParams>) => {
       state.contractList.unshift(action.payload);
     },

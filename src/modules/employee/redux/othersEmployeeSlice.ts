@@ -9,6 +9,7 @@ import employeeApi from "../../../api/employeeApi";
 interface contractUploadState {
   dataDocument: IDocumentParams[];
   dataFormDocument: IDocumentFormDataParams;
+  newDocs: File[];
 }
 
 const initialState: contractUploadState = {
@@ -19,6 +20,8 @@ const initialState: contractUploadState = {
     documents: [],
     deleted_ids: [],
   },
+
+  newDocs: [],
 };
 
 export const addDataDocument = createAsyncThunk(
@@ -62,7 +65,7 @@ const othersEmployeeSlice = createSlice({
 
       state.dataFormDocument.documents &&
         documents &&
-        state.dataFormDocument.documents.push(...documents);
+        state.newDocs.push(...documents);
 
       state.dataFormDocument.deleted_ids &&
         deleted_ids &&
@@ -81,6 +84,8 @@ const othersEmployeeSlice = createSlice({
     },
 
     removeAllDataFromDocument: (state) => {
+      console.log(initialState.dataFormDocument);
+
       state.dataFormDocument = initialState.dataFormDocument;
     },
 
@@ -88,12 +93,16 @@ const othersEmployeeSlice = createSlice({
       state.dataDocument = [];
     },
 
+    removeNewDocs: (state) => {
+      state.newDocs = [];
+    },
+
     mountDataDocument: (state, action: PayloadAction<IDocumentParams[]>) => {
       state.dataDocument = action.payload;
     },
 
-    addDataTableDocument: (state, action: PayloadAction<IDocumentParams>) => {
-      state.dataDocument.unshift(action.payload);
+    addDataTableDocument: (state, action) => {
+      state.dataDocument.push(action.payload);
     },
   },
 });
@@ -108,6 +117,7 @@ export const {
   removeAllDataDocument,
   removeAllDataFromDocument,
   removeDataFormDocument,
+  removeNewDocs,
 } = actions;
 
 export default reducer;
